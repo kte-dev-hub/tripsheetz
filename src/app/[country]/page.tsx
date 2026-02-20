@@ -1,26 +1,146 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import { ChevronDownIcon, ChevronUpDownIcon } from '@heroicons/react/16/solid'
 import {
   InformationCircleIcon,
+  IdentificationIcon,
   BanknotesIcon,
   SunIcon,
   BoltIcon,
   PaperAirplaneIcon,
   DevicePhoneMobileIcon,
   SwatchIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/20/solid'
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
 const tabs = [
   { name: 'Basics', id: 'basics', icon: InformationCircleIcon },
+  { name: 'Visa & Entry', id: 'visa', icon: IdentificationIcon },
   { name: 'Money', id: 'money', icon: BanknotesIcon },
   { name: 'Weather', id: 'weather', icon: SunIcon },
   { name: 'Electrical', id: 'electrical', icon: BoltIcon },
   { name: 'Transportation', id: 'transport', icon: PaperAirplaneIcon },
   { name: 'Communications', id: 'communications', icon: DevicePhoneMobileIcon },
   { name: 'Units & Sizes', id: 'units', icon: SwatchIcon },
+  { name: 'Emergency', id: 'emergency', icon: ExclamationTriangleIcon },
 ]
+
+const nationalities = [
+  { id: 1, name: 'United States' },
+  { id: 2, name: 'United Kingdom' },
+  { id: 3, name: 'Canada' },
+  { id: 4, name: 'Australia' },
+  { id: 5, name: 'EU Citizens' },
+  { id: 6, name: 'South Korea' },
+  { id: 7, name: 'China' },
+  { id: 8, name: 'India' },
+]
+
+const visaData: Record<string, { visaRequired: string; duration: string; eVisa: string }> = {
+  'United States': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'United Kingdom': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'Canada': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'Australia': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'EU Citizens': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'South Korea': { visaRequired: 'No', duration: '90 days', eVisa: 'N/A' },
+  'China': { visaRequired: 'Yes', duration: '—', eVisa: 'No' },
+  'India': { visaRequired: 'Yes', duration: '—', eVisa: 'No' },
+}
+
+const embassyData: Record<string, { embassy: string; address: string; phone: string; emergency: string; website: string; websiteUrl: string; consulates: { name: string; address: string }[] }> = {
+  'United States': {
+    embassy: 'US Embassy Tokyo',
+    address: '1-10-5 Akasaka, Minato-ku, Tokyo 107-8420',
+    phone: '03-3224-5000',
+    emergency: '03-3224-5000 (same number, 24/7 operator)',
+    website: 'jp.usembassy.gov',
+    websiteUrl: 'https://jp.usembassy.gov/',
+    consulates: [
+      { name: 'US Consulate Osaka-Kobe', address: '2-11-5 Nishitenma, Kita-ku, Osaka 530-8543' },
+      { name: 'US Consulate Naha (Okinawa)', address: '2-1-1 Toyama, Urasoe City, Okinawa 901-2104' },
+      { name: 'US Consulate Sapporo', address: 'Kita 1-jo Nishi 28-chome, Chuo-ku, Sapporo 064-0821' },
+      { name: 'US Consulate Fukuoka', address: '5-26 Ohori 2-chome, Chuo-ku, Fukuoka 810-0052' },
+    ],
+  },
+  'United Kingdom': {
+    embassy: 'British Embassy Tokyo',
+    address: '1 Ichiban-cho, Chiyoda-ku, Tokyo 102-8381',
+    phone: '03-5211-1100',
+    emergency: '03-5211-1100 (24/7)',
+    website: 'gov.uk/world/japan',
+    websiteUrl: 'https://www.gov.uk/world/organisations/british-embassy-tokyo',
+    consulates: [
+      { name: 'British Consulate-General Osaka', address: '19F Epson Osaka Building, 3-5-1 Bakuromachi, Chuo-ku, Osaka 541-0059' },
+    ],
+  },
+  'Canada': {
+    embassy: 'Embassy of Canada Tokyo',
+    address: '7-3-38 Akasaka, Minato-ku, Tokyo 107-8503',
+    phone: '03-5412-6200',
+    emergency: '+1-613-996-8885 (Ottawa, 24/7)',
+    website: 'japan.gc.ca',
+    websiteUrl: 'https://www.international.gc.ca/country-pays/japan-japon/',
+    consulates: [],
+  },
+  'Australia': {
+    embassy: 'Australian Embassy Tokyo',
+    address: '2-1-14 Mita, Minato-ku, Tokyo 108-8361',
+    phone: '03-5232-4111',
+    emergency: '+61-2-6261-3305 (Canberra, 24/7)',
+    website: 'japan.embassy.gov.au',
+    websiteUrl: 'https://japan.embassy.gov.au/',
+    consulates: [],
+  },
+  'EU Citizens': {
+    embassy: 'Delegation of the European Union to Japan',
+    address: 'Europa House, 4-6-28 Minami-Azabu, Minato-ku, Tokyo 106-0047',
+    phone: '03-5422-6001',
+    emergency: 'Contact your national embassy directly',
+    website: 'eeas.europa.eu/japan',
+    websiteUrl: 'https://www.eeas.europa.eu/japan/',
+    consulates: [],
+  },
+  'South Korea': {
+    embassy: 'Embassy of South Korea Tokyo',
+    address: '1-2-5 Minami-Azabu, Minato-ku, Tokyo 106-0047',
+    phone: '03-3452-7611',
+    emergency: '03-3452-7611',
+    website: 'overseas.mofa.go.kr/jp-ja',
+    websiteUrl: 'https://overseas.mofa.go.kr/jp-ja/',
+    consulates: [
+      { name: 'Korean Consulate-General Osaka', address: '2-3-4 Nishi-Shinsaibashi, Chuo-ku, Osaka 542-0086' },
+      { name: 'Korean Consulate-General Fukuoka', address: '1-1-3 Jigyohama, Chuo-ku, Fukuoka 810-0065' },
+    ],
+  },
+  'China': {
+    embassy: 'Embassy of China Tokyo',
+    address: '3-4-33 Moto-Azabu, Minato-ku, Tokyo 106-0046',
+    phone: '03-3403-3388',
+    emergency: '03-3403-3065',
+    website: 'jp.china-embassy.gov.cn',
+    websiteUrl: 'http://jp.china-embassy.gov.cn/',
+    consulates: [
+      { name: 'Chinese Consulate-General Osaka', address: '3-9-2 Utsubo Honmachi, Nishi-ku, Osaka 550-0004' },
+      { name: 'Chinese Consulate-General Fukuoka', address: '1-3-3 Jigyohama, Chuo-ku, Fukuoka 810-0065' },
+      { name: 'Chinese Consulate-General Sapporo', address: 'Nishi 23-chome, Minami 13-jo, Chuo-ku, Sapporo 064-0913' },
+      { name: 'Chinese Consulate-General Nagasaki', address: '10-35 Hashiguchi-machi, Nagasaki 852-8114' },
+    ],
+  },
+  'India': {
+    embassy: 'Embassy of India Tokyo',
+    address: '2-2-11 Kudan-Minami, Chiyoda-ku, Tokyo 102-0074',
+    phone: '03-3262-2391',
+    emergency: '03-3262-2391',
+    website: 'indembassy-tokyo.gov.in',
+    websiteUrl: 'https://www.indembassy-tokyo.gov.in/',
+    consulates: [
+      { name: 'Indian Consulate-General Osaka-Kobe', address: '10F Semba IS Building, 1-9-26 Minamisemba, Chuo-ku, Osaka 542-0081' },
+    ],
+  },
+}
 
 function classNames(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(' ')
@@ -28,6 +148,7 @@ function classNames(...classes: (string | boolean | undefined)[]) {
 
 export default function CountryPage() {
   const [activeTab, setActiveTab] = useState('basics')
+  const [selectedNationality, setSelectedNationality] = useState(nationalities[0])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -299,6 +420,196 @@ export default function CountryPage() {
                       </a>
                     </dd>
                   </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ============================================================
+          VISA & ENTRY TAB
+          ============================================================ */}
+      {activeTab === 'visa' && (
+        <div className="mt-8 space-y-10">
+
+          {/* VISA REQUIREMENTS — based on 138-simple-custom + 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Visa Requirements</h3>
+            <p className="mt-2 text-sm text-gray-700">Select your nationality to see visa requirements for Japan.</p>
+
+            {/* Nationality selector — based on 138-simple-custom */}
+            <div className="mt-5 max-w-xs">
+              <Listbox value={selectedNationality} onChange={setSelectedNationality}>
+                <div className="relative mt-2">
+                  <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
+                    <span className="col-start-1 row-start-1 truncate pr-6">{selectedNationality.name}</span>
+                    <ChevronUpDownIcon
+                      aria-hidden="true"
+                      className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                    />
+                  </ListboxButton>
+                  <ListboxOptions
+                    transition
+                    className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                  >
+                    {nationalities.map((nationality) => (
+                      <ListboxOption
+                        key={nationality.id}
+                        value={nationality}
+                        className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                      >
+                        <span className="block truncate font-normal group-data-selected:font-semibold">{nationality.name}</span>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                          <CheckIcon aria-hidden="true" className="size-5" />
+                        </span>
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </div>
+              </Listbox>
+            </div>
+
+            {/* Visa details for selected nationality — based on 50-left-aligned-in-card */}
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Nationality</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{selectedNationality.name}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Visa Required</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{visaData[selectedNationality.name]?.visaRequired}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Visa-Free Duration</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{visaData[selectedNationality.name]?.duration}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">eVisa Available</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{visaData[selectedNationality.name]?.eVisa}</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* ENTRY REQUIREMENTS — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Entry Requirements</h3>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Passport Validity</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Must be valid for the duration of your stay</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Return Ticket Required</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes — proof of onward or return travel may be requested</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Proof of Funds</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">May be requested at immigration</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Customs Declaration</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Required — form provided on arrival or via Visit Japan Web</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Arrival Card</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes — disembarkation card required, can be completed in advance via Visit Japan Web</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Duty-Free Allowances</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">3 bottles of alcohol (760ml each), 400 cigarettes, ¥200,000 in gifts/souvenirs</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Restricted Items</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Strict rules on medications (some OTC drugs banned), meat products, fruits, plants. Stimulant drugs including some cold medicines are prohibited.</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* GOVERNMENT RESOURCES — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Government Resources</h3>
+            <p className="mt-2 text-sm text-gray-700">Visa requirements change frequently. Always verify with official sources before travel.</p>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Official Immigration Website</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <a href="https://www.mofa.go.jp/j_info/visit/visa/index.html" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        Ministry of Foreign Affairs — Visa Information
+                      </a>
+                    </dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Visit Japan Web</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <a href="https://www.vjw.digital.go.jp/" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        vjw.digital.go.jp
+                      </a>
+                      {' '}— Pre-register customs and immigration forms online
+                    </dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Japan Customs</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <a href="https://www.customs.go.jp/english/" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        customs.go.jp
+                      </a>
+                      {' '}— Duty-free allowances and prohibited items
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* CONSULATES & EMBASSIES — based on 50-left-aligned-in-card, driven by nationality selector */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Consulates & Embassies</h3>
+            <p className="mt-2 text-sm text-gray-700">Showing embassy information for {selectedNationality.name} citizens in Japan.</p>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Embassy</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.embassy}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Address</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.address}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Phone</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.phone}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Emergency After-Hours</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.emergency}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Website</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <a href={embassyData[selectedNationality.name]?.websiteUrl} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        {embassyData[selectedNationality.name]?.website}
+                      </a>
+                    </dd>
+                  </div>
+                  {(embassyData[selectedNationality.name]?.consulates ?? []).map((consulate, index) => (
+                    <div key={index} className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">{consulate.name}</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{consulate.address}</dd>
+                    </div>
+                  ))}
                 </dl>
               </div>
             </div>
@@ -1405,6 +1716,226 @@ export default function CountryPage() {
                   </div>
                 </dl>
               </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ============================================================
+          EMERGENCY TAB
+          ============================================================ */}
+      {activeTab === 'emergency' && (
+        <div className="mt-8 space-y-10">
+
+          {/* EMERGENCY NUMBERS — based on 57-simple-in-cards */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Emergency Numbers</h3>
+            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Police</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">110</dd>
+              </div>
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Ambulance</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">119</dd>
+              </div>
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Fire</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">119</dd>
+              </div>
+            </dl>
+            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Tourist Police</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">N/A</dd>
+              </div>
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Roadside Assistance (JAF)</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">#8139</dd>
+              </div>
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Coast Guard</dt>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">118</dd>
+              </div>
+            </dl>
+          </div>
+
+          {/* CONSULATES & EMBASSIES — based on 50-left-aligned-in-card, driven by nationality selector */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Your Embassy</h3>
+            <p className="mt-2 text-sm text-gray-700">Showing embassy information for {selectedNationality.name} citizens in Japan. Change nationality in the Visa & Entry tab.</p>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Embassy</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.embassy}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Address</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.address}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Phone</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.phone}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Emergency After-Hours</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{embassyData[selectedNationality.name]?.emergency}</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Website</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <a href={embassyData[selectedNationality.name]?.websiteUrl} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        {embassyData[selectedNationality.name]?.website}
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* MAJOR HOSPITALS — based on 84-simple-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Major Hospitals</h3>
+            <p className="mt-2 text-sm text-gray-700">Hospitals in Tokyo recommended for foreign visitors.</p>
+            <div className="mt-5 flow-root">
+              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                    <table className="relative min-w-full divide-y divide-gray-300">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Hospital</th>
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">English Staff</th>
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">24hr ER</th>
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Phone</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        <tr>
+                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">St. Luke&apos;s International Hospital</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">03-3541-5151</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Tokyo Medical and Surgical Clinic</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">No</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">03-3436-3028</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">National Center for Global Health and Medicine</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">03-3202-7181</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* HEALTH — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Health</h3>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Required Vaccinations</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">None</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Recommended Vaccinations</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Routine vaccinations (MMR, tetanus). Hepatitis A and B recommended for longer stays.</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Health Insurance Required for Entry</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">No</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Travel Insurance Recommended</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes — medical costs in Japan are high for uninsured visitors. Travel insurance with medical coverage is strongly recommended.</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Tap Water</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Safe to drink throughout Japan</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Common Health Risks</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Heat exhaustion in summer (June–September), cedar pollen allergies (February–April), earthquakes year-round</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* TRAVEL ADVISORIES — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Travel Advisories</h3>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">US Travel Advisory</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      Level 1 — Exercise Normal Precautions ·{' '}
+                      <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/japan-travel-advisory.html" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        Source
+                      </a>
+                    </dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">UK Travel Advisory</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      See our information and advice before you travel ·{' '}
+                      <a href="https://www.gov.uk/foreign-travel-advice/japan" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                        Source
+                      </a>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* WHAT TO DO IF... — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">What To Do If...</h3>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Lost or Stolen Passport</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">File a police report at the nearest koban (police box). Contact your embassy for an emergency travel document. Bring a photocopy of your passport if available.</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Medical Emergency</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Call 119 for an ambulance. For non-emergency English medical assistance, call AMDA International Medical Information Center at 03-6233-9266.</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Crime Victim</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Call 110 for police. Visit the nearest koban (police box) to file a report. For English assistance, call Japan Helpline at 0570-000-911 (24/7).</dd>
+                  </div>
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">Natural Disaster</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japan has frequent earthquakes and typhoons. Download the Safety Tips app (multilingual disaster alerts). Follow NHK World for English-language updates. Register with your embassy for emergency notifications.</dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          {/* DISCLAIMER */}
+          <div>
+            <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <p className="text-sm text-gray-500">This information is for reference only. In any emergency, contact local emergency services immediately. Always verify embassy and hospital details before travel.</p>
             </div>
           </div>
 
