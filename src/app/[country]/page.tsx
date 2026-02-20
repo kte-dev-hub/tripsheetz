@@ -150,6 +150,136 @@ export default function CountryPage() {
   const [activeTab, setActiveTab] = useState('basics')
   const [selectedNationality, setSelectedNationality] = useState(nationalities[0])
 
+  // Unit converter state
+  const [tempC, setTempC] = useState('')
+  const [tempF, setTempF] = useState('')
+  const [distKm, setDistKm] = useState('')
+  const [distMi, setDistMi] = useState('')
+  const [weightKg, setWeightKg] = useState('')
+  const [weightLbs, setWeightLbs] = useState('')
+  const [volL, setVolL] = useState('')
+  const [volGal, setVolGal] = useState('')
+  const [heightCm, setHeightCm] = useState('')
+  const [heightFt, setHeightFt] = useState('')
+  const [heightIn, setHeightIn] = useState('')
+  const [speedKmh, setSpeedKmh] = useState('')
+  const [speedMph, setSpeedMph] = useState('')
+  const [areaSqm, setAreaSqm] = useState('')
+  const [areaSqft, setAreaSqft] = useState('')
+
+  // Converter handlers
+  const onTempCChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const c = e.target.value
+    setTempC(c)
+    const n = parseFloat(c)
+    setTempF(isNaN(n) ? '' : String(Math.round((n * 9 / 5 + 32) * 10) / 10))
+  }
+  const onTempFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.value
+    setTempF(f)
+    const n = parseFloat(f)
+    setTempC(isNaN(n) ? '' : String(Math.round((n - 32) * 5 / 9 * 10) / 10))
+  }
+  const onDistKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const km = e.target.value
+    setDistKm(km)
+    const n = parseFloat(km)
+    setDistMi(isNaN(n) ? '' : String(Math.round(n * 0.621371 * 100) / 100))
+  }
+  const onDistMiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const mi = e.target.value
+    setDistMi(mi)
+    const n = parseFloat(mi)
+    setDistKm(isNaN(n) ? '' : String(Math.round(n / 0.621371 * 100) / 100))
+  }
+  const onWeightKgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const kg = e.target.value
+    setWeightKg(kg)
+    const n = parseFloat(kg)
+    setWeightLbs(isNaN(n) ? '' : String(Math.round(n * 2.20462 * 10) / 10))
+  }
+  const onWeightLbsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const lbs = e.target.value
+    setWeightLbs(lbs)
+    const n = parseFloat(lbs)
+    setWeightKg(isNaN(n) ? '' : String(Math.round(n / 2.20462 * 10) / 10))
+  }
+  const onVolLChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const l = e.target.value
+    setVolL(l)
+    const n = parseFloat(l)
+    setVolGal(isNaN(n) ? '' : String(Math.round(n * 0.264172 * 100) / 100))
+  }
+  const onVolGalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const gal = e.target.value
+    setVolGal(gal)
+    const n = parseFloat(gal)
+    setVolL(isNaN(n) ? '' : String(Math.round(n / 0.264172 * 100) / 100))
+  }
+  const onHeightCmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cm = e.target.value
+    setHeightCm(cm)
+    const n = parseFloat(cm)
+    if (isNaN(n)) {
+      setHeightFt('')
+      setHeightIn('')
+    } else {
+      const totalIn = n / 2.54
+      const ft = Math.floor(totalIn / 12)
+      const inVal = Math.round((totalIn - ft * 12) * 10) / 10
+      setHeightFt(String(ft))
+      setHeightIn(String(inVal))
+    }
+  }
+  const onHeightFtChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const ft = e.target.value
+    setHeightFt(ft)
+    const f = parseFloat(ft)
+    const i = parseFloat(heightIn)
+    if (isNaN(f) && isNaN(i)) {
+      setHeightCm('')
+    } else {
+      const totalIn = (isNaN(f) ? 0 : f) * 12 + (isNaN(i) ? 0 : i)
+      setHeightCm(String(Math.round(totalIn * 2.54 * 10) / 10))
+    }
+  }
+  const onHeightInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inVal = e.target.value
+    setHeightIn(inVal)
+    const f = parseFloat(heightFt)
+    const i = parseFloat(inVal)
+    if (isNaN(f) && isNaN(i)) {
+      setHeightCm('')
+    } else {
+      const totalIn = (isNaN(f) ? 0 : f) * 12 + (isNaN(i) ? 0 : i)
+      setHeightCm(String(Math.round(totalIn * 2.54 * 10) / 10))
+    }
+  }
+  const onSpeedKmhChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setSpeedKmh(val)
+    const n = parseFloat(val)
+    setSpeedMph(isNaN(n) ? '' : String(Math.round(n * 0.621371 * 10) / 10))
+  }
+  const onSpeedMphChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setSpeedMph(val)
+    const n = parseFloat(val)
+    setSpeedKmh(isNaN(n) ? '' : String(Math.round(n * 1.60934 * 10) / 10))
+  }
+  const onAreaSqmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setAreaSqm(val)
+    const n = parseFloat(val)
+    setAreaSqft(isNaN(n) ? '' : String(Math.round(n * 10.7639 * 10) / 10))
+  }
+  const onAreaSqftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setAreaSqft(val)
+    const n = parseFloat(val)
+    setAreaSqm(isNaN(n) ? '' : String(Math.round(n * 0.092903 * 10) / 10))
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
 
@@ -1504,12 +1634,257 @@ export default function CountryPage() {
             </dl>
           </div>
 
-          {/* CONVERTERS — placeholder for Phase 4 */}
+          {/* UNIT CONVERTERS — based on 125-input-with-inline-add-on */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Unit Converters</h3>
-            <p className="mt-2 text-sm text-gray-700">Temperature, distance, weight, volume, and height converters.</p>
-            <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <p className="text-sm text-gray-500">Interactive unit converters coming soon.</p>
+            <p className="mt-2 text-sm text-gray-700">Type in either field to convert instantly. All conversions are bidirectional.</p>
+
+            <div className="mt-5 space-y-6">
+
+              {/* TEMPERATURE */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Temperature</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">°C</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={tempC}
+                        onChange={onTempCChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">°F</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="32"
+                        value={tempF}
+                        onChange={onTempFChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* DISTANCE */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Distance</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">km</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={distKm}
+                        onChange={onDistKmChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">mi</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={distMi}
+                        onChange={onDistMiChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* WEIGHT */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Weight</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">kg</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={weightKg}
+                        onChange={onWeightKgChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">lbs</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={weightLbs}
+                        onChange={onWeightLbsChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* VOLUME */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Volume</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">L</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={volL}
+                        onChange={onVolLChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">gal</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={volGal}
+                        onChange={onVolGalChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* HEIGHT */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Height</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">cm</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={heightCm}
+                        onChange={onHeightCmChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                        <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">ft</div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          placeholder="0"
+                          value={heightFt}
+                          onChange={onHeightFtChange}
+                          className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                        />
+                      </div>
+                      <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                        <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">in</div>
+                        <input
+                          type="text"
+                          inputMode="decimal"
+                          placeholder="0"
+                          value={heightIn}
+                          onChange={onHeightInChange}
+                          className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* SPEED */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Speed</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">km/h</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={speedKmh}
+                        onChange={onSpeedKmhChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">mph</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={speedMph}
+                        onChange={onSpeedMphChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* AREA */}
+              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <h4 className="text-sm font-medium text-gray-900">Area</h4>
+                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">m²</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={areaSqm}
+                        onChange={onAreaSqmChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">ft²</div>
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={areaSqft}
+                        onChange={onAreaSqftChange}
+                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
