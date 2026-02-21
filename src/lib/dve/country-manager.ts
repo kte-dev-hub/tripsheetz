@@ -31,7 +31,7 @@ Now research and verify all embassy/consulate data for ${countryName} (${country
 
   const response = await anthropic.messages.create({
     model: DVE_CONFIG.countryManagerModel,
-    max_tokens: 32000,
+    max_tokens: 24000,
     system: systemPrompt,
     tools: [
       {
