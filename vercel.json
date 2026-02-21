@@ -4,5 +4,10 @@
       "path": "/api/dve/cron",
       "schedule": "0 6 * * *"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/dve/**/*.ts": {
+      "maxDuration": 900
+    }
+  }
 }
