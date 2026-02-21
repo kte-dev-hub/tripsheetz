@@ -28,4 +28,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export const maxDuration = 300;
+export const maxDuration = 800;
