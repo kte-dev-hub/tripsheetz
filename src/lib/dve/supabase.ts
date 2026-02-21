@@ -24,7 +24,7 @@ function getSupabase() {
 export async function getNextCountriesDue(limit: number): Promise<ManagerJob[]> {
   const now = new Date().toISOString();
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_jobs')
     .select('*')
     .or(`next_scheduled_at.is.null,next_scheduled_at.lte.${now}`)
@@ -37,7 +37,7 @@ export async function getNextCountriesDue(limit: number): Promise<ManagerJob[]> 
 }
 
 export async function getCountryManager(countryCode: string): Promise<CountryManager | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('country_managers')
     .select('*')
     .eq('country_code', countryCode)
@@ -55,7 +55,7 @@ export async function getSourcesForCountry(
   countryCode: string,
   _jobType: string
 ): Promise<ManagerSource[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_sources')
     .select('*')
     .or(`country_code.eq.${countryCode}`)
@@ -66,7 +66,7 @@ export async function getSourcesForCountry(
 }
 
 export async function getAllSources(): Promise<ManagerSource[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_sources')
     .select('*')
     .order('country_code', { ascending: true })
@@ -81,7 +81,7 @@ export async function getAllSources(): Promise<ManagerSource[]> {
 // ============================================================
 
 export async function getEmbassiesForCountry(countryCode: string): Promise<Embassy[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('embassies')
     .select('*')
     .eq('country_code', countryCode)
@@ -94,7 +94,7 @@ export async function getEmbassiesForCountry(countryCode: string): Promise<Embas
 }
 
 export async function getEmbassiesByNationality(nationalityCode: string): Promise<Embassy[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('embassies')
     .select('*')
     .eq('nationality_code', nationalityCode)
@@ -115,7 +115,7 @@ export async function createRun(
   jobType: string,
   runNumber: number
 ): Promise<ManagerRun> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_runs')
     .insert({
       country_code: countryCode,
@@ -144,7 +144,7 @@ export async function completeRun(
     summary?: string;
   }
 ): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('manager_runs')
     .update({
       ...result,
@@ -184,7 +184,7 @@ export async function insertFindings(
     status: 'pending_review' as FindingStatus,
   }));
 
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_findings')
     .insert(rows)
     .select();
@@ -199,7 +199,7 @@ export async function updateFindingStatus(
   sqlScript: string | null,
   reviewNotes: string
 ): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('manager_findings')
     .update({
       status: newStatus,
@@ -217,7 +217,7 @@ export async function updateFindingStatus(
 // ============================================================
 
 export async function markJobInProgress(countryCode: string, jobType: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('manager_jobs')
     .update({
       status: 'in_progress',
@@ -244,7 +244,7 @@ export async function markJobCompleted(
     nextRun = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
   }
 
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('manager_jobs')
     .update({
       status: 'completed',
@@ -265,7 +265,7 @@ export async function markJobCompleted(
 
   if (rpcError) {
     console.warn('increment_total_runs RPC not found, using direct query');
-    await supabase
+    await getSupabase()
       .from('manager_jobs')
       .update({ total_runs: 1 })
       .eq('country_code', countryCode)
@@ -274,7 +274,7 @@ export async function markJobCompleted(
 }
 
 export async function markJobErrored(countryCode: string, jobType: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('manager_jobs')
     .update({
       status: 'error',
@@ -291,7 +291,7 @@ export async function markJobErrored(countryCode: string, jobType: string): Prom
 // ============================================================
 
 export async function getFindingsForDigest(since: string): Promise<ManagerFinding[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_findings')
     .select('*')
     .gte('created_at', since)
@@ -307,7 +307,7 @@ export async function getCrossValidationFindings(
   targetRowId: number,
   excludeCountryCode: string
 ): Promise<ManagerFinding[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_findings')
     .select('*')
     .eq('target_table', targetTable)
@@ -324,7 +324,7 @@ export async function getCrossValidationFindings(
 // ============================================================
 
 export async function getNextRunNumber(countryCode: string, jobType: string): Promise<number> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('manager_runs')
     .select('run_number')
     .eq('country_code', countryCode)
