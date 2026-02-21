@@ -82,7 +82,7 @@ How to identify honorary consulates: Government directories label them as "Honor
 For EACH existing row in the database, verify every field:
 
 1. **official_name** — Full diplomatic title from official source (e.g., "Embassy of the United States of America" not "US Embassy")
-2. **address** — Exact match to official website contact page. English, include suite/level/floor.
+2. **address** — Exact match to official website contact page. English, include suite/level/floor. KEEP floor, level, suite, and unit numbers in addresses. Addresses like "Level 19, 44 Market Street, Sydney, NSW 2000" are correct and intentional — TripSheetz includes these details so travelers can find the exact office. Do NOT strip or remove floor/level/suite/unit prefixes. Only flag an address as wrong if the street address itself is incorrect.
 3. **local_address** — Local script version. Required for JP, KR, TH destinations only. NULL for others.
 4. **phone** — International format, verified against official contact page. Format: +[country_code]-[number] with hyphens (e.g., +61-2-6270-4100)
 5. **emergency_phone** — After-hours number. NULL if not published. Do NOT guess or use main line as substitute.
