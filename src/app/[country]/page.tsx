@@ -1,11 +1,11 @@
-import { supabase } from '@/lib/supabase'
+import { getSupabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import CountrySheet from './CountrySheet'
 
 export default async function CountryPage({ params }: { params: Promise<{ country: string }> }) {
   const { country: slug } = await params
 
-  const { data: country } = await supabase
+  const { data: country } = await getSupabase()
     .from('countries')
     .select('*')
     .eq('slug', slug)
@@ -17,28 +17,28 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
 
   const countryCode = country.iso_alpha2
 
-  const { data: visaRequirements } = await supabase
+  const { data: visaRequirements } = await getSupabase()
     .from('visa_requirements')
     .select('*')
     .eq('destination_code', countryCode)
 
-  const { data: entryRequirements } = await supabase
+  const { data: entryRequirements } = await getSupabase()
     .from('entry_requirements')
     .select('*')
     .eq('country_code', countryCode)
     .single()
 
-  const { data: embassies } = await supabase
+  const { data: embassies } = await getSupabase()
     .from('embassies')
     .select('*')
     .eq('country_code', countryCode)
 
-  const { data: governmentResources } = await supabase
+  const { data: governmentResources } = await getSupabase()
     .from('government_resources')
     .select('*')
     .eq('country_code', countryCode)
 
-  const { data: allCountries } = await supabase
+  const { data: allCountries } = await getSupabase()
     .from('countries')
     .select('id, name, iso_alpha2')
 
