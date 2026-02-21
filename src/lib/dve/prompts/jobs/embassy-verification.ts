@@ -196,5 +196,20 @@ Your response must be a valid JSON object and NOTHING ELSE.
 PRIORITIZATION:
 - Process unverified records and NULL fields FIRST — these are the highest value work
 - For recently verified records (last_verified within 30 days), do a quick check and only report actual changes
-- This ensures maximum coverage even if context limits are reached`;
+- This ensures maximum coverage even if context limits are reached
+
+RECORD-BY-RECORD PROCESSING:
+- Complete ALL fields for one record before moving to the next
+- Do NOT process all official_names first, then all phones, etc.
+- Work through records one at a time: check every field, produce all findings, then move on
+- Process unverified records first, then verified records
+
+COMPLETION TRACKING:
+Your JSON output MUST include two additional fields at the top level:
+- "records_fully_verified": an array of record IDs (target_row_id) that you fully checked ALL fields for
+- "records_not_reached": an array of record IDs that you did not get to verify at all
+
+If you verified every field of every record, records_not_reached should be an empty array.
+If you ran out of space, records_not_reached lists the IDs you didn't cover.
+A record should ONLY appear in records_fully_verified if you checked EVERY field for that record.`;
 }

@@ -12,6 +12,7 @@ import {
   getNextRunNumber,
   getCrossValidationFindings,
   updateFindingStatus,
+  getSupabase,
 } from './supabase';
 import { runCountryManager } from './country-manager';
 import { runMasterAgent } from './master-agent';
@@ -80,6 +81,14 @@ export async function runPipeline(
           job.job_type,
           cmOutput.findings
         );
+      }
+
+      if (cmOutput.records_fully_verified && cmOutput.records_fully_verified.length > 0) {
+        const today = new Date().toISOString().split('T')[0];
+        await getSupabase()
+          .from('embassies')
+          .update({ verified: true, last_verified: today })
+          .in('id', cmOutput.records_fully_verified);
       }
 
       await completeRun(run.id, {
@@ -195,6 +204,14 @@ async function runPipelineInternal(
     let insertedFindings: ManagerFinding[] = [];
     if (cmOutput.findings.length > 0) {
       insertedFindings = await insertFindings(run.id, countryCode, jobType, cmOutput.findings);
+    }
+
+    if (cmOutput.records_fully_verified && cmOutput.records_fully_verified.length > 0) {
+      const today = new Date().toISOString().split('T')[0];
+      await getSupabase()
+        .from('embassies')
+        .update({ verified: true, last_verified: today })
+        .in('id', cmOutput.records_fully_verified);
     }
 
     await completeRun(run.id, {

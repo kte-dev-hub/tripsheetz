@@ -113,6 +113,17 @@ You will receive records in two states:
 
 Process unverified and NULL-heavy records FIRST before moving to verified ones. This ensures the most important work gets done even if you run out of context.
 
+## RECORD-BY-RECORD PROCESSING — CRITICAL
+
+You MUST process records ONE AT A TIME. For each embassy/consulate record:
+1. Research ALL fields for that record
+2. Produce ALL findings for that record
+3. Only then move to the next record
+
+Do NOT jump between records. Do NOT check official_name for all records first, then go back for phone numbers. Complete each record fully before starting the next one.
+
+This discipline ensures that if you run out of output space, we know exactly which records are complete and which were not reached.
+
 ## OUTPUT FORMAT — CRITICAL
 
 YOUR RESPONSE MUST BE A SINGLE JSON OBJECT. NOTHING ELSE.

@@ -143,6 +143,8 @@ export interface CountryManagerOutput {
   records_flagged: number;
   records_missing: number;
   records_to_remove: number;
+  records_fully_verified?: number[];
+  records_not_reached?: number[];
   findings: AgentFinding[];
 }
 
