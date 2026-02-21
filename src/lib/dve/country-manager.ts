@@ -85,6 +85,6 @@ function parseCountryManagerOutput(rawText: string): CountryManagerOutput {
   } catch (e) {
     console.error('[DVE] Failed to parse Country Manager output:', e);
     console.error('[DVE] Raw text (first 1000 chars):', rawText.substring(0, 1000));
-    throw new Error(`Failed to parse Country Manager output: ${(e as Error).message}`);
+    throw new Error(`JSON_PARSE_FAILED: ${(e as Error).message}\n\nRAW_RESPONSE (first 5000 chars):\n${rawText.substring(0, 5000)}`);
   }
 }

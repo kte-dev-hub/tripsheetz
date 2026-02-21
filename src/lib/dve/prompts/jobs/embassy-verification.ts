@@ -183,5 +183,18 @@ Return a single valid JSON object with this exact structure:
 }
 \`\`\`
 
-IMPORTANT: Return ONLY the JSON object. No markdown formatting, no code fences, no explanatory text before or after. Just valid JSON.`;
+IMPORTANT — READ THIS CAREFULLY:
+
+Your response must be a valid JSON object and NOTHING ELSE.
+- First character: {
+- Last character: }
+- No text before the JSON. No text after the JSON.
+- No markdown code fences. No backticks.
+- No greetings or preamble like "I'll verify..." or "Let me check..."
+- If you find zero issues, return the JSON with an empty findings array: "findings": []
+
+PRIORITIZATION:
+- Process unverified records and NULL fields FIRST — these are the highest value work
+- For recently verified records (last_verified within 30 days), do a quick check and only report actual changes
+- This ensures maximum coverage even if context limits are reached`;
 }

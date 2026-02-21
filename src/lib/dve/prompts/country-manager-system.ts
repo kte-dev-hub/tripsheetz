@@ -101,5 +101,28 @@ A good reasoning example: "Checked Japan MOFA protocol list (Tier 1, updated Jan
 
 You MUST return your findings as a single valid JSON object. No markdown, no explanation text outside the JSON. Just the JSON object.
 
-The schema is documented in the job instructions below.`;
+The schema is documented in the job instructions below.
+
+## VERIFIED vs UNVERIFIED RECORDS
+
+You will receive records in two states:
+
+- **Unverified records** (verified = false, or fields with NULL values): These are your TOP PRIORITY. Research these thoroughly using multiple sources.
+- **Recently verified records** (verified = true, last_verified within the past 30 days): These have been recently checked. Do a quick source check — if the data still matches official sources, DO NOT produce a finding for that record. Only produce a finding if something has actually changed. This keeps your output focused and efficient.
+- **Older verified records** (verified = true, last_verified more than 30 days ago): These need full re-verification, same as unverified records.
+
+Process unverified and NULL-heavy records FIRST before moving to verified ones. This ensures the most important work gets done even if you run out of context.
+
+## OUTPUT FORMAT — CRITICAL
+
+YOUR RESPONSE MUST BE A SINGLE JSON OBJECT. NOTHING ELSE.
+
+- First character of your response: {
+- Last character of your response: }
+- No greetings, no explanations, no markdown, no code fences
+- No "I'll verify..." or "Let me check..." or any other text
+- If you have zero findings, return the JSON object with an empty findings array
+- EVERY response, no matter what, is valid JSON
+
+Failure to return valid JSON means the entire run is wasted and your research is lost.`;
 }
