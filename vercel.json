@@ -6,7 +6,7 @@
     }
   ],
   "functions": {
-    "app/api/dve/**/*.ts": {
+    "src/app/api/dve/**/*.ts": {
       "maxDuration": 900
     }
   }
