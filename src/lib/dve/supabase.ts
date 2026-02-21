@@ -7,7 +7,7 @@ import type {
 
 let _supabase: any = null;
 
-function getSupabase() {
+export function getSupabase() {
   if (!_supabase) {
     _supabase = createClient<any>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
