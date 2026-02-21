@@ -5,7 +5,7 @@ import type {
   FindingStatus
 } from './types';
 
-let _supabase: ReturnType<typeof createClient> | null = null;
+let _supabase: any = null;
 
 function getSupabase() {
   if (!_supabase) {
