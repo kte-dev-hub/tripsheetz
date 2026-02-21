@@ -168,8 +168,8 @@ export interface AgentFinding {
 export interface MasterAgentReview {
   findings_reviewed: number;
   findings_approved: number;
+  findings_rejected: number;
   findings_escalated: number;
-  findings_flagged: number;
   cross_validations_performed: number;
   reviews: MasterReviewItem[];
   summary: string;
@@ -178,8 +178,10 @@ export interface MasterAgentReview {
 export interface MasterReviewItem {
   finding_id: number;
   new_status: FindingStatus;
+  recommendation: string;
   sql_script: string | null;
   review_notes: string;
+  confidence: 'high' | 'medium' | 'low';
 }
 
 // ============================================================

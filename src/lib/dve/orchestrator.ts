@@ -112,7 +112,7 @@ export async function runPipeline(
 
         const masterReview = await runMasterAgent(insertedFindings, crossValidationData);
 
-        console.log(`[DVE] Master Agent reviewed. Approved: ${masterReview.findings_approved}, Flagged: ${masterReview.findings_flagged}`);
+        console.log(`[DVE] Master Agent reviewed. Approved: ${masterReview.findings_approved}, Rejected: ${masterReview.findings_rejected}, Escalated: ${masterReview.findings_escalated}`);
 
         for (const review of masterReview.reviews) {
           await updateFindingStatus(
