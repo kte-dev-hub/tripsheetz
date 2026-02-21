@@ -5,10 +5,17 @@ import type {
   FindingStatus
 } from './types';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+let _supabase: ReturnType<typeof createClient> | null = null;
+
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+  }
+  return _supabase;
+}
 
 // ============================================================
 // READ: Country Managers
@@ -251,7 +258,7 @@ export async function markJobCompleted(
 
   if (error) throw new Error(`markJobCompleted failed: ${error.message}`);
 
-  const { error: rpcError } = await supabase.rpc('increment_total_runs', {
+  const { error: rpcError } = await getSupabase().rpc('increment_total_runs', {
     p_country_code: countryCode,
     p_job_type: jobType,
   });
