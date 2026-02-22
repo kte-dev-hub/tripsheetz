@@ -1,20 +1,22 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDownIcon, ChevronUpDownIcon } from '@heroicons/react/16/solid'
 import {
-  InformationCircleIcon,
-  IdentificationIcon,
-  BanknotesIcon,
-  SunIcon,
-  BoltIcon,
-  PaperAirplaneIcon,
-  DevicePhoneMobileIcon,
-  SwatchIcon,
-  CheckIcon,
-  ExclamationTriangleIcon,
-  MapPinIcon,
-} from '@heroicons/react/20/solid'
+  Info,
+  IdCard,
+  Banknote,
+  Sun,
+  Zap,
+  Car,
+  Smartphone,
+  Ruler,
+  Check,
+  TriangleAlert,
+  MapPin,
+  ChevronDown,
+  ChevronsUpDown,
+  ExternalLink,
+} from 'lucide-react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
 interface Country {
@@ -58,11 +60,15 @@ interface EntryRequirement {
   dutyfree_alcohol: string | null
   dutyfree_tobacco: string | null
   dutyfree_cash_limit: string | null
+  dutyfree_perfume: string | null
+  dutyfree_other: string | null
+  dutyfree_penalties: string | null
   restricted_items: string | null
   immigration_website: string | null
   customs_website: string | null
   entry_portal_name: string | null
   entry_portal_url: string | null
+  entry_portal_description: string | null
   last_verified: string | null
   verified: boolean | null
   source_urls: string[] | null
@@ -108,15 +114,15 @@ interface CountrySheetProps {
 }
 
 const tabs = [
-  { name: 'Basics', id: 'basics', icon: InformationCircleIcon },
-  { name: 'Visa & Entry', id: 'visa', icon: IdentificationIcon },
-  { name: 'Money', id: 'money', icon: BanknotesIcon },
-  { name: 'Weather', id: 'weather', icon: SunIcon },
-  { name: 'Electrical', id: 'electrical', icon: BoltIcon },
-  { name: 'Transportation', id: 'transport', icon: PaperAirplaneIcon },
-  { name: 'Communications', id: 'communications', icon: DevicePhoneMobileIcon },
-  { name: 'Units & Sizes', id: 'units', icon: SwatchIcon },
-  { name: 'Emergency', id: 'emergency', icon: ExclamationTriangleIcon },
+  { name: 'Basics', id: 'basics', icon: Info },
+  { name: 'Visa & Entry', id: 'visa', icon: IdCard },
+  { name: 'Money', id: 'money', icon: Banknote },
+  { name: 'Weather', id: 'weather', icon: Sun },
+  { name: 'Electrical', id: 'electrical', icon: Zap },
+  { name: 'Transportation', id: 'transport', icon: Car },
+  { name: 'Communications', id: 'communications', icon: Smartphone },
+  { name: 'Units & Sizes', id: 'units', icon: Ruler },
+  { name: 'Emergency', id: 'emergency', icon: TriangleAlert },
 ]
 
 function classNames(...classes: (string | boolean | undefined)[]) {
@@ -332,9 +338,9 @@ export default function CountrySheet({
               <option key={tab.name}>{tab.name}</option>
             ))}
           </select>
-          <ChevronDownIcon
+          <ChevronDown
             aria-hidden="true"
-            className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end fill-gray-500"
+            className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500"
           />
         </div>
         <div className="hidden sm:block">
@@ -572,19 +578,16 @@ export default function CountrySheet({
       {activeTab === 'visa' && (
         <div className="mt-8 space-y-10">
 
-          {/* VISA REQUIREMENTS — based on 138-simple-custom + 50-left-aligned-in-card */}
+          {/* NATIONALITY SELECTOR — standalone, controls Visa Requirements and Embassy sections */}
+          {nationalities.length > 0 && (
           <div>
-            <h3 className="text-base font-semibold text-gray-900">Visa Requirements</h3>
-            <p className="mt-2 text-sm text-gray-700">Select your nationality to see visa requirements for {country.name}.</p>
-
-            {/* Nationality selector — based on 138-simple-custom */}
-            {nationalities.length > 0 && (
-            <div className="mt-5 max-w-xs">
+            <p className="text-sm text-gray-700">Select your nationality to see visa requirements for {country.name}.</p>
+            <div className="mt-3 max-w-xs">
               <Listbox value={selectedNationality} onChange={setSelectedNationality}>
                 <div className="relative mt-2">
                   <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
                     <span className="col-start-1 row-start-1 truncate pr-6">{selectedNationality?.name}</span>
-                    <ChevronUpDownIcon
+                    <ChevronsUpDown
                       aria-hidden="true"
                       className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                     />
@@ -601,7 +604,7 @@ export default function CountrySheet({
                       >
                         <span className="block truncate font-normal group-data-selected:font-semibold">{nationality.name}</span>
                         <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                          <CheckIcon aria-hidden="true" className="size-5" />
+                          <Check aria-hidden="true" className="size-5" />
                         </span>
                       </ListboxOption>
                     ))}
@@ -609,7 +612,12 @@ export default function CountrySheet({
                 </div>
               </Listbox>
             </div>
-            )}
+          </div>
+          )}
+
+          {/* VISA REQUIREMENTS — based on 50-left-aligned-in-card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Visa Requirements</h3>
 
             {/* Visa details for selected nationality — based on 50-left-aligned-in-card */}
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
@@ -680,26 +688,94 @@ export default function CountrySheet({
                     <dt className="text-sm font-medium text-gray-900">Arrival Card</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{entryRequirements?.arrival_card_required == null ? '—' : entryRequirements.arrival_card_required ? 'Yes' : 'No'}</dd>
                   </div>
+                  {entryRequirements?.entry_portal_name && (
+                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-900">{entryRequirements.entry_portal_name}</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      {entryRequirements.entry_portal_url && (
+                        <a href={entryRequirements.entry_portal_url} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                          {(() => { try { return new URL(entryRequirements.entry_portal_url).hostname.replace('www.', '') } catch { return entryRequirements.entry_portal_url } })()}
+                          <ExternalLink className="size-3.5" aria-hidden="true" />
+                        </a>
+                      )}
+                      {entryRequirements.entry_portal_description && (
+                        <p className={entryRequirements.entry_portal_url ? "mt-1 text-gray-700" : ""}>{entryRequirements.entry_portal_description}</p>
+                      )}
+                    </dd>
+                  </div>
+                  )}
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Duty-Free Allowances</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      {[entryRequirements?.dutyfree_alcohol, entryRequirements?.dutyfree_tobacco, entryRequirements?.dutyfree_cash_limit].filter(Boolean).join(' · ') || '—'}
+                      {(entryRequirements?.dutyfree_alcohol || entryRequirements?.dutyfree_tobacco || entryRequirements?.dutyfree_perfume || entryRequirements?.dutyfree_cash_limit || entryRequirements?.dutyfree_other || entryRequirements?.dutyfree_penalties) ? (
+                        <div className="space-y-4">
+                          {entryRequirements?.dutyfree_alcohol && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Alcohol</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_alcohol}</p>
+                            </div>
+                          )}
+                          {entryRequirements?.dutyfree_tobacco && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Tobacco</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_tobacco}</p>
+                            </div>
+                          )}
+                          {entryRequirements?.dutyfree_perfume && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Perfume</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_perfume}</p>
+                            </div>
+                          )}
+                          {entryRequirements?.dutyfree_cash_limit && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Cash Declaration</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_cash_limit}</p>
+                            </div>
+                          )}
+                          {entryRequirements?.dutyfree_other && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Other</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_other}</p>
+                            </div>
+                          )}
+                          {entryRequirements?.dutyfree_penalties && (
+                            <div>
+                              <span className="font-semibold text-gray-900">Penalties</span>
+                              <p className="mt-1">{entryRequirements.dutyfree_penalties}</p>
+                            </div>
+                          )}
+                        </div>
+                      ) : '—'}
                     </dd>
                   </div>
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Restricted Items</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{entryRequirements?.restricted_items ?? '—'}</dd>
-                  </div>
-                  {entryRequirements?.entry_portal_name && entryRequirements?.entry_portal_url && (
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">{entryRequirements.entry_portal_name}</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      <a href={entryRequirements.entry_portal_url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
-                        {(() => { try { return new URL(entryRequirements.entry_portal_url).hostname.replace('www.', '') } catch { return entryRequirements.entry_portal_url } })()}
-                      </a>
+                      {entryRequirements?.restricted_items ? (
+                        entryRequirements.restricted_items.includes('||') ? (
+                          <div className="space-y-4">
+                            {entryRequirements.restricted_items.split('||').map((item, index) => {
+                              const colonIndex = item.indexOf(':')
+                              if (colonIndex > -1) {
+                                const label = item.substring(0, colonIndex).trim()
+                                const description = item.substring(colonIndex + 1).trim()
+                                return (
+                                  <div key={index}>
+                                    <span className="font-semibold text-gray-900">{label.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</span>
+                                    <p className="mt-1">{description}</p>
+                                  </div>
+                                )
+                              }
+                              return <p key={index}>{item.trim()}</p>
+                            })}
+                          </div>
+                        ) : (
+                          entryRequirements.restricted_items
+                        )
+                      ) : '—'}
                     </dd>
                   </div>
-                  )}
                 </dl>
               </div>
             </div>
@@ -719,11 +795,14 @@ export default function CountrySheet({
                       <dt className="text-sm font-medium text-gray-900">{resource.name ?? resource.category}</dt>
                       <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
                         {resource.url ? (
-                          <a href={resource.url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                          <a href={resource.url} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
                             {(() => { try { return new URL(resource.url).hostname.replace('www.', '') } catch { return resource.url } })()}
+                            <ExternalLink className="size-3.5" aria-hidden="true" />
                           </a>
                         ) : null}
-                        {resource.description && <>{resource.url ? ' — ' : ''}{resource.description}</>}
+                        {resource.description && (
+                          <p className="mt-1 text-gray-700">{resource.description}</p>
+                        )}
                       </dd>
                     </div>
                   ))}
@@ -767,7 +846,7 @@ export default function CountrySheet({
                                   className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
                                 >
                                   Google Maps
-                                  <MapPinIcon className="size-4" aria-hidden="true" />
+                                  <MapPin className="size-4" aria-hidden="true" />
                                 </a>
                               </div>
                             )}
@@ -832,7 +911,7 @@ export default function CountrySheet({
                                 className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
                               >
                                 Google Maps
-                                <MapPinIcon className="size-4" aria-hidden="true" />
+                                <MapPin className="size-4" aria-hidden="true" />
                               </a>
                             </div>
                           )}
@@ -2272,7 +2351,7 @@ export default function CountrySheet({
                                 className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
                               >
                                 Google Maps
-                                <MapPinIcon className="size-4" aria-hidden="true" />
+                                <MapPin className="size-4" aria-hidden="true" />
                               </a>
                             </div>
                           )}
