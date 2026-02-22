@@ -104,6 +104,70 @@ interface GovernmentResource {
   last_verified: string | null
 }
 
+interface Currency {
+  id: number
+  country_code: string
+  currency_name: string
+  currency_symbol: string | null
+  currency_code: string
+  banknotes: string | null
+  coins: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface PaymentMethod {
+  id: number
+  country_code: string
+  cash_vs_card: string | null
+  mobile_payment_apps: string | null
+  atm_availability: string | null
+  foreign_card_fees: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface TippingCustom {
+  id: number
+  country_code: string
+  context: string
+  expected: string
+  typical_amount: string | null
+  note: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface AverageCost {
+  id: number
+  country_code: string
+  item: string
+  cost_local: string
+  cost_usd: string
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface TaxRefund {
+  id: number
+  country_code: string
+  tax_rate: string | null
+  eligible_purchases: string | null
+  minimum_purchase: string | null
+  how_to_claim: string | null
+  where_to_claim: string | null
+  refund_method: string | null
+  time_limit: string | null
+  refund_portal_url: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
 interface CountrySheetProps {
   country: Country
   allCountries: { id: number; name: string; iso_alpha2: string }[]
@@ -111,6 +175,11 @@ interface CountrySheetProps {
   entryRequirements: EntryRequirement | null
   embassies: Embassy[]
   governmentResources: GovernmentResource[]
+  currency: Currency | null
+  paymentMethods: PaymentMethod | null
+  tippingCustoms: TippingCustom[]
+  averageCosts: AverageCost[]
+  taxRefund: TaxRefund | null
 }
 
 const tabs = [
@@ -136,6 +205,11 @@ export default function CountrySheet({
   entryRequirements,
   embassies,
   governmentResources,
+  currency,
+  paymentMethods,
+  tippingCustoms,
+  averageCosts,
+  taxRefund,
 }: CountrySheetProps) {
   const [activeTab, setActiveTab] = useState('basics')
 
@@ -827,7 +901,7 @@ export default function CountrySheet({
                     {mainEmbassy ? (
                       <>
                         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                          <dt className="text-sm font-medium text-gray-900">Embassy</dt>
+                          <dt className="text-sm font-medium text-gray-900">Embassy{mainEmbassy.city ? ` — ${mainEmbassy.city}` : ''}</dt>
                           <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mainEmbassy.official_name ?? `${selectedNationality?.name} Embassy in ${mainEmbassy.city ?? '—'}`}</dd>
                         </div>
                         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -948,24 +1022,28 @@ export default function CountrySheet({
                 <dl className="divide-y divide-gray-100">
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Currency Name</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japanese Yen</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{currency?.currency_name ?? '—'}</dd>
                   </div>
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Symbol</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">¥</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{currency?.currency_symbol ?? '—'}</dd>
                   </div>
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Currency Code</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">JPY</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{currency?.currency_code ?? '—'}</dd>
                   </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Banknotes</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">¥1,000 · ¥5,000 · ¥10,000</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Coins</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">¥1 · ¥5 · ¥10 · ¥50 · ¥100 · ¥500</dd>
-                  </div>
+                  {currency?.banknotes && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Banknotes</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{currency.banknotes}</dd>
+                    </div>
+                  )}
+                  {currency?.coins && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Coins</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{currency.coins}</dd>
+                    </div>
+                  )}
                 </dl>
               </div>
             </div>
@@ -979,180 +1057,195 @@ export default function CountrySheet({
             </div>
           </div>
 
-          {/* TIPPING — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Tipping</h3>
-            <p className="mt-2 text-sm text-gray-700">Tipping customs and expectations by context.</p>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Context
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Expected
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Amount
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Note
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Restaurant</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Can be considered rude</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Taxi</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Round up is fine but not expected</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Hotel Bellhop</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Service is included</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Housekeeping</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Not customary</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Bar</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Not customary</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Tour Guide</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Not customary</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Salon</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Not expected</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">None</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Not customary</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* PAYING — based on 50-left-aligned-in-card */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Paying</h3>
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Cash vs. Card</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japan is still heavily cash-based, especially outside major cities. Always carry cash.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Mobile Payment Apps</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">PayPay · Suica · Pasmo · Apple Pay (limited)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">ATM Availability</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Widely available. 7-Eleven and Japan Post ATMs accept foreign cards.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Foreign Card Fees</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Most ATMs charge a small fee. Many restaurants and shops are cash-only.</dd>
-                  </div>
+                  {paymentMethods?.cash_vs_card && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Cash vs. Card</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.cash_vs_card}</dd>
+                    </div>
+                  )}
+                  {paymentMethods?.mobile_payment_apps && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Mobile Payment Apps</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.mobile_payment_apps}</dd>
+                    </div>
+                  )}
+                  {paymentMethods?.atm_availability && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">ATM Availability</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.atm_availability}</dd>
+                    </div>
+                  )}
+                  {paymentMethods?.foreign_card_fees && (
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Foreign Card Fees</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.foreign_card_fees}</dd>
+                    </div>
+                  )}
                 </dl>
               </div>
             </div>
           </div>
 
-          {/* TYPICAL COSTS — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Typical Costs</h3>
-            <p className="mt-2 text-sm text-gray-700">Average prices for common items in local currency and USD.</p>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Item
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Local Price
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            USD
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Budget Meal</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥800</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$5.50</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Mid-range Meal</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥2,000</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$13.50</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Coffee</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥400</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$2.75</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Beer (domestic)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥500</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$3.50</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Bottle of Water</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥110</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$0.75</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Local Transit Ride</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">¥200</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">~$1.35</td>
-                        </tr>
-                      </tbody>
-                    </table>
+          {/* TIPPING — based on 84-simple-in-card */}
+          {tippingCustoms.length > 0 && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Tipping</h3>
+              <p className="mt-2 text-sm text-gray-700">Tipping customs and expectations by context.</p>
+              <div className="mt-5 flow-root">
+                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                      <table className="relative min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                              Context
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Expected
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Amount
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Note
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {tippingCustoms.map((tip) => (
+                            <tr key={tip.id}>
+                              <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{tip.context}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{tip.expected}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{tip.typical_amount ?? '—'}</td>
+                              <td className="px-3 py-4 text-sm text-gray-500">{tip.note ?? '—'}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* LEGAL DRINKING AGE — based on 57-simple-in-cards */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Legal Drinking Age</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Minimum Age</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">20</dd>
+          {/* TYPICAL COSTS — based on 84-simple-in-card */}
+          {averageCosts.length > 0 && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Typical Costs</h3>
+              <p className="mt-2 text-sm text-gray-700">Average prices for common items in local currency and USD.</p>
+              <div className="mt-5 flow-root">
+                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                      <table className="relative min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                              Item
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Local Price
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              USD
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {averageCosts.map((cost) => (
+                            <tr key={cost.id}>
+                              <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{cost.item}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{cost.cost_local}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{cost.cost_usd}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </dl>
-          </div>
+            </div>
+          )}
+
+          {/* TAX REFUND — based on 50-left-aligned-in-card */}
+          {taxRefund && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Tax Refund</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {taxRefund.tax_rate && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Tax Rate</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.tax_rate}</dd>
+                      </div>
+                    )}
+                    {taxRefund.eligible_purchases && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Eligible Purchases</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.eligible_purchases}</dd>
+                      </div>
+                    )}
+                    {taxRefund.minimum_purchase && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Minimum Purchase</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.minimum_purchase}</dd>
+                      </div>
+                    )}
+                    {taxRefund.how_to_claim && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">How to Claim</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.how_to_claim}</dd>
+                      </div>
+                    )}
+                    {taxRefund.where_to_claim && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Where to Claim</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.where_to_claim}</dd>
+                      </div>
+                    )}
+                    {taxRefund.refund_method && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Refund Method</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.refund_method}</dd>
+                      </div>
+                    )}
+                    {taxRefund.time_limit && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Time Limit</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.time_limit}</dd>
+                      </div>
+                    )}
+                    {taxRefund.refund_portal_url && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Official Portal</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <a
+                            href={taxRefund.refund_portal_url}
+                            className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {(() => { try { return new URL(taxRefund.refund_portal_url).hostname.replace('www.', '') } catch { return taxRefund.refund_portal_url } })()}
+                            <ExternalLink className="size-3.5" aria-hidden="true" />
+                          </a>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
       )}
@@ -2332,7 +2425,7 @@ export default function CountrySheet({
                   {mainEmbassy ? (
                     <>
                       <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-900">Embassy</dt>
+                        <dt className="text-sm font-medium text-gray-900">Embassy{mainEmbassy.city ? ` — ${mainEmbassy.city}` : ''}</dt>
                         <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mainEmbassy.official_name ?? `${selectedNationality?.name} Embassy in ${mainEmbassy.city ?? '—'}`}</dd>
                       </div>
                       <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

@@ -38,6 +38,34 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
     .select('*')
     .eq('country_code', countryCode)
 
+  const { data: currency } = await getSupabase()
+    .from('currencies')
+    .select('*')
+    .eq('country_code', countryCode)
+    .single()
+
+  const { data: paymentMethods } = await getSupabase()
+    .from('payment_methods')
+    .select('*')
+    .eq('country_code', countryCode)
+    .single()
+
+  const { data: tippingCustoms } = await getSupabase()
+    .from('tipping_customs')
+    .select('*')
+    .eq('country_code', countryCode)
+
+  const { data: averageCosts } = await getSupabase()
+    .from('average_costs')
+    .select('*')
+    .eq('country_code', countryCode)
+
+  const { data: taxRefund } = await getSupabase()
+    .from('tax_refund')
+    .select('*')
+    .eq('country_code', countryCode)
+    .single()
+
   const { data: allCountries } = await getSupabase()
     .from('countries')
     .select('id, name, iso_alpha2')
@@ -50,6 +78,11 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
       entryRequirements={entryRequirements}
       embassies={embassies ?? []}
       governmentResources={governmentResources ?? []}
+      currency={currency}
+      paymentMethods={paymentMethods}
+      tippingCustoms={tippingCustoms ?? []}
+      averageCosts={averageCosts ?? []}
+      taxRefund={taxRefund}
     />
   )
 }
