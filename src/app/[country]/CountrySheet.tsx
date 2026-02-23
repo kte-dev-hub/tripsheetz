@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Info,
   IdCard,
@@ -16,8 +16,21 @@ import {
   ChevronDown,
   ChevronsUpDown,
   ExternalLink,
+  CloudRain,
+  Cloud,
+  CloudSnow,
+  CloudLightning,
+  CloudDrizzle,
+  CloudFog,
+  Snowflake,
+  Wind,
+  Droplets,
+  Thermometer,
+  CloudSun,
+  Clock,
+  Phone,
 } from 'lucide-react'
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Label } from '@headlessui/react'
 
 interface Country {
   id: number
@@ -29,6 +42,41 @@ interface Country {
   slug: string
   region: string
   subregion: string
+  capital_city: string
+  capital_lat: number | null
+  capital_lon: number | null
+  measurement_system: string | null
+  population: string | null
+  government_type: string | null
+  languages_official: string | null
+  languages_common: string | null
+  dialing_code: string | null
+  driving_side: string | null
+  currency_name: string | null
+  currency_code: string | null
+  emergency_police: string | null
+  emergency_ambulance: string | null
+  emergency_fire: string | null
+}
+
+interface Religion {
+  id: number
+  country_code: string
+  religion_name: string
+  percentage: number
+  display_order: number
+}
+
+interface CountryTimezone {
+  id: number
+  country_code: string
+  city: string
+  timezone_id: string
+  timezone_name: string
+  timezone_abbreviation: string | null
+  utc_offset: string
+  dst_observed: boolean
+  display_order: number
 }
 
 interface VisaRequirement {
@@ -168,9 +216,213 @@ interface TaxRefund {
   source_urls: string | null
 }
 
+interface CountryElectrical {
+  id: number
+  country_code: string
+  plug_types: string
+  voltage: string
+  frequency: string
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface PlugType {
+  id: number
+  type_letter: string
+  description: string
+  svg_filename: string
+}
+
+interface ElectricalTemplate {
+  id: number
+  scenario: string
+  heading: string
+  description: string
+}
+
+interface CountryElectricalSummary {
+  country_code: string
+  plug_types: string
+  voltage: string
+  frequency: string
+}
+
+interface TaxisRidehailing {
+  id: number
+  country_code: string
+  ride_hailing_apps: string | null
+  taxi_info: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface PublicTransit {
+  id: number
+  country_code: string
+  transit_systems: string | null
+  transit_card_name: string | null
+  transit_card_where_to_buy: string | null
+  transit_contactless: string | null
+  intercity_options: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface Driving {
+  id: number
+  country_code: string
+  driving_side: string | null
+  idp_required: string | null
+  road_conditions: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface PhoneInfo {
+  id: number
+  country_code: string
+  dialing_code: string | null
+  phone_number_format: string | null
+  phone_number_length: string | null
+  how_to_dial_local: string | null
+  how_to_dial_international: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface MobileData {
+  id: number
+  country_code: string
+  major_carriers: string | null
+  esim_available: string | null
+  esim_providers: string | null
+  sim_purchase_locations: string | null
+  sim_requirements: string | null
+  network_standards: string | null
+  prepaid_plan_costs: string | null
+  wifi_rental: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface AppsAccess {
+  id: number
+  country_code: string
+  messaging_apps: string | null
+  vpn_needed: string | null
+  blocked_services: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface Airport {
+  id: number
+  country_code: string
+  city: string
+  airport_name: string
+  iata_code: string
+  distance_to_city: string
+  transport_options: string | null
+  website: string | null
+  display_order: number
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface EmergencyNumbers {
+  id: number
+  country_code: string
+  tourist_police: string | null
+  coast_guard: string | null
+  roadside_assistance: string | null
+  roadside_assistance_name: string | null
+  other_emergency_name_1: string | null
+  other_emergency_number_1: string | null
+  other_emergency_name_2: string | null
+  other_emergency_number_2: string | null
+  other_emergency_name_3: string | null
+  other_emergency_number_3: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface TravelAdvisory {
+  id: number
+  country_code: string
+  advisory_us: string | null
+  advisory_us_url: string | null
+  advisory_uk: string | null
+  advisory_uk_url: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface HealthSafety {
+  id: number
+  country_code: string
+  required_vaccinations: string | null
+  health_insurance_required: string | null
+  tap_water_safe: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface CityResult {
+  name: string
+  state?: string
+  country: string
+  lat: number
+  lon: number
+}
+
+interface CurrentWeather {
+  temp: number
+  feels_like: number
+  humidity: number
+  wind_speed: number
+  description: string
+  icon: string
+  precipitation: number
+  uvindex: number
+  cloudcover: number
+  visibility: number
+  sunrise: string
+  sunset: string
+}
+
+interface DayForecast {
+  date: string
+  high: number
+  low: number
+  description: string
+  icon: string
+  precipChance: number
+  humidity: number
+  uvindex: number
+}
+
+interface ClimateAverage {
+  month: string
+  high: number
+  low: number
+  precip: number
+  humidity: number
+}
+
 interface CountrySheetProps {
   country: Country
-  allCountries: { id: number; name: string; iso_alpha2: string }[]
+  allCountries: { id: number; name: string; iso_alpha2: string; currency_code: string | null }[]
   visaRequirements: VisaRequirement[]
   entryRequirements: EntryRequirement | null
   embassies: Embassy[]
@@ -180,22 +432,75 @@ interface CountrySheetProps {
   tippingCustoms: TippingCustom[]
   averageCosts: AverageCost[]
   taxRefund: TaxRefund | null
+  countryElectrical: CountryElectrical | null
+  plugTypes: PlugType[]
+  electricalTemplates: ElectricalTemplate[]
+  allCountryElectrical: CountryElectricalSummary[]
+  currencyReference: {
+    currency_code: string
+    currency_name: string
+    currency_symbol: string
+  }[]
+  airports: Airport[]
+  taxisRidehailing: TaxisRidehailing | null
+  publicTransit: PublicTransit | null
+  driving: Driving | null
+  phoneInfo: PhoneInfo | null
+  mobileData: MobileData | null
+  appsAccess: AppsAccess | null
+  religions: Religion[]
+  countryTimezones: CountryTimezone[]
+  emergencyNumbers: EmergencyNumbers | null
+  travelAdvisory: TravelAdvisory | null
+  healthSafety: HealthSafety | null
 }
 
 const tabs = [
-  { name: 'Basics', id: 'basics', icon: Info },
+  { name: 'Overview', id: 'basics', icon: Info },
   { name: 'Visa & Entry', id: 'visa', icon: IdCard },
   { name: 'Money', id: 'money', icon: Banknote },
   { name: 'Weather', id: 'weather', icon: Sun },
   { name: 'Electrical', id: 'electrical', icon: Zap },
   { name: 'Transportation', id: 'transport', icon: Car },
   { name: 'Communications', id: 'communications', icon: Smartphone },
-  { name: 'Units & Sizes', id: 'units', icon: Ruler },
   { name: 'Emergency', id: 'emergency', icon: TriangleAlert },
 ]
 
 function classNames(...classes: (string | boolean | undefined)[]) {
   return classes.filter(Boolean).join(' ')
+}
+
+function getWeatherIcon(iconName: string, size: string = 'size-8') {
+  const className = `${size} text-gray-700`
+  switch (iconName) {
+    case 'clear-day':
+    case 'clear-night':
+      return <Sun className={className} />
+    case 'partly-cloudy-day':
+    case 'partly-cloudy-night':
+      return <CloudSun className={className} />
+    case 'cloudy':
+      return <Cloud className={className} />
+    case 'rain':
+      return <CloudRain className={className} />
+    case 'showers-day':
+    case 'showers-night':
+      return <CloudDrizzle className={className} />
+    case 'thunder-rain':
+    case 'thunder-showers-day':
+    case 'thunder-showers-night':
+      return <CloudLightning className={className} />
+    case 'snow':
+    case 'snow-showers-day':
+    case 'snow-showers-night':
+      return <Snowflake className={className} />
+    case 'fog':
+      return <CloudFog className={className} />
+    case 'wind':
+      return <Wind className={className} />
+    default:
+      return <Sun className={className} />
+  }
 }
 
 export default function CountrySheet({
@@ -210,24 +515,153 @@ export default function CountrySheet({
   tippingCustoms,
   averageCosts,
   taxRefund,
+  countryElectrical,
+  plugTypes,
+  electricalTemplates,
+  allCountryElectrical,
+  currencyReference,
+  airports,
+  taxisRidehailing,
+  publicTransit,
+  driving,
+  phoneInfo,
+  mobileData,
+  appsAccess,
+  religions,
+  countryTimezones,
+  emergencyNumbers,
+  travelAdvisory,
+  healthSafety,
 }: CountrySheetProps) {
   const [activeTab, setActiveTab] = useState('basics')
+  // Master selector state
+  const [masterTravelingFrom, setMasterTravelingFrom] = useState<string | null>(null)
+  const [masterNationality, setMasterNationality] = useState<string | null>(null)
+  const [travelingFromQuery, setTravelingFromQuery] = useState('')
+  const [masterNationalityQuery, setMasterNationalityQuery] = useState('')
+  // Master selector country list — all countries except the destination being viewed
+  const masterCountryList = allCountries
+    .filter((c) => c.iso_alpha2.trim() !== country.iso_alpha2.trim())
+    .map((c) => ({
+      code: c.iso_alpha2.trim(),
+      name: c.name,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+  const filteredTravelingFrom = travelingFromQuery === ''
+    ? masterCountryList
+    : masterCountryList.filter((c) =>
+        c.name.toLowerCase().includes(travelingFromQuery.toLowerCase())
+      )
+  const filteredMasterNationality = masterNationalityQuery === ''
+    ? masterCountryList
+    : masterCountryList.filter((c) =>
+        c.name.toLowerCase().includes(masterNationalityQuery.toLowerCase())
+      )
+  // When "Traveling from" is selected, auto-fill Nationality to the same value
+  const handleTravelingFromChange = (countryCode: string | null) => {
+    setMasterTravelingFrom(countryCode)
+    if (countryCode && (!masterNationality || masterNationality === masterTravelingFrom)) {
+      setMasterNationality(countryCode)
+    }
+  }
+  const [currentTime, setCurrentTime] = useState(new Date())
 
-  const nationalities = visaRequirements
-    .map((vr) => {
-      const code = vr.passport_code.trim()
-      const match = allCountries.find((c) => c.iso_alpha2.trim() === code)
+  const [weatherCity, setWeatherCity] = useState<CityResult>({
+    name: country.capital_city ?? country.name,
+    country: country.iso_alpha2,
+    lat: country.capital_lat ?? 0,
+    lon: country.capital_lon ?? 0,
+  })
+  const [cityQuery, setCityQuery] = useState('')
+  const [cityResults, setCityResults] = useState<CityResult[]>([])
+  const [cityLoading, setCityLoading] = useState(false)
+
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null)
+  const [forecast, setForecast] = useState<DayForecast[]>([])
+  const [weatherLoading, setWeatherLoading] = useState(false)
+  const [weatherError, setWeatherError] = useState('')
+  const [climateAverages, setClimateAverages] = useState<ClimateAverage[]>([])
+  const [climateLoading, setClimateLoading] = useState(false)
+
+  const homeCountries = allCountryElectrical
+    .filter((ce) => ce.country_code.trim() !== country.iso_alpha2.trim())
+    .map((ce) => {
+      const match = allCountries.find((c) => c.iso_alpha2.trim() === ce.country_code.trim())
       return {
-        id: code,
-        name: match?.name ?? code,
-        code: code,
+        code: ce.country_code.trim(),
+        name: match?.name ?? ce.country_code,
+        plug_types: ce.plug_types,
+        voltage: ce.voltage,
+        frequency: ce.frequency,
       }
     })
     .sort((a, b) => a.name.localeCompare(b.name))
 
-  const [selectedNationality, setSelectedNationality] = useState(
-    nationalities.find((n) => n.code === 'US') ?? nationalities[0]
+  const [selectedHomeCountry, setSelectedHomeCountry] = useState<typeof homeCountries[0] | null>(
+    null
   )
+  const [homeCountryQuery, setHomeCountryQuery] = useState('')
+
+  const filteredHomeCountries = homeCountryQuery === ''
+    ? homeCountries
+    : homeCountries.filter((c) =>
+        c.name.toLowerCase().includes(homeCountryQuery.toLowerCase())
+      )
+
+  const [selectedAirportCity, setSelectedAirportCity] = useState<string | null>(null)
+  const [airportCityQuery, setAirportCityQuery] = useState('')
+
+  const airportCities = airports.reduce<string[]>((cities, airport) => {
+    if (!cities.includes(airport.city)) cities.push(airport.city)
+    return cities
+  }, [])
+
+  const activeAirportCity = selectedAirportCity || airportCities[0] || null
+
+  const filteredAirports = airports.filter(a => a.city === activeAirportCity)
+
+  const filteredAirportCities = airportCityQuery === ''
+    ? airportCities
+    : airportCities.filter(city =>
+        city.toLowerCase().includes(airportCityQuery.toLowerCase())
+      )
+
+  const nationalities = allCountries
+    .map((c) => ({
+      id: c.iso_alpha2.trim(),
+      name: c.name,
+      code: c.iso_alpha2.trim(),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const [selectedNationality, setSelectedNationality] = useState<typeof nationalities[0] | null>(null)
+  const [nationalityQuery, setNationalityQuery] = useState('')
+
+  const filteredNationalities = nationalityQuery === ''
+    ? nationalities
+    : nationalities.filter((n) =>
+        n.name.toLowerCase().includes(nationalityQuery.toLowerCase())
+      )
+
+  // Sync master "Nationality" to Visa & Entry tab's selectedNationality
+  useEffect(() => {
+    if (masterNationality) {
+      const match = nationalities.find((n) => n.code === masterNationality)
+      if (match) {
+        setSelectedNationality(match)
+      }
+    }
+  }, [masterNationality])
+
+  // Sync master "Traveling from" to Electrical tab's selectedHomeCountry
+  useEffect(() => {
+    if (masterTravelingFrom) {
+      const match = homeCountries.find((c) => c.code === masterTravelingFrom)
+      if (match) {
+        setSelectedHomeCountry(match)
+      }
+    }
+  }, [masterTravelingFrom])
 
   const selectedVisa = visaRequirements.find(
     (vr) => vr.passport_code.trim() === selectedNationality?.code
@@ -254,6 +688,27 @@ export default function CountrySheet({
   const [speedMph, setSpeedMph] = useState('')
   const [areaSqm, setAreaSqm] = useState('')
   const [areaSqft, setAreaSqft] = useState('')
+  const [activeConverter, setActiveConverter] = useState('temperature')
+  const converterOptions = [
+    { id: 'temperature', name: 'Temperature' },
+    { id: 'distance', name: 'Distance' },
+    { id: 'weight', name: 'Weight' },
+    { id: 'volume', name: 'Volume' },
+    { id: 'height', name: 'Height' },
+    { id: 'speed', name: 'Speed' },
+    { id: 'area', name: 'Area' },
+  ]
+  const activeConverterOption = converterOptions.find(c => c.id === activeConverter) || converterOptions[0]
+
+  // Currency converter state
+  const [localAmount, setLocalAmount] = useState<string>('1')
+  const [foreignAmount, setForeignAmount] = useState<string>('')
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('')
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number> | null>(null)
+  const [rateLastUpdated, setRateLastUpdated] = useState<string>('')
+  const [rateLoading, setRateLoading] = useState<boolean>(false)
+  const [rateError, setRateError] = useState<string>('')
+  const [currencyQuery, setCurrencyQuery] = useState('')
 
   // Converter handlers
   const onTempCChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -368,7 +823,381 @@ export default function CountrySheet({
     setAreaSqm(isNaN(n) ? '' : String(Math.round(n * 0.092903 * 10) / 10))
   }
 
+  const onHeightCmToInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cm = e.target.value
+    setHeightCm(cm)
+    const n = parseFloat(cm)
+    setHeightIn(isNaN(n) ? '' : String(Math.round(n / 2.54 * 10) / 10))
+  }
+  const onHeightInToCmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inVal = e.target.value
+    setHeightIn(inVal)
+    const n = parseFloat(inVal)
+    setHeightCm(isNaN(n) ? '' : String(Math.round(n * 2.54 * 10) / 10))
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date())
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  function formatTimeForZone(date: Date, timezoneId: string) {
+    const time24 = new Intl.DateTimeFormat('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: timezoneId,
+    }).format(date)
+
+    const time12 = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: timezoneId,
+    }).format(date)
+
+    const dateStr = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: timezoneId,
+    }).format(date)
+
+    return { time24, time12, dateStr }
+  }
+
+  // Exchange rates fetch when Money tab is active
+  useEffect(() => {
+    if (activeTab === 'money' && currency?.currency_code && !exchangeRates) {
+      setRateLoading(true)
+      setRateError('')
+      fetch(`https://open.er-api.com/v6/latest/${currency.currency_code}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.result === 'success') {
+            setExchangeRates(data.rates)
+            setRateLastUpdated(data.time_last_update_utc)
+          } else {
+            setRateError('Unable to load exchange rates.')
+          }
+        })
+        .catch(() => {
+          setRateError('Unable to load exchange rates.')
+        })
+        .finally(() => {
+          setRateLoading(false)
+        })
+    }
+  }, [activeTab, currency?.currency_code])
+
+  useEffect(() => {
+    if (cityQuery.length < 2) {
+      setCityResults([])
+      return
+    }
+    const debounceTimer = setTimeout(() => {
+      setCityLoading(true)
+      const apiKey = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY
+      if (!apiKey) {
+        setCityLoading(false)
+        return
+      }
+      fetch(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(cityQuery)}&type=city&filter=countrycode:${country.iso_alpha2.toLowerCase()}&limit=5&format=json&apiKey=${apiKey}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.results && Array.isArray(data.results)) {
+            setCityResults(
+              data.results.map((item: any) => ({
+                name: item.city || item.name || item.formatted,
+                state: item.state,
+                country: item.country_code?.toUpperCase() || country.iso_alpha2,
+                lat: item.lat,
+                lon: item.lon,
+              }))
+            )
+          }
+          setCityLoading(false)
+        })
+        .catch(() => {
+          setCityLoading(false)
+        })
+    }, 300)
+    return () => clearTimeout(debounceTimer)
+  }, [cityQuery, country.iso_alpha2])
+
+  useEffect(() => {
+    if (activeTab !== 'weather') return
+    if (!weatherCity.lat || !weatherCity.lon) return
+    const apiKey = process.env.NEXT_PUBLIC_VISUALCROSSING_API_KEY
+    if (!apiKey) {
+      setWeatherError('Weather API key not configured.')
+      return
+    }
+    setWeatherLoading(true)
+    setWeatherError('')
+    setCurrentWeather(null)
+    setForecast([])
+
+    const lat = weatherCity.lat
+    const lon = weatherCity.lon
+
+    fetch(
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=metric&include=current,days&key=${apiKey}&contentType=json`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error(`Weather API error: ${res.status}`)
+        return res.json()
+      })
+      .then((data) => {
+        if (data.currentConditions) {
+          const cc = data.currentConditions
+          setCurrentWeather({
+            temp: Math.round(cc.temp),
+            feels_like: Math.round(cc.feelslike),
+            humidity: Math.round(cc.humidity),
+            wind_speed: Math.round(cc.windspeed),
+            description: cc.conditions || '',
+            icon: cc.icon || 'clear-day',
+            precipitation: cc.precip ?? 0,
+            uvindex: cc.uvindex ?? 0,
+            cloudcover: Math.round(cc.cloudcover ?? 0),
+            visibility: Math.round(cc.visibility ?? 0),
+            sunrise: cc.sunrise ? cc.sunrise.substring(0, 5) : '',
+            sunset: cc.sunset ? cc.sunset.substring(0, 5) : '',
+          })
+        }
+
+        if (data.days && Array.isArray(data.days)) {
+          const days: DayForecast[] = data.days.slice(0, 15).map((day: any) => {
+            const date = new Date(day.datetime + 'T12:00:00')
+            return {
+              date: date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+              high: Math.round(day.tempmax),
+              low: Math.round(day.tempmin),
+              description: day.conditions || '',
+              icon: day.icon || 'clear-day',
+              precipChance: Math.round(day.precipprob ?? 0),
+              humidity: Math.round(day.humidity ?? 0),
+              uvindex: Math.round(day.uvindex ?? 0),
+            }
+          })
+          setForecast(days)
+        }
+
+        setWeatherLoading(false)
+      })
+      .catch((err) => {
+        console.error('Weather fetch error:', err)
+        setWeatherError('Unable to load weather data.')
+        setWeatherLoading(false)
+      })
+  }, [activeTab, weatherCity])
+
+  useEffect(() => {
+    if (activeTab !== 'weather') return
+    if (!weatherCity.lat || !weatherCity.lon) return
+    const apiKey = process.env.NEXT_PUBLIC_VISUALCROSSING_API_KEY
+    if (!apiKey) return
+
+    setClimateLoading(true)
+    setClimateAverages([])
+
+    const lat = weatherCity.lat
+    const lon = weatherCity.lon
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    let cancelled = false
+
+    async function fetchClimateData() {
+      const averages: ClimateAverage[] = []
+
+      for (let i = 0; i < 12; i++) {
+        if (cancelled) return
+        const month = String(i + 1).padStart(2, '0')
+        try {
+          const res = await fetch(
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}/2027-${month}-15/2027-${month}-15?unitGroup=metric&include=days&key=${apiKey}&contentType=json&elements=tempmax,tempmin,precip,humidity`
+          )
+          if (!res.ok) {
+            console.error(`Climate data error for month ${i + 1}: ${res.status}`)
+            averages.push({ month: monthNames[i], high: 0, low: 0, precip: 0, humidity: 0 })
+          } else {
+            const data = await res.json()
+            const day = data.days?.[0]
+            averages.push({
+              month: monthNames[i],
+              high: day ? Math.round(day.tempmax) : 0,
+              low: day ? Math.round(day.tempmin) : 0,
+              precip: day ? Math.round(day.precip ?? 0) : 0,
+              humidity: day ? Math.round(day.humidity ?? 0) : 0,
+            })
+          }
+          if (i < 11) {
+            await new Promise((resolve) => setTimeout(resolve, 200))
+          }
+        } catch (err) {
+          console.error(`Climate data error for month ${i + 1}:`, err)
+          averages.push({ month: monthNames[i], high: 0, low: 0, precip: 0, humidity: 0 })
+        }
+      }
+
+      if (!cancelled) {
+        setClimateAverages(averages)
+        setClimateLoading(false)
+      }
+    }
+
+    fetchClimateData()
+
+    return () => {
+      cancelled = true
+    }
+  }, [activeTab, weatherCity])
+
+  const getCurrencySymbol = (code: string): string => {
+    const ref = currencyReference.find((c) => c.currency_code === code)
+    return ref?.currency_symbol || code
+  }
+
+  const getCurrencyName = (code: string): string => {
+    const ref = currencyReference.find((c) => c.currency_code === code)
+    return ref?.currency_name || code
+  }
+
+  const availableCurrencies = exchangeRates
+    ? Object.keys(exchangeRates)
+        .filter((code) => code !== currency?.currency_code)
+        .sort()
+        .map((code) => ({
+          code,
+          name: getCurrencyName(code),
+          symbol: getCurrencySymbol(code),
+        }))
+    : []
+
+  const filteredCurrencies = currencyQuery === ''
+    ? availableCurrencies
+    : availableCurrencies.filter((c) =>
+        c.code.toLowerCase().includes(currencyQuery.toLowerCase()) ||
+        c.name.toLowerCase().includes(currencyQuery.toLowerCase())
+      )
+
+  const handleLocalAmountChange = (value: string) => {
+    setLocalAmount(value)
+    if (exchangeRates && value && !isNaN(Number(value))) {
+      const rate = exchangeRates[selectedCurrency]
+      if (rate) {
+        setForeignAmount((Number(value) * rate).toFixed(2))
+      }
+    } else {
+      setForeignAmount('')
+    }
+  }
+
+  const handleForeignAmountChange = (value: string) => {
+    setForeignAmount(value)
+    if (exchangeRates && value && !isNaN(Number(value))) {
+      const rate = exchangeRates[selectedCurrency]
+      if (rate) {
+        setLocalAmount((Number(value) / rate).toFixed(2))
+      }
+    } else {
+      setLocalAmount('')
+    }
+  }
+
+  const handleCurrencyChange = (newCurrency: string) => {
+    setSelectedCurrency(newCurrency)
+    if (exchangeRates && localAmount && !isNaN(Number(localAmount))) {
+      const rate = exchangeRates[newCurrency]
+      if (rate) {
+        setForeignAmount((Number(localAmount) * rate).toFixed(2))
+      }
+    }
+  }
+
+  // Sync master "Traveling from" to Money tab's currency converter default
+  useEffect(() => {
+    if (masterTravelingFrom && exchangeRates) {
+      const travelingFromCountry = allCountries.find(
+        (c) => c.iso_alpha2.trim() === masterTravelingFrom
+      )
+      if (travelingFromCountry?.currency_code && exchangeRates[travelingFromCountry.currency_code]) {
+        // Only set default if user hasn't manually selected a currency yet
+        if (!selectedCurrency) {
+          handleCurrencyChange(travelingFromCountry.currency_code)
+        }
+      }
+    }
+  }, [masterTravelingFrom, exchangeRates])
+
+  function getElectricalComparison() {
+    if (!countryElectrical || !selectedHomeCountry) return null
+
+    const destTypes = countryElectrical.plug_types.split(',').map((t) => t.trim())
+    const homeTypes = selectedHomeCountry.plug_types.split(',').map((t) => t.trim())
+
+    const matching = destTypes.filter((t) => homeTypes.includes(t))
+    const nonMatchingHome = homeTypes.filter((t) => !destTypes.includes(t))
+
+    let adapterScenario: string
+    if (matching.length === homeTypes.length) {
+      adapterScenario = 'adapter_not_needed'
+    } else if (matching.length > 0) {
+      adapterScenario = 'adapter_partial'
+    } else {
+      adapterScenario = 'adapter_needed'
+    }
+
+    const destV = parseInt(countryElectrical.voltage)
+    const homeV = parseInt(selectedHomeCountry.voltage)
+    const voltageSameRange =
+      (destV >= 100 && destV <= 127 && homeV >= 100 && homeV <= 127) ||
+      (destV >= 220 && destV <= 240 && homeV >= 220 && homeV <= 240)
+    const voltageScenario = voltageSameRange ? 'voltage_same' : 'voltage_different'
+
+
+    const fillTemplate = (template: string) => {
+      const homePlugTypeNames = homeTypes.map((t) => `Type ${t}`).join(', ')
+      const destPlugTypeNames = destTypes.map((t) => `Type ${t}`).join(', ')
+      const matchingTypeNames = matching.map((t) => `Type ${t}`).join(', ')
+      const nonMatchingTypeNames = nonMatchingHome.map((t) => `Type ${t}`).join(', ')
+
+      return template
+        .replace(/{home_country}/g, selectedHomeCountry.name)
+        .replace(/{destination_country}/g, country.name)
+        .replace(/{home_plug_types}/g, homePlugTypeNames)
+        .replace(/{destination_plug_types}/g, destPlugTypeNames)
+        .replace(/{matching_types}/g, matchingTypeNames)
+        .replace(/{non_matching_types}/g, nonMatchingTypeNames)
+        .replace(/{home_voltage}/g, selectedHomeCountry.voltage)
+        .replace(/{destination_voltage}/g, countryElectrical.voltage)
+    }
+
+    const adapterTemplate = electricalTemplates.find((t) => t.scenario === adapterScenario)
+    const voltageTemplate = electricalTemplates.find((t) => t.scenario === voltageScenario)
+
+    return {
+      adapter: adapterTemplate
+        ? { heading: adapterTemplate.heading, description: fillTemplate(adapterTemplate.description) }
+        : null,
+      voltage: voltageTemplate
+        ? { heading: voltageTemplate.heading, description: fillTemplate(voltageTemplate.description) }
+        : null,
+    }
+  }
+
+  const electricalComparison = getElectricalComparison()
+
   return (
+    <div className="min-h-screen bg-gray-50">
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
 
       {/* ============================================================
@@ -392,6 +1221,118 @@ export default function CountrySheet({
             </p>
           </div>
         </div>
+      </div>
+
+      {/* ============================================================
+          MASTER COUNTRY SELECTOR — persistent, controls tab-level dropdowns
+          ============================================================ */}
+      <div className="mt-6 rounded-lg bg-gray-100 px-4 py-5 sm:px-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
+          {/* Traveling From */}
+          <div className="flex-1 max-w-xs">
+            <label className="flex items-center gap-1.5 text-sm font-medium text-gray-900">
+              Traveling from
+              <span className="group relative">
+                <Info className="size-4 text-gray-400 cursor-help" aria-hidden="true" />
+                <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  The country you currently live in. Determines electrical comparisons and currency defaults.
+                </span>
+              </span>
+            </label>
+            <Combobox
+              value={masterTravelingFrom}
+              onChange={handleTravelingFromChange}
+            >
+              <div className="relative mt-1.5">
+                <ComboboxInput
+                  className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  onChange={(event) => setTravelingFromQuery(event.target.value)}
+                  onBlur={() => setTravelingFromQuery('')}
+                  displayValue={(code: string | null) =>
+                    code ? (masterCountryList.find((c) => c.code === code)?.name ?? '') : ''
+                  }
+                  placeholder="Select a country"
+                />
+                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                  <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+                </ComboboxButton>
+                <ComboboxOptions
+                  transition
+                  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                >
+                  {filteredTravelingFrom.map((c) => (
+                    <ComboboxOption
+                      key={c.code}
+                      value={c.code}
+                      className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                    >
+                      <span className="block truncate font-normal group-data-selected:font-semibold">{c.name}</span>
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                        <Check aria-hidden="true" className="size-5" />
+                      </span>
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              </div>
+            </Combobox>
+          </div>
+
+          {/* Nationality */}
+          <div className="flex-1 max-w-xs">
+            <label className="flex items-center gap-1.5 text-sm font-medium text-gray-900">
+              Nationality
+              <span className="group relative">
+                <Info className="size-4 text-gray-400 cursor-help" aria-hidden="true" />
+                <span className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-3 py-1.5 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  The country that issued your passport. Determines visa requirements and embassy information.
+                </span>
+              </span>
+            </label>
+            <Combobox
+              value={masterNationality}
+              onChange={setMasterNationality}
+            >
+              <div className="relative mt-1.5">
+                <ComboboxInput
+                  className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  onChange={(event) => setMasterNationalityQuery(event.target.value)}
+                  onBlur={() => setMasterNationalityQuery('')}
+                  displayValue={(code: string | null) =>
+                    code ? (masterCountryList.find((c) => c.code === code)?.name ?? '') : ''
+                  }
+                  placeholder="Select a country"
+                />
+                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                  <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+                </ComboboxButton>
+                <ComboboxOptions
+                  transition
+                  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                >
+                  {filteredMasterNationality.map((c) => (
+                    <ComboboxOption
+                      key={c.code}
+                      value={c.code}
+                      className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                    >
+                      <span className="block truncate font-normal group-data-selected:font-semibold">{c.name}</span>
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                        <Check aria-hidden="true" className="size-5" />
+                      </span>
+                    </ComboboxOption>
+                  ))}
+                </ComboboxOptions>
+              </div>
+            </Combobox>
+          </div>
+        </div>
+
+        {/* Meta text */}
+        <p className="mt-3 text-xs text-gray-500">
+          {masterTravelingFrom || masterNationality
+            ? 'Your selections personalize visa requirements, embassy info, electrical comparisons, and currency defaults across all tabs.'
+            : 'Select your country to personalize visa requirements, embassy info, electrical comparisons, and currency defaults across all tabs.'}
+        </p>
       </div>
 
       {/* ============================================================
@@ -458,189 +1399,322 @@ export default function CountrySheet({
       {activeTab === 'basics' && (
         <div className="mt-8 space-y-10">
 
-          {/* IDENTITY — based on 57-simple-in-cards */}
+          {/* IDENTITY — based on #59 with-shared-borders */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Identity</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Capital</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Tokyo</dd>
+            <dl className="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Capital</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.capital_city ?? '—'}</dd>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Population</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">125,700,000</dd>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Population</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.population ?? '—'}</dd>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Government</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Constitutional Monarchy</dd>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Government</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.government_type ?? '—'}</dd>
               </div>
             </dl>
           </div>
 
-          {/* LANGUAGE — based on 50-left-aligned-in-card */}
+          {/* LANGUAGE — based on #50 left-aligned-in-card */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Language</h3>
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Official Languages</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japanese</dd>
+                    <dt className="text-sm font-medium text-gray-500">Official Languages</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900 sm:col-span-2 sm:mt-0">{country.languages_official ?? '—'}</dd>
                   </div>
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Common Languages</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japanese, English (limited)</dd>
+                    <dt className="text-sm font-medium text-gray-500">Common Languages</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-900 sm:col-span-2 sm:mt-0">{country.languages_common ?? '—'}</dd>
                   </div>
                 </dl>
               </div>
             </div>
           </div>
 
-          {/* RELIGION — based on 84-simple-in-card */}
+          {/* TIME — #328 card-with-header per timezone, live clocks */}
           <div>
-            <h3 className="text-base font-semibold text-gray-900">Religion</h3>
-            <p className="mt-2 text-sm text-gray-700">Religious affiliation breakdown by percentage.</p>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Religion
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Percentage
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Shinto</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">70.4%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Buddhism</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">69.8%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Christianity</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">1.5%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Other</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">6.9%</td>
-                        </tr>
-                      </tbody>
-                    </table>
+            <h3 className="text-base font-semibold text-gray-900">Time</h3>
+            {countryTimezones.length > 0 ? (
+              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+                {countryTimezones.map((tz: CountryTimezone) => {
+                  const { time24, time12, dateStr } = formatTimeForZone(currentTime, tz.timezone_id)
+                  return (
+                    <div
+                      key={tz.id}
+                      className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm"
+                    >
+                      {/* Header */}
+                      <div className="px-4 py-4 sm:px-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-900">{tz.city}</h4>
+                            <p className="text-sm text-gray-500">
+                              {tz.timezone_name}
+                              {tz.timezone_abbreviation && ` (${tz.timezone_abbreviation})`}
+                            </p>
+                          </div>
+                          <Clock className="h-5 w-5 text-gray-400" />
+                        </div>
+                      </div>
+                      {/* Body */}
+                      <div className="px-4 py-4 sm:px-6 sm:py-4">
+                        <div className="text-center">
+                          <p className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+                            {time24}
+                          </p>
+                          <p className="mt-1 text-sm text-gray-500 tabular-nums">
+                            {time12} · {dateStr}
+                          </p>
+                        </div>
+                        <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                          <div>
+                            <dt className="text-xs font-medium text-gray-500">UTC Offset</dt>
+                            <dd className="mt-1 text-sm font-semibold text-gray-900">UTC {tz.utc_offset}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium text-gray-500">DST Observed</dt>
+                            <dd className="mt-1 text-sm font-semibold text-gray-900">{tz.dst_observed ? 'Yes' : 'No'}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : (
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                      <dt className="text-sm font-medium text-gray-900">Time Zone</dt>
+                      <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">—</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* MEASUREMENTS — System card + unit converter using #57 stat + #138 Listbox + #125 inline add-on inputs */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Measurements</h3>
+            <dl className="mt-5 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+              {/* Left: System stat — 1/3 width */}
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">System</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.measurement_system ?? '—'}</dd>
+              </div>
+
+              {/* Right: Unit converter — 2/3 width */}
+              <div className="md:col-span-2 px-4 py-5 sm:p-6">
+                <dt className="truncate text-sm font-medium text-gray-500">Unit Converter</dt>
+                {/* Single row: dropdown + left input + = + right input */}
+                <div className="mt-3 flex items-center gap-3">
+                  {/* Converter type dropdown — #138 Simple Custom Listbox */}
+                  <Listbox value={activeConverterOption} onChange={(option) => setActiveConverter(option.id)}>
+                    <div className="relative inline-block">
+                      <ListboxButton className="inline-flex items-center gap-x-2 rounded-md bg-white py-1.5 pr-3 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
+                        <span className="truncate">{activeConverterOption.name}</span>
+                        <ChevronsUpDown
+                          aria-hidden="true"
+                          className="size-4 shrink-0 text-gray-500"
+                        />
+                      </ListboxButton>
+                      <ListboxOptions
+                        transition
+                        className="absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                      >
+                        {converterOptions.map((option) => (
+                          <ListboxOption
+                            key={option.id}
+                            value={option}
+                            className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                          >
+                            <span className="block truncate font-normal group-data-selected:font-semibold">{option.name}</span>
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                              <Check aria-hidden="true" className="size-5" />
+                            </span>
+                          </ListboxOption>
+                        ))}
+                      </ListboxOptions>
+                    </div>
+                  </Listbox>
+
+                  {/* Left input — unit label on right (#125 inline add-on, reversed) */}
+                  <div className="flex-1">
+                    <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={
+                          activeConverter === 'temperature' ? tempC :
+                          activeConverter === 'distance' ? distKm :
+                          activeConverter === 'weight' ? weightKg :
+                          activeConverter === 'volume' ? volL :
+                          activeConverter === 'height' ? heightCm :
+                          activeConverter === 'speed' ? speedKmh :
+                          areaSqm
+                        }
+                        onChange={
+                          activeConverter === 'temperature' ? onTempCChange :
+                          activeConverter === 'distance' ? onDistKmChange :
+                          activeConverter === 'weight' ? onWeightKgChange :
+                          activeConverter === 'volume' ? onVolLChange :
+                          activeConverter === 'height' ? onHeightCmToInChange :
+                          activeConverter === 'speed' ? onSpeedKmhChange :
+                          onAreaSqmChange
+                        }
+                        className="block min-w-0 grow py-1.5 pl-3 pr-2 text-base font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                      <div className="shrink-0 text-sm text-gray-500 select-none">
+                        {activeConverter === 'temperature' ? '°C' :
+                         activeConverter === 'distance' ? 'km' :
+                         activeConverter === 'weight' ? 'kg' :
+                         activeConverter === 'volume' ? 'L' :
+                         activeConverter === 'height' ? 'cm' :
+                         activeConverter === 'speed' ? 'km/h' :
+                         'm²'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Equals sign */}
+                  <span className="text-lg font-semibold text-gray-400">=</span>
+
+                  {/* Right input — unit label on right (#125 inline add-on, reversed) */}
+                  <div className="flex-1">
+                    <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0"
+                        value={
+                          activeConverter === 'temperature' ? tempF :
+                          activeConverter === 'distance' ? distMi :
+                          activeConverter === 'weight' ? weightLbs :
+                          activeConverter === 'volume' ? volGal :
+                          activeConverter === 'height' ? heightIn :
+                          activeConverter === 'speed' ? speedMph :
+                          areaSqft
+                        }
+                        onChange={
+                          activeConverter === 'temperature' ? onTempFChange :
+                          activeConverter === 'distance' ? onDistMiChange :
+                          activeConverter === 'weight' ? onWeightLbsChange :
+                          activeConverter === 'volume' ? onVolGalChange :
+                          activeConverter === 'height' ? onHeightInToCmChange :
+                          activeConverter === 'speed' ? onSpeedMphChange :
+                          onAreaSqftChange
+                        }
+                        className="block min-w-0 grow py-1.5 pl-3 pr-2 text-base font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      />
+                      <div className="shrink-0 text-sm text-gray-500 select-none">
+                        {activeConverter === 'temperature' ? '°F' :
+                         activeConverter === 'distance' ? 'mi' :
+                         activeConverter === 'weight' ? 'lbs' :
+                         activeConverter === 'volume' ? 'gal' :
+                         activeConverter === 'height' ? 'in' :
+                         activeConverter === 'speed' ? 'mph' :
+                         'ft²'}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* EMERGENCY — based on 57-simple-in-cards */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Emergency Numbers</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Police</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:110" className="text-indigo-600 hover:text-indigo-500">110</a></dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Ambulance</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:119" className="text-indigo-600 hover:text-indigo-500">119</a></dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Fire</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:119" className="text-indigo-600 hover:text-indigo-500">119</a></dd>
-              </div>
             </dl>
           </div>
 
-          {/* QUICK REFERENCE — based on 57-simple-in-cards */}
+          {/* RELIGION — horizontal bar chart in #326 basic card */}
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Religion</h3>
+            <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              {religions.length > 0 ? (
+                <div className="space-y-3">
+                  {religions.map((religion: Religion, index: number) => (
+                    <div key={religion.id}>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className={`${index === 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-500'}`}>{religion.religion_name}</span>
+                        <span className={`font-semibold ${index === 0 ? 'text-2xl text-gray-900' : 'text-gray-500'}`}>{religion.percentage}%</span>
+                      </div>
+                      <div className="mt-1 h-2 w-full rounded-full bg-gray-100">
+                        <div
+                          className="h-2 rounded-full bg-indigo-600"
+                          style={{ width: `${Math.min(religion.percentage, 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No religion data available.</p>
+              )}
+            </div>
+          </div>
+
+          {/* QUICK REFERENCE — based on #57 simple-in-cards */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Quick Reference</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Dialing Code</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">+81</dd>
+            <dl className="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Dialing Code</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.dialing_code ?? '—'}</dd>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Driving Side</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Left</dd>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Driving Side</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.driving_side ?? '—'}</dd>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Currency</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">JPY (¥)</dd>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Currency</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.currency_code ?? '—'}</dd>
               </div>
             </dl>
           </div>
 
-          {/* TIME — based on 50-left-aligned-in-card */}
+          {/* EMERGENCY — based on #59 with-shared-borders */}
           <div>
-            <h3 className="text-base font-semibold text-gray-900">Time</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Time Zone</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japan Standard Time (JST)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">UTC Offset</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">UTC +9:00</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">DST Observed</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">No</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Number of Time Zones</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">1</dd>
-                  </div>
-                </dl>
+            <h3 className="text-base font-semibold text-gray-900">Emergency Numbers</h3>
+            <dl className="mt-5 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Police</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_police ? (
+                    <a href={`tel:${country.emergency_police}`} className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-500">
+                      {country.emergency_police}
+                      <Phone className="size-4" />
+                    </a>
+                  ) : '—'}
+                </dd>
               </div>
-            </div>
-          </div>
-
-          {/* TRAVEL — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Travel</h3>
-            <p className="mt-2 text-sm text-gray-700">Entry requirements and advisories.</p>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Required Vaccinations</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">None</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Health Insurance Required</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">No</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">US Travel Advisory</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      Level 1 — Exercise Normal Precautions ·{' '}
-                      <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/japan-travel-advisory.html" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
-                        Source
-                      </a>
-                    </dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">UK Travel Advisory</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      See our information and advice before you travel ·{' '}
-                      <a href="https://www.gov.uk/foreign-travel-advice/japan" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
-                        Source
-                      </a>
-                    </dd>
-                  </div>
-                </dl>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Ambulance</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_ambulance ? (
+                    <a href={`tel:${country.emergency_ambulance}`} className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-500">
+                      {country.emergency_ambulance}
+                      <Phone className="size-4" />
+                    </a>
+                  ) : '—'}
+                </dd>
               </div>
-            </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Fire</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_fire ? (
+                    <a href={`tel:${country.emergency_fire}`} className="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-500">
+                      {country.emergency_fire}
+                      <Phone className="size-4" />
+                    </a>
+                  ) : '—'}
+                </dd>
+              </div>
+            </dl>
           </div>
 
         </div>
@@ -655,23 +1729,28 @@ export default function CountrySheet({
           {/* NATIONALITY SELECTOR — standalone, controls Visa Requirements and Embassy sections */}
           {nationalities.length > 0 && (
           <div>
-            <p className="text-sm text-gray-700">Select your nationality to see visa requirements for {country.name}.</p>
+            <p className="text-sm text-gray-700">Select your nationality to see visa requirements for {country.name}.{selectedNationality && masterNationality && selectedNationality.code !== masterNationality && (
+              <span className="ml-1 text-xs text-amber-600">(Different from your master setting)</span>
+            )}</p>
             <div className="mt-3 max-w-xs">
-              <Listbox value={selectedNationality} onChange={setSelectedNationality}>
+              <Combobox value={selectedNationality} onChange={setSelectedNationality}>
                 <div className="relative mt-2">
-                  <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-white py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
-                    <span className="col-start-1 row-start-1 truncate pr-6">{selectedNationality?.name}</span>
-                    <ChevronsUpDown
-                      aria-hidden="true"
-                      className="col-start-1 row-start-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                    />
-                  </ListboxButton>
-                  <ListboxOptions
+                  <ComboboxInput
+                    className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    onChange={(event) => setNationalityQuery(event.target.value)}
+                    onBlur={() => setNationalityQuery('')}
+                    displayValue={(item: typeof nationalities[0]) => item?.name ?? ''}
+                    placeholder="Select a country"
+                  />
+                  <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                    <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+                  </ComboboxButton>
+                  <ComboboxOptions
                     transition
                     className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                   >
-                    {nationalities.map((nationality) => (
-                      <ListboxOption
+                    {filteredNationalities.map((nationality) => (
+                      <ComboboxOption
                         key={nationality.id}
                         value={nationality}
                         className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
@@ -680,16 +1759,17 @@ export default function CountrySheet({
                         <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
                           <Check aria-hidden="true" className="size-5" />
                         </span>
-                      </ListboxOption>
+                      </ComboboxOption>
                     ))}
-                  </ListboxOptions>
+                  </ComboboxOptions>
                 </div>
-              </Listbox>
+              </Combobox>
             </div>
           </div>
           )}
 
           {/* VISA REQUIREMENTS — based on 50-left-aligned-in-card */}
+          {selectedNationality && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Visa Requirements</h3>
 
@@ -739,6 +1819,7 @@ export default function CountrySheet({
               </div>
             </div>
           </div>
+          )}
 
           {/* ENTRY REQUIREMENTS — based on 50-left-aligned-in-card */}
           <div>
@@ -891,6 +1972,7 @@ export default function CountrySheet({
           </div>
 
           {/* CONSULATES & EMBASSIES — based on 50-left-aligned-in-card, driven by nationality selector */}
+          {selectedNationality && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Embassy & Consulates</h3>
             <p className="mt-2 text-sm text-gray-700">Showing embassy and consulate information for {selectedNationality?.name} citizens in {country.name}.</p>
@@ -1004,6 +2086,7 @@ export default function CountrySheet({
               )}
             </div>
           </div>
+          )}
 
         </div>
       )}
@@ -1049,11 +2132,128 @@ export default function CountrySheet({
             </div>
           </div>
 
-          {/* EXCHANGE — placeholder for live converter (Phase 4) */}
+          {/* EXCHANGE — live currency converter */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Exchange Rate</h3>
-            <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <p className="text-sm text-gray-500">Live currency converter coming soon.</p>
+            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+              <div className="border-t border-gray-100">
+                <div className="px-4 py-5 sm:p-6">
+              {!currency ? (
+                <p className="text-sm text-gray-500">Currency data not available.</p>
+              ) : rateLoading ? (
+                <p className="text-sm text-gray-500">Loading exchange rates...</p>
+              ) : rateError ? (
+                <p className="text-sm text-gray-500">{rateError}</p>
+              ) : exchangeRates ? (
+                <>
+                  {selectedCurrency && localAmount && foreignAmount ? (
+                    <div className="mb-5">
+                      <p className="text-sm text-gray-500">
+                        {localAmount} {currency.currency_name} equals
+                      </p>
+                      <p className="text-2xl font-semibold text-gray-900">
+                        {foreignAmount} {getCurrencyName(selectedCurrency)}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mb-5">
+                      <p className="text-sm text-gray-500">Convert {currency.currency_name} to another currency</p>
+                    </div>
+                  )}
+
+                  <div className="flex gap-3">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="1"
+                        value={localAmount}
+                        onChange={(e) => handleLocalAmountChange(e.target.value)}
+                        className="block w-full rounded-md bg-white py-2 px-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex h-full items-center rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-700 outline-1 -outline-offset-1 outline-gray-300">
+                        <span className="mr-2 text-base">{currency.currency_symbol}</span>
+                        <span className="truncate">{currency.currency_name}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 flex gap-3">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="0.00"
+                        value={foreignAmount}
+                        onChange={(e) => handleForeignAmountChange(e.target.value)}
+                        className="block w-full rounded-md bg-white py-2 px-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Combobox
+                        value={selectedCurrency}
+                        onChange={(val: string | null) => {
+                          if (val) handleCurrencyChange(val)
+                        }}
+                      >
+                        <div className="relative">
+                          <ComboboxInput
+                            className="block w-full rounded-md bg-white py-2 pr-10 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                            onChange={(event) => setCurrencyQuery(event.target.value)}
+                            onBlur={() => setCurrencyQuery('')}
+                            displayValue={(code: string) =>
+                              code ? `${getCurrencySymbol(code)} ${getCurrencyName(code)}` : ''
+                            }
+                            placeholder="Select currency"
+                          />
+                          <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                            <ChevronDown className="size-5 text-gray-400" aria-hidden="true" />
+                          </ComboboxButton>
+                          {filteredCurrencies.length > 0 && (
+                            <ComboboxOptions
+                              transition
+                              className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                            >
+                              {filteredCurrencies.map((c) => (
+                                <ComboboxOption
+                                  key={c.code}
+                                  value={c.code}
+                                  className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                                >
+                                  <span className="block truncate font-normal group-data-selected:font-semibold">
+                                    {c.symbol} {c.name} ({c.code})
+                                  </span>
+                                  <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                                    <Check aria-hidden="true" className="size-5" />
+                                  </span>
+                                </ComboboxOption>
+                              ))}
+                            </ComboboxOptions>
+                          )}
+                        </div>
+                      </Combobox>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs text-gray-400">
+                      Last updated: {rateLastUpdated ? new Date(rateLastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                    </span>
+                    <a
+                      href="https://www.exchangerate-api.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-indigo-600 hover:text-indigo-500"
+                    >
+                      Rates from ExchangeRate-API
+                    </a>
+                  </div>
+                </>
+              ) : null}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1256,139 +2456,198 @@ export default function CountrySheet({
       {activeTab === 'weather' && (
         <div className="mt-8 space-y-10">
 
-          {/* CITY SELECTOR — placeholder for Phase 5 */}
+          {/* CITY SELECTOR — based on 185-with-secondary-text */}
           <div>
-            <h3 className="text-base font-semibold text-gray-900">City</h3>
-            <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <p className="text-sm text-gray-500">City selector coming soon. Showing data for Tokyo.</p>
-            </div>
+            <Combobox
+              as="div"
+              value={weatherCity}
+              onChange={(city: CityResult | null) => {
+                setCityQuery('')
+                if (city) setWeatherCity(city)
+              }}
+            >
+              <Label className="text-base font-semibold text-gray-900">City</Label>
+              <p className="mt-1 text-sm text-gray-500">Search for a city to see its weather data.</p>
+              <div className="relative mt-3">
+                <ComboboxInput
+                  className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  onChange={(event) => setCityQuery(event.target.value)}
+                  onBlur={() => setCityQuery('')}
+                  displayValue={(city: CityResult) => city?.name ?? ''}
+                  placeholder={`Search cities in ${country.name}...`}
+                />
+                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                  <ChevronDown className="size-5 text-gray-400" aria-hidden="true" />
+                </ComboboxButton>
+
+                {(cityResults.length > 0 || cityLoading) && (
+                  <ComboboxOptions
+                    transition
+                    className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                  >
+                    {cityLoading && cityResults.length === 0 && (
+                      <div className="px-3 py-2 text-sm text-gray-500">Searching...</div>
+                    )}
+                    {cityResults.map((city, index) => (
+                      <ComboboxOption
+                        key={`${city.lat}-${city.lon}-${index}`}
+                        value={city}
+                        className="cursor-default px-3 py-2 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                      >
+                        <div className="flex">
+                          <span className="block truncate">{city.name}</span>
+                          {city.state && (
+                            <span className="ml-2 block truncate text-gray-500 in-data-focus:text-white">
+                              {city.state}
+                            </span>
+                          )}
+                        </div>
+                      </ComboboxOption>
+                    ))}
+                  </ComboboxOptions>
+                )}
+              </div>
+            </Combobox>
           </div>
 
-          {/* CURRENT CONDITIONS — based on 57-simple-in-cards */}
+          {/* CURRENT CONDITIONS — based on 328-card-with-header + 59-with-shared-borders */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Current Conditions</h3>
-            <p className="mt-2 text-sm text-gray-700">Live weather data for Tokyo. Updates via API.</p>
-            <dl className="mt-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Temperature</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">12°C</dd>
+            <p className="mt-2 text-sm text-gray-700">Live weather data for {weatherCity.name}.</p>
+
+            {weatherLoading && !currentWeather && (
+              <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <p className="text-sm text-gray-500">Loading weather data...</p>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Feels Like</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">9°C</dd>
+            )}
+
+            {weatherError && (
+              <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <p className="text-sm text-red-600">{weatherError}</p>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Humidity</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">55%</dd>
+            )}
+
+            {currentWeather && (
+              <div className="mt-5 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+                <div className="px-4 py-5 sm:px-6">
+                  <div className="flex items-center gap-4">
+                    {getWeatherIcon(currentWeather.icon, 'size-12')}
+                    <div>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl font-semibold tracking-tight text-gray-900">
+                          {currentWeather.temp}°C
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          Feels like {currentWeather.feels_like}°C
+                        </span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-700 capitalize">
+                        {currentWeather.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <dl className="grid grid-cols-2 divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">Humidity</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.humidity}%</dd>
+                  </div>
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">Wind</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.wind_speed} km/h</dd>
+                  </div>
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">Precipitation</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.precipitation} mm</dd>
+                  </div>
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">UV Index</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.uvindex}</dd>
+                  </div>
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">Cloud Cover</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.cloudcover}%</dd>
+                  </div>
+                  <div className="px-4 py-5 sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">Visibility</dt>
+                    <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.visibility} km</dd>
+                  </div>
+                </dl>
+                <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
+                  <p className="text-sm text-gray-500">
+                    Sunrise {currentWeather.sunrise} · Sunset {currentWeather.sunset}
+                  </p>
+                </div>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Wind</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">12 km/h</dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Precipitation</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">0 mm</dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">UV Index</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">3</dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Air Quality</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Good</dd>
-              </div>
-            </dl>
+            )}
           </div>
 
-          {/* 7-DAY FORECAST — based on 84-simple-in-card */}
+          {/* 15-DAY FORECAST — based on 84-simple-in-card */}
           <div>
-            <h3 className="text-base font-semibold text-gray-900">7-Day Forecast</h3>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Day
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            High
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Low
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Conditions
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Precip %
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Monday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">6°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Partly Cloudy</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">10%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Tuesday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">12°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Sunny</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Wednesday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">11°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">4°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Cloudy</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">20%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Thursday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">13°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Rain</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">70%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Friday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">15°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">7°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Sunny</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Saturday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">16°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">8°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Partly Cloudy</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">15%</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Sunday</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">6°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Sunny</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5%</td>
-                        </tr>
-                      </tbody>
-                    </table>
+            <h3 className="text-base font-semibold text-gray-900">15-Day Forecast</h3>
+
+            {weatherLoading && forecast.length === 0 && (
+              <div className="mt-5 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                <p className="text-sm text-gray-500">Loading forecast...</p>
+              </div>
+            )}
+
+            {forecast.length > 0 && (
+              <div className="mt-5 flow-root">
+                <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                      <table className="relative min-w-full divide-y divide-gray-300">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                              Day
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              High
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Low
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Conditions
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Precip %
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              Humidity
+                            </th>
+                            <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                              UV
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {forecast.map((day, index) => (
+                            <tr key={index}>
+                              <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{day.date}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.high}°C</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.low}°C</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.description}</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.precipChance}%</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.humidity}%</td>
+                              <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.uvindex}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* CLIMATE AVERAGES — based on 84-simple-in-card */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Climate Averages</h3>
-            <p className="mt-2 text-sm text-gray-700">Monthly averages for Tokyo.</p>
+            <p className="mt-2 text-sm text-gray-700">Monthly averages for {weatherCity.name}.</p>
             <div className="mt-5 flow-root">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -1411,123 +2670,23 @@ export default function CountrySheet({
                           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                             Humidity
                           </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Sunny Days
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Note
-                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Jan</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">10°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">1°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">52</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">52%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">19</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Dry and cold</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Feb</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">11°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">2°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">56</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">53%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">17</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Dry and cold</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Mar</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">4°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">117</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">58%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">16</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Cherry blossom season begins</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Apr</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">19°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">9°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">125</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">62%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">15</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Peak cherry blossom</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">May</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">23°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">138</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">65%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">15</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Warm and pleasant</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Jun</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">26°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">18°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">168</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">75%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">11</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Rainy season (tsuyu)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Jul</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">30°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">22°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">154</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">77%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">13</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Hot and humid</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Aug</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">31°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">23°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">168</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">73%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Peak typhoon season</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Sep</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">27°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">19°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">210</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">73%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">12</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Typhoon season continues</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Oct</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">22°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">198</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">68%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">14</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Autumn foliage begins</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Nov</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">17°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">8°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">93</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">63%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">16</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Peak autumn foliage</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Dec</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">12°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">3°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">51</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">56%</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">18</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Dry and cold</td>
-                        </tr>
+                        {climateLoading && climateAverages.length === 0 && (
+                          <tr>
+                            <td colSpan={5} className="px-3 py-4 text-sm text-gray-500 text-center">Loading climate data...</td>
+                          </tr>
+                        )}
+                        {climateAverages.map((avg, index) => (
+                          <tr key={index}>
+                            <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{avg.month}</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.high}°C</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.low}°C</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.precip}</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.humidity}%</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -1536,62 +2695,13 @@ export default function CountrySheet({
             </div>
           </div>
 
-          {/* SEASONS — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Seasons</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Rainy Season</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Early June to mid-July (tsuyu)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Typhoon Season</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">August to October</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Snow Season</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">December to March (northern regions and mountains)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Best Months to Visit</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">March–May (spring) and October–November (autumn)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Worst Months to Visit</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Late June–August (hot, humid, rainy, typhoons)</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
-
-          {/* PACKING GUIDANCE — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Packing Guidance</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Temperature</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Layers recommended. Cold winters, hot summers.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Rain</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Compact umbrella essential, especially June–September.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">UV Protection</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Sunscreen recommended May–September. UV index can reach 8+.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Humidity</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">High humidity June–September. Expect to sweat outdoors. Light, breathable fabrics recommended.</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
+          <div className="mt-4">
+            <p className="text-xs text-gray-400">
+              Weather data provided by{' '}
+              <a href="https://www.visualcrossing.com/" className="text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+                Visual Crossing
+              </a>
+            </p>
           </div>
 
         </div>
@@ -1600,204 +2710,331 @@ export default function CountrySheet({
         <div className="mt-8 space-y-10">
 
           {/* PLUG TYPES — based on 107-images-with-details */}
+          {countryElectrical && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Plug Types</h3>
-            <ul role="list" className="mt-5 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-              <li className="relative">
-                <div className="group overflow-hidden rounded-lg bg-gray-100 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-600">
-                  <img
-                    alt="Type A plug diagram"
-                    src="https://www.worldstandards.eu/WordPress/wp-content/uploads/electricity-type-A-plug-300x300.jpg"
-                    className="pointer-events-none aspect-10/7 rounded-lg object-cover outline -outline-offset-1 outline-black/5 group-hover:opacity-75"
-                  />
-                </div>
-                <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
-                  Type A
-                </p>
-                <p className="pointer-events-none block text-sm font-medium text-gray-500">Two flat parallel pins</p>
-              </li>
-              <li className="relative">
-                <div className="group overflow-hidden rounded-lg bg-gray-100 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-600">
-                  <img
-                    alt="Type B plug diagram"
-                    src="https://www.worldstandards.eu/WordPress/wp-content/uploads/electricity-type-B-plug-300x300.jpg"
-                    className="pointer-events-none aspect-10/7 rounded-lg object-cover outline -outline-offset-1 outline-black/5 group-hover:opacity-75"
-                  />
-                </div>
-                <p className="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
-                  Type B
-                </p>
-                <p className="pointer-events-none block text-sm font-medium text-gray-500">Two flat parallel pins + grounding pin</p>
-              </li>
+            <ul role="list" className="mt-5 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-x-6 lg:grid-cols-5 xl:gap-x-8">
+              {countryElectrical.plug_types.split(',').map((typeCode) => {
+                const trimmed = typeCode.trim()
+                const plugType = plugTypes.find((p) => p.type_letter.trim() === trimmed)
+                if (!plugType) return null
+                return (
+                  <li key={trimmed} className="relative">
+                    <div className="group overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center p-3" style={{ aspectRatio: '1' }}>
+                      <img
+                        alt={`Type ${plugType.type_letter.trim()} plug diagram`}
+                        src={`/plugs/${plugType.svg_filename}`}
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <p className="mt-2 block truncate text-sm font-medium text-gray-900">
+                      Type {plugType.type_letter.trim()}
+                    </p>
+                    <p className="block text-sm font-medium text-gray-500">{plugType.description}</p>
+                  </li>
+                )
+              })}
             </ul>
           </div>
+          )}
 
           {/* POWER — based on 57-simple-in-cards */}
+          {countryElectrical && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Power</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            <dl className="mt-5 grid grid-cols-4 gap-5">
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Voltage</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">100V</dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{countryElectrical.voltage}</dd>
               </div>
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Frequency</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">50/60Hz</dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{countryElectrical.frequency}</dd>
               </div>
             </dl>
           </div>
+          )}
 
           {/* WHAT YOU NEED — based on 50-left-aligned-in-card */}
+          {countryElectrical && homeCountries.length > 0 && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">What You Need</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+            <p className="mt-2 text-sm text-gray-700">Select your home country to see if you need an adapter or voltage converter for {country.name}.{selectedHomeCountry && masterTravelingFrom && selectedHomeCountry.code !== masterTravelingFrom && (
+              <span className="ml-1 text-xs text-amber-600">(Different from your master setting)</span>
+            )}</p>
+            <div className="mt-3 mb-5 max-w-xs">
+              <Combobox value={selectedHomeCountry} onChange={setSelectedHomeCountry}>
+                <div className="relative mt-2">
+                  <ComboboxInput
+                    className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    onChange={(event) => setHomeCountryQuery(event.target.value)}
+                    onBlur={() => setHomeCountryQuery('')}
+                    displayValue={(item: typeof homeCountries[0]) => item?.name ?? ''}
+                    placeholder="Select a country"
+                  />
+                  <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                    <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+                  </ComboboxButton>
+                  <ComboboxOptions
+                    transition
+                    className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                  >
+                    {filteredHomeCountries.map((hc) => (
+                      <ComboboxOption
+                        key={hc.code}
+                        value={hc}
+                        className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                      >
+                        <span className="block truncate font-normal group-data-selected:font-semibold">{hc.name}</span>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                          <Check aria-hidden="true" className="size-5" />
+                        </span>
+                      </ComboboxOption>
+                    ))}
+                  </ComboboxOptions>
+                </div>
+              </Combobox>
+            </div>
+            {electricalComparison && (
+            <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
+                  {electricalComparison.adapter && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Adapter Needed</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Depends on home country. US plugs fit without adapter. UK/EU plugs require adapter.</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <span className="font-semibold">{electricalComparison.adapter.heading}</span>
+                      <span> — </span>
+                      {electricalComparison.adapter.description}
+                    </dd>
                   </div>
+                  )}
+                  {electricalComparison.voltage && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Voltage Converter Needed</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Most modern electronics (phones, laptops) are dual-voltage (100–240V) and work fine. Check your device label. Hair dryers and curling irons may need a converter.</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                      <span className="font-semibold">{electricalComparison.voltage.heading}</span>
+                      <span> — </span>
+                      {electricalComparison.voltage.description}
+                    </dd>
                   </div>
+                  )}
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Adapter Recommendation</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Universal travel adapter with Type A support</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">USB Charging</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Widespread. Hotels, cafes, trains, and airports commonly have USB ports.</dd>
+                    <dt className="text-sm font-medium text-gray-900">Tip</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Contact your hotel or accommodation in advance to ask about available adapters, voltage converters, and outlet types in your room. Many hotels provide adapters upon request or have universal outlets installed.</dd>
                   </div>
                 </dl>
               </div>
             </div>
+            )}
           </div>
+          )}
 
         </div>
       )}
       {activeTab === 'transport' && (
         <div className="mt-8 space-y-10">
 
-          {/* AIRPORTS — based on 84-simple-in-card */}
+          {/* AIRPORTS */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Airports</h3>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                            Airport
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            IATA
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Distance to City
-                          </th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Transport Options
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Narita International</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">NRT</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">60 km to Tokyo</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Narita Express (¥3,070, 60 min) · Limousine Bus (¥3,200, 85 min) · Skyliner (¥2,520, 36 min to Ueno)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Haneda International</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">HND</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">15 km to Tokyo</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Tokyo Monorail (¥500, 18 min) · Keikyu Line (¥300, 20 min) · Limousine Bus · Taxi (~¥6,000)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Kansai International</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">KIX</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">50 km to Osaka</td>
-                          <td className="px-3 py-4 text-sm text-gray-500">Haruka Express (¥2,910, 50 min) · Nankai Rapi:t (¥1,450, 38 min) · Limousine Bus</td>
-                        </tr>
-                      </tbody>
-                    </table>
+
+            {airports.length > 0 ? (
+              <>
+                <p className="mt-1 text-sm text-gray-500">
+                  Select a city to see international airports for {country.name}.
+                </p>
+                {airportCities.length > 1 && (
+                  <div className="mt-3 max-w-xs">
+                    <Combobox
+                      value={activeAirportCity}
+                      onChange={(val: string | null) => {
+                        if (val) setSelectedAirportCity(val)
+                      }}
+                    >
+                      <div className="relative">
+                        <ComboboxInput
+                          className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                          onChange={(event) => setAirportCityQuery(event.target.value)}
+                          onBlur={() => setAirportCityQuery('')}
+                          displayValue={(city: string) => city || ''}
+                          placeholder="Select a city"
+                        />
+                        <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+                          <ChevronDown className="size-5 text-gray-400" aria-hidden="true" />
+                        </ComboboxButton>
+                        {filteredAirportCities.length > 0 && (
+                          <ComboboxOptions
+                            transition
+                            className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                          >
+                            {filteredAirportCities.map((city) => (
+                              <ComboboxOption
+                                key={city}
+                                value={city}
+                                className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                              >
+                                <span className="block truncate font-normal group-data-selected:font-semibold">
+                                  {city}
+                                </span>
+                                <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                                  <Check aria-hidden="true" className="size-5" />
+                                </span>
+                              </ComboboxOption>
+                            ))}
+                          </ComboboxOptions>
+                        )}
+                      </div>
+                    </Combobox>
                   </div>
+                )}
+
+                <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+                  {filteredAirports.map((airport) => (
+                    <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+                      <div className="px-4 py-5 sm:px-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-base font-semibold text-gray-900">{airport.airport_name}</h4>
+                            {airport.website && (
+                              <a
+                                href={airport.website}
+                                className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {new URL(airport.website).hostname.replace('www.', '')}
+                                <ExternalLink className="size-3.5" aria-hidden="true" />
+                              </a>
+                            )}
+                          </div>
+                          <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
+                        </div>
+                      </div>
+                      <div className="px-4 py-5 sm:p-6">
+                        <p className="text-sm text-gray-500">{airport.distance_to_city}</p>
+                        {airport.transport_options && (
+                          <>
+                            <h5 className="mt-4 text-sm font-medium text-gray-900">Getting to the city</h5>
+                            <ul className="mt-2 space-y-1.5 text-sm text-gray-700">
+                              {airport.transport_options.split(' · ').map((option, i) => (
+                                <li key={i}>• {option}</li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            </div>
+              </>
+            ) : (
+              <p className="mt-2 text-sm text-gray-500">Airport data not available.</p>
+            )}
           </div>
 
           {/* TAXIS & RIDE-HAILING — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Taxis & Ride-Hailing</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Ride-Hailing Apps</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">GO Taxi · Uber (limited, mainly Tokyo) · DiDi · S.Ride</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Taxi Availability</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Widely available in cities. Flag down on the street or find at taxi stands. Doors open and close automatically.</dd>
-                  </div>
-                </dl>
+          {taxisRidehailing && (taxisRidehailing.ride_hailing_apps || taxisRidehailing.taxi_info) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Taxis & Ride-Hailing</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {taxisRidehailing.ride_hailing_apps && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Ride-Hailing Apps</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxisRidehailing.ride_hailing_apps}</dd>
+                      </div>
+                    )}
+                    {taxisRidehailing.taxi_info && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Taxi Availability</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{taxisRidehailing.taxi_info}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* PUBLIC TRANSPORTATION — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Public Transportation</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Transit Systems</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Subway/Metro · JR Lines · Private Railways · Bus · Tram (select cities) · Ferry</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Transit Card</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Suica · Pasmo · ICOCA</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Where to Buy</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Station ticket machines, staffed ticket counters, or add to Apple Wallet (Suica)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Contactless Payment</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes. IC cards accepted on virtually all trains and buses.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Intercity Options</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Shinkansen (bullet train) · Highway buses · Domestic flights (ANA, JAL, Peach, Jetstar Japan)</dd>
-                  </div>
-                </dl>
+          {publicTransit && (publicTransit.transit_systems || publicTransit.transit_card_name || publicTransit.intercity_options) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Public Transportation</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {publicTransit.transit_systems && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Transit Systems</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_systems}</dd>
+                      </div>
+                    )}
+                    {publicTransit.transit_card_name && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Transit Card</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_card_name}</dd>
+                      </div>
+                    )}
+                    {publicTransit.transit_card_where_to_buy && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Where to Buy</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_card_where_to_buy}</dd>
+                      </div>
+                    )}
+                    {publicTransit.transit_contactless && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Contactless Payment</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_contactless}</dd>
+                      </div>
+                    )}
+                    {publicTransit.intercity_options && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Intercity Options</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.intercity_options}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* DRIVING — based on 57-simple-in-cards */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Driving</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Drives On</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Left</dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">IDP Required</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Yes</dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Road Conditions</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Excellent</dd>
-              </div>
-            </dl>
-          </div>
+          {driving && (driving.driving_side || driving.idp_required || driving.road_conditions) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Driving</h3>
+              <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                {driving.driving_side && (
+                  <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                    <dt className="truncate text-sm font-medium text-gray-500">Drives On</dt>
+                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{driving.driving_side}</dd>
+                  </div>
+                )}
+                {driving.idp_required && (
+                  <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                    <dt className="text-sm font-medium text-gray-500">International Driving Permit (IDP) Required</dt>
+                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{driving.idp_required}</dd>
+                  </div>
+                )}
+                {driving.road_conditions && (() => {
+                  const firstDot = driving.road_conditions.indexOf('. ')
+                  const headline = firstDot !== -1 ? driving.road_conditions.substring(0, firstDot) : driving.road_conditions
+                  const description = firstDot !== -1 ? driving.road_conditions.substring(firstDot + 2) : null
+                  return (
+                    <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                      <dt className="text-sm font-medium text-gray-500">Road Conditions</dt>
+                      <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{headline}</dd>
+                      {description && (
+                        <p className="mt-2 text-sm text-gray-500">{description}</p>
+                      )}
+                    </div>
+                  )
+                })()}
+              </dl>
+            </div>
+          )}
 
         </div>
       )}
@@ -1805,620 +3042,250 @@ export default function CountrySheet({
         <div className="mt-8 space-y-10">
 
           {/* PHONE — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Phone</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Country Dialing Code</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">+81</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Phone Number Format</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">0X-XXXX-XXXX (landline) · 0X0-XXXX-XXXX (mobile)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Phone Number Length</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">10–11 digits</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">How to Dial Locally</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Dial the full number including area code (e.g., 03-XXXX-XXXX for Tokyo)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">How to Dial Internationally</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">+81 + area code (drop leading 0) + number (e.g., +81 3-XXXX-XXXX)</dd>
-                  </div>
-                </dl>
+          {phoneInfo && (phoneInfo.dialing_code || phoneInfo.phone_number_format || phoneInfo.how_to_dial_local) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Phone</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {phoneInfo.dialing_code && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Country Dialing Code</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{phoneInfo.dialing_code}</dd>
+                      </div>
+                    )}
+                    {phoneInfo.phone_number_format && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Phone Number Format</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{phoneInfo.phone_number_format}</dd>
+                      </div>
+                    )}
+                    {phoneInfo.phone_number_length && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Phone Number Length</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{phoneInfo.phone_number_length}</dd>
+                      </div>
+                    )}
+                    {phoneInfo.how_to_dial_local && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">How to Dial Locally</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{phoneInfo.how_to_dial_local}</dd>
+                      </div>
+                    )}
+                    {phoneInfo.how_to_dial_international && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">How to Dial Internationally</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{phoneInfo.how_to_dial_international}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* MOBILE DATA — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Mobile Data</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Major Carriers</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">NTT Docomo · au (KDDI) · SoftBank · Rakuten Mobile</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">eSIM Available</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">eSIM Providers</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Airalo · Ubigi · Holafly · Mobal</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">SIM Card Purchase</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Airport kiosks (Narita, Haneda, Kansai) · Electronics stores (Bic Camera, Yodobashi) · Convenience stores</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">SIM Requirements</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Passport required for purchase</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Network Standards</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">4G LTE nationwide · 5G expanding in major cities</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Prepaid Plan Cost</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">~¥3,000–5,000 for 7–30 days with 3–10 GB data</dd>
-                  </div>
-                </dl>
+          {mobileData && (mobileData.major_carriers || mobileData.esim_available || mobileData.sim_purchase_locations) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Mobile Data</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {mobileData.major_carriers && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Major Carriers</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.major_carriers}</dd>
+                      </div>
+                    )}
+                    {mobileData.esim_available && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">eSIM Available</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.esim_available}</dd>
+                      </div>
+                    )}
+                    {mobileData.esim_providers && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">eSIM Providers</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.esim_providers}</dd>
+                      </div>
+                    )}
+                    {mobileData.sim_purchase_locations && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">SIM Card Purchase</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.sim_purchase_locations}</dd>
+                      </div>
+                    )}
+                    {mobileData.sim_requirements && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">SIM Requirements</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.sim_requirements}</dd>
+                      </div>
+                    )}
+                    {mobileData.network_standards && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Network Standards</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.network_standards}</dd>
+                      </div>
+                    )}
+                    {mobileData.prepaid_plan_costs && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Prepaid Plan Cost</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.prepaid_plan_costs}</dd>
+                      </div>
+                    )}
+                    {mobileData.wifi_rental && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Pocket WiFi Rental</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.wifi_rental}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* APPS & ACCESS — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Apps & Access</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Popular Messaging Apps</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">LINE (dominant) · WhatsApp (used by foreigners) · iMessage</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">VPN Needed</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">No</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Blocked Services</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">None. All major services (Google, Facebook, Instagram, YouTube, etc.) are accessible.</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      )}
-      {activeTab === 'units' && (
-        <div className="mt-8 space-y-10">
-
-          {/* MEASUREMENT SYSTEM — based on 57-simple-in-cards */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Measurement System</h3>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">System</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">Metric</dd>
-              </div>
-            </dl>
-          </div>
-
-          {/* UNIT CONVERTERS — based on 125-input-with-inline-add-on */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Unit Converters</h3>
-            <p className="mt-2 text-sm text-gray-700">Type in either field to convert instantly. All conversions are bidirectional.</p>
-
-            <div className="mt-5 space-y-6">
-
-              {/* TEMPERATURE */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Temperature</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">°C</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={tempC}
-                        onChange={onTempCChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">°F</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="32"
-                        value={tempF}
-                        onChange={onTempFChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* DISTANCE */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Distance</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">km</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={distKm}
-                        onChange={onDistKmChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">mi</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={distMi}
-                        onChange={onDistMiChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* WEIGHT */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Weight</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">kg</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={weightKg}
-                        onChange={onWeightKgChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">lbs</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={weightLbs}
-                        onChange={onWeightLbsChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* VOLUME */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Volume</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">L</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={volL}
-                        onChange={onVolLChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">gal</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={volGal}
-                        onChange={onVolGalChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* HEIGHT */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Height</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">cm</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={heightCm}
-                        onChange={onHeightCmChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                        <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">ft</div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          placeholder="0"
-                          value={heightFt}
-                          onChange={onHeightFtChange}
-                          className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                        />
+          {appsAccess && (appsAccess.messaging_apps || appsAccess.vpn_needed || appsAccess.blocked_services) && (
+            <div>
+              <h3 className="text-base font-semibold text-gray-900">Apps & Access</h3>
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {appsAccess.messaging_apps && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Popular Messaging Apps</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.messaging_apps}</dd>
                       </div>
-                      <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                        <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">in</div>
-                        <input
-                          type="text"
-                          inputMode="decimal"
-                          placeholder="0"
-                          value={heightIn}
-                          onChange={onHeightInChange}
-                          className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                        />
+                    )}
+                    {appsAccess.vpn_needed && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">VPN Needed</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.vpn_needed}</dd>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* SPEED */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Speed</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">km/h</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={speedKmh}
-                        onChange={onSpeedKmhChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">mph</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={speedMph}
-                        onChange={onSpeedMphChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* AREA */}
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <h4 className="text-sm font-medium text-gray-900">Area</h4>
-                <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">m²</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={areaSqm}
-                        onChange={onAreaSqmChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                      <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm/6">ft²</div>
-                      <input
-                        type="text"
-                        inputMode="decimal"
-                        placeholder="0"
-                        value={areaSqft}
-                        onChange={onAreaSqftChange}
-                        className="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* CLOTHING SIZES — WOMEN'S — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Women&apos;s Clothing Sizes</h3>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">US</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">EU</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">UK</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Japan</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">XS (0–2)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">32–34</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">4–6</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">5–7 (SS)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">S (4–6)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">36–38</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">8–10</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">9–11 (S)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">M (8–10)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">40–42</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">12–14</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">13–15 (M)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">L (12–14)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">44–46</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">16–18</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">17–19 (L)</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">XL (16–18)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">48–50</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">20–22</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">21–23 (LL)</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                    )}
+                    {appsAccess.blocked_services && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">Blocked Services</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.blocked_services}</dd>
+                      </div>
+                    )}
+                  </dl>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* CLOTHING SIZES — MEN'S — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Men&apos;s Clothing Sizes</h3>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">US</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">EU</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">UK</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Japan</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">XS (34)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">44</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">34</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">SS</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">S (36)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">46</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">36</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">S</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">M (38–40)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">48–50</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">38–40</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">M</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">L (42–44)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">52–54</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">42–44</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">L</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">XL (46)</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">56</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">46</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">LL</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* SHOE SIZES — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Shoe Sizes</h3>
-            <p className="mt-2 text-sm text-gray-700">Men&apos;s and women&apos;s shoe size conversions.</p>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">US Men</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">US Women</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">EU</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">UK</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Japan (cm)</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">7</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">8.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">40</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">6.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">25</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">8</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">9.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">41</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">7.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">26</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">9</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">10.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">42</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">8.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">27</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">10</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">11.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">43</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">9.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">28</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">11</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">12.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">44</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">10.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">29</td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">12</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">13.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">45</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">11.5</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">30</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* FORMATTING — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Formatting</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Date Format</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">YYYY/MM/DD</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Number Format</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Comma for thousands, period for decimals (1,000.00)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Time Format</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">24-hour (common) and 12-hour (also used)</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Paper Size</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">A4 (and B-series sizes unique to Japan)</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
+          )}
 
         </div>
       )}
 
-      {/* ============================================================
-          EMERGENCY TAB
-          ============================================================ */}
       {activeTab === 'emergency' && (
         <div className="mt-8 space-y-10">
 
-          {/* EMERGENCY NUMBERS — based on 57-simple-in-cards */}
+          {/* EMERGENCY NUMBERS — primary from countries table + supplementary from emergency_numbers table */}
           <div>
             <h3 className="text-base font-semibold text-gray-900">Emergency Numbers</h3>
+
+            {/* Primary numbers — always 3 cards in a row */}
             <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Police</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:110" className="text-indigo-600 hover:text-indigo-500">110</a></dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_police ? (
+                    <a href={`tel:${country.emergency_police.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_police}</a>
+                  ) : '—'}
+                </dd>
               </div>
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Ambulance</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:119" className="text-indigo-600 hover:text-indigo-500">119</a></dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_ambulance ? (
+                    <a href={`tel:${country.emergency_ambulance.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_ambulance}</a>
+                  ) : '—'}
+                </dd>
               </div>
               <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
                 <dt className="truncate text-sm font-medium text-gray-500">Fire</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:119" className="text-indigo-600 hover:text-indigo-500">119</a></dd>
+                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                  {country.emergency_fire ? (
+                    <a href={`tel:${country.emergency_fire.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_fire}</a>
+                  ) : '—'}
+                </dd>
               </div>
             </dl>
-            <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Tourist Police</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">N/A</dd>
+
+            {/* Supplementary numbers — only render cards that have data */}
+            {emergencyNumbers && (emergencyNumbers.tourist_police || emergencyNumbers.roadside_assistance || emergencyNumbers.coast_guard) && (
+              <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                {emergencyNumbers.tourist_police && (
+                  <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                    <dt className="truncate text-sm font-medium text-gray-500">Tourist Police</dt>
+                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                      <a href={`tel:${emergencyNumbers.tourist_police.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.tourist_police}</a>
+                    </dd>
+                  </div>
+                )}
+                {emergencyNumbers.roadside_assistance && (
+                  <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                    <dt className="truncate text-sm font-medium text-gray-500">
+                      Roadside Assistance{emergencyNumbers.roadside_assistance_name ? ` (${emergencyNumbers.roadside_assistance_name})` : ''}
+                    </dt>
+                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                      <a href={`tel:${emergencyNumbers.roadside_assistance.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.roadside_assistance}</a>
+                    </dd>
+                  </div>
+                )}
+                {emergencyNumbers.coast_guard && (
+                  <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+                    <dt className="truncate text-sm font-medium text-gray-500">Coast Guard</dt>
+                    <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
+                      <a href={`tel:${emergencyNumbers.coast_guard.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.coast_guard}</a>
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
+            {/* Other emergency numbers — description list for additional services */}
+            {emergencyNumbers && (emergencyNumbers.other_emergency_name_1 || emergencyNumbers.other_emergency_name_2 || emergencyNumbers.other_emergency_name_3) && (
+              <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                <div className="border-t border-gray-100">
+                  <dl className="divide-y divide-gray-100">
+                    {emergencyNumbers.other_emergency_name_1 && emergencyNumbers.other_emergency_number_1 && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_1}</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <a href={`tel:${emergencyNumbers.other_emergency_number_1.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_1}</a>
+                        </dd>
+                      </div>
+                    )}
+                    {emergencyNumbers.other_emergency_name_2 && emergencyNumbers.other_emergency_number_2 && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_2}</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <a href={`tel:${emergencyNumbers.other_emergency_number_2.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_2}</a>
+                        </dd>
+                      </div>
+                    )}
+                    {emergencyNumbers.other_emergency_name_3 && emergencyNumbers.other_emergency_number_3 && (
+                      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_3}</dt>
+                        <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
+                          <a href={`tel:${emergencyNumbers.other_emergency_number_3.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_3}</a>
+                        </dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
               </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Roadside Assistance (JAF)</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:%238139" className="text-indigo-600 hover:text-indigo-500">#8139</a></dd>
-              </div>
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Coast Guard</dt>
-                <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900"><a href="tel:118" className="text-indigo-600 hover:text-indigo-500">118</a></dd>
-              </div>
-            </dl>
+            )}
           </div>
 
-          {/* YOUR EMBASSY — based on 50-left-aligned-in-card, driven by nationality selector */}
+          {/* YOUR EMBASSY — driven by selectedNationality from master selector or Visa & Entry tab */}
+          {selectedNationality && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Your Embassy</h3>
-            <p className="mt-2 text-sm text-gray-700">Showing embassy information for {selectedNationality?.name} citizens in {country.name}. Change nationality in the Visa & Entry tab.</p>
+            <p className="mt-2 text-sm text-gray-700">Showing embassy information for {selectedNationality.name} citizens in {country.name}.</p>
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
@@ -2478,152 +3345,95 @@ export default function CountrySheet({
               </div>
             </div>
           </div>
+          )}
 
-          {/* MAJOR HOSPITALS — based on 84-simple-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">Major Hospitals</h3>
-            <p className="mt-2 text-sm text-gray-700">Hospitals in Tokyo recommended for foreign visitors.</p>
-            <div className="mt-5 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="relative min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Hospital</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">English Staff</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">24hr ER</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Phone</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">St. Luke&apos;s International Hospital</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500"><a href="tel:03-3541-5151" className="text-indigo-600 hover:text-indigo-500">03-3541-5151</a></td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">Tokyo Medical and Surgical Clinic</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">No</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500"><a href="tel:03-3436-3028" className="text-indigo-600 hover:text-indigo-500">03-3436-3028</a></td>
-                        </tr>
-                        <tr>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">National Center for Global Health and Medicine</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">Yes</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500"><a href="tel:03-3202-7181" className="text-indigo-600 hover:text-indigo-500">03-3202-7181</a></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* HEALTH — based on 50-left-aligned-in-card */}
+          {/* HEALTH — from health_safety table */}
+          {healthSafety && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Health</h3>
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
+                  {healthSafety.required_vaccinations && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Required Vaccinations</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">None</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.required_vaccinations}</dd>
                   </div>
+                  )}
+                  {healthSafety.health_insurance_required && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Recommended Vaccinations</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Routine vaccinations (MMR, tetanus). Hepatitis A and B recommended for longer stays.</dd>
+                    <dt className="text-sm font-medium text-gray-900">Health Insurance</dt>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.health_insurance_required}</dd>
                   </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Health Insurance Required for Entry</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">No</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Travel Insurance Recommended</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Yes — medical costs in Japan are high for uninsured visitors. Travel insurance with medical coverage is strongly recommended.</dd>
-                  </div>
+                  )}
+                  {healthSafety.tap_water_safe && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">Tap Water</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Safe to drink throughout Japan</dd>
+                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.tap_water_safe}</dd>
                   </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Common Health Risks</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Heat exhaustion in summer (June–September), cedar pollen allergies (February–April), earthquakes year-round</dd>
-                  </div>
+                  )}
                 </dl>
               </div>
             </div>
           </div>
+          )}
 
-          {/* TRAVEL ADVISORIES — based on 50-left-aligned-in-card */}
+          {/* TRAVEL ADVISORIES — from travel_advisories table */}
+          {travelAdvisory && (
           <div>
             <h3 className="text-base font-semibold text-gray-900">Travel Advisories</h3>
             <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
               <div className="border-t border-gray-100">
                 <dl className="divide-y divide-gray-100">
+                  {travelAdvisory.advisory_us && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">US Travel Advisory</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      Level 1 — Exercise Normal Precautions ·{' '}
-                      <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/japan-travel-advisory.html" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
-                        Source
-                      </a>
+                      {travelAdvisory.advisory_us}
+                      {travelAdvisory.advisory_us_url && (
+                        <>
+                          {' · '}
+                          <a href={travelAdvisory.advisory_us_url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                            Source <ExternalLink className="inline size-3.5" aria-hidden="true" />
+                          </a>
+                        </>
+                      )}
                     </dd>
                   </div>
+                  )}
+                  {travelAdvisory.advisory_uk && (
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt className="text-sm font-medium text-gray-900">UK Travel Advisory</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      See our information and advice before you travel ·{' '}
-                      <a href="https://www.gov.uk/foreign-travel-advice/japan" className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
-                        Source
-                      </a>
+                      {travelAdvisory.advisory_uk}
+                      {travelAdvisory.advisory_uk_url && (
+                        <>
+                          {' · '}
+                          <a href={travelAdvisory.advisory_uk_url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                            Source <ExternalLink className="inline size-3.5" aria-hidden="true" />
+                          </a>
+                        </>
+                      )}
                     </dd>
                   </div>
+                  )}
                 </dl>
               </div>
             </div>
           </div>
-
-          {/* WHAT TO DO IF... — based on 50-left-aligned-in-card */}
-          <div>
-            <h3 className="text-base font-semibold text-gray-900">What To Do If...</h3>
-            <div className="mt-5 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-              <div className="border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Lost or Stolen Passport</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">File a police report at the nearest koban (police box). Contact your embassy for an emergency travel document. Bring a photocopy of your passport if available.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Medical Emergency</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Call <a href="tel:119" className="text-indigo-600 hover:text-indigo-500">119</a> for an ambulance. For non-emergency English medical assistance, call AMDA International Medical Information Center at <a href="tel:03-6233-9266" className="text-indigo-600 hover:text-indigo-500">03-6233-9266</a>.</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Crime Victim</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Call <a href="tel:110" className="text-indigo-600 hover:text-indigo-500">110</a> for police. Visit the nearest koban (police box) to file a report. For English assistance, call Japan Helpline at <a href="tel:0570-000-911" className="text-indigo-600 hover:text-indigo-500">0570-000-911</a> (24/7).</dd>
-                  </div>
-                  <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Natural Disaster</dt>
-                    <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">Japan has frequent earthquakes and typhoons. Download the Safety Tips app (multilingual disaster alerts). Follow NHK World for English-language updates. Register with your embassy for emergency notifications.</dd>
-                  </div>
-                </dl>
-              </div>
-            </div>
-          </div>
+          )}
 
           {/* DISCLAIMER */}
           <div>
             <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-              <p className="text-sm text-gray-500">This information is for reference only. In any emergency, contact local emergency services immediately. Always verify embassy and hospital details before travel.</p>
+              <p className="text-sm text-gray-500">This information is for reference only and may not reflect the most current data. In any emergency, contact local emergency services immediately. Always verify embassy details before travel. Travel advisories are subject to change — check official government sources for the latest information.</p>
             </div>
           </div>
 
         </div>
       )}
 
+    </div>
     </div>
   )
 }
