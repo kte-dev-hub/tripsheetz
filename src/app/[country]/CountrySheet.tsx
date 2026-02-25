@@ -1799,7 +1799,7 @@ export default function CountrySheet({
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
                       {selectedVisa.secondary_rule_duration ?? '—'}
                       {selectedVisa.secondary_rule_link && (
-                        <>{' · '}<a href={selectedVisa.secondary_rule_link} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">More info</a></>
+                        <>{' · '}<a href={selectedVisa.secondary_rule_link} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">More info <ExternalLink className="size-3.5" aria-hidden="true" /></a></>
                       )}
                     </dd>
                   </div>
@@ -1810,7 +1810,7 @@ export default function CountrySheet({
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
                       Required
                       {selectedVisa.mandatory_registration_link && (
-                        <>{' · '}<a href={selectedVisa.mandatory_registration_link} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">More info</a></>
+                        <>{' · '}<a href={selectedVisa.mandatory_registration_link} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">More info <ExternalLink className="size-3.5" aria-hidden="true" /></a></>
                       )}
                     </dd>
                   </div>
@@ -2028,8 +2028,9 @@ export default function CountrySheet({
                         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                           <dt className="text-sm font-medium text-gray-900">Website</dt>
                           <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                            <a href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                            <a href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
                               {(() => { try { return new URL(mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`).hostname.replace('www.', '') } catch { return mainEmbassy.website } })()}
+                              <ExternalLink className="size-3.5" aria-hidden="true" />
                             </a>
                           </dd>
                         </div>
@@ -3329,8 +3330,9 @@ export default function CountrySheet({
                       <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt className="text-sm font-medium text-gray-900">Website</dt>
                         <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                          <a href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                          <a href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`} className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
                             {(() => { try { return new URL(mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`).hostname.replace('www.', '') } catch { return mainEmbassy.website } })()}
+                            <ExternalLink className="size-3.5" aria-hidden="true" />
                           </a>
                         </dd>
                       </div>
