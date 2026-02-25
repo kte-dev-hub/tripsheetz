@@ -20,6 +20,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
   const router = useRouter()
   const [countries, setCountries] = useState<CountryOption[]>([])
   const [query, setQuery] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const searchRef = useRef<HTMLDivElement>(null)
@@ -46,6 +47,8 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
       if (!insideDesktop && !insideMobile) {
         setIsOpen(false)
         setHighlightedIndex(-1)
+        setSearchOpen(false)
+        setQuery('')
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -60,6 +63,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
     setQuery('')
     setIsOpen(false)
     setHighlightedIndex(-1)
+    setSearchOpen(false)
     router.push(`/${country.slug}`)
   }
 
@@ -109,77 +113,109 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
             </div>
           </div>
           {showSearch && (
-            <div className="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
-              <div ref={searchRef} className="relative w-full max-w-lg lg:max-w-xs">
-                <div className="grid w-full grid-cols-1">
-                  <input
-                    ref={inputRef}
-                    name="search"
-                    type="search"
-                    placeholder="Search countries..."
-                    value={query}
-                    onChange={(e) => {
-                      setQuery(e.target.value)
-                      setIsOpen(e.target.value.length >= 1)
-                      setHighlightedIndex(-1)
-                    }}
-                    onFocus={() => {
-                      if (query.length >= 1) setIsOpen(true)
-                    }}
-                    onKeyDown={handleKeyDown}
-                    autoComplete="off"
-                    className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                    role="combobox"
-                    aria-expanded={isOpen && filteredCountries.length > 0}
-                    aria-controls="search-results"
-                    aria-activedescendant={highlightedIndex >= 0 ? `search-result-${highlightedIndex}` : undefined}
-                  />
-                  <Search
-                    aria-hidden="true"
-                    className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
-                  />
-                </div>
-
-                {isOpen && filteredCountries.length > 0 && (
-                  <ul
-                    id="search-results"
-                    role="listbox"
-                    className="absolute z-50 mt-1 w-full overflow-hidden rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
-                  >
-                    {filteredCountries.map((country, index) => (
-                      <li
-                        key={country.slug}
-                        id={`search-result-${index}`}
-                        role="option"
-                        aria-selected={index === highlightedIndex}
-                        className={`flex cursor-pointer items-center gap-3 px-4 py-2 text-sm ${
-                          index === highlightedIndex
-                            ? 'bg-indigo-600 text-white'
-                            : 'text-gray-900 hover:bg-gray-50'
-                        }`}
-                        onMouseEnter={() => setHighlightedIndex(index)}
-                        onMouseDown={(e) => {
-                          e.preventDefault()
-                          handleSelect(country)
-                        }}
-                      >
-                        <img
-                          src={`https://flagcdn.com/w40/${country.iso_alpha2.trim().toLowerCase()}.png`}
-                          alt=""
-                          className="h-4 w-6 object-cover"
-                        />
-                        <span>{country.name}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {isOpen && query.length >= 1 && filteredCountries.length === 0 && countries.length > 0 && (
-                  <div className="absolute z-50 mt-1 w-full rounded-md bg-white py-3 px-4 text-sm text-gray-500 shadow-lg ring-1 ring-black/5">
-                    No countries found for &ldquo;{query}&rdquo;
+            <div className="flex flex-1 items-center justify-end px-2 lg:ml-6">
+              {!searchOpen ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen(true)
+                    setTimeout(() => inputRef.current?.focus(), 50)
+                  }}
+                  className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
+                  aria-label="Search countries"
+                >
+                  <Search className="size-5" aria-hidden="true" />
+                </button>
+              ) : (
+                <div ref={searchRef} className="relative w-full max-w-lg lg:max-w-xs">
+                  <div className="grid w-full grid-cols-1">
+                    <input
+                      ref={inputRef}
+                      name="search"
+                      type="search"
+                      placeholder="Search countries..."
+                      value={query}
+                      onChange={(e) => {
+                        setQuery(e.target.value)
+                        setIsOpen(e.target.value.length >= 1)
+                        setHighlightedIndex(-1)
+                      }}
+                      onFocus={() => {
+                        if (query.length >= 1) setIsOpen(true)
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape' && !isOpen) {
+                          setSearchOpen(false)
+                          setQuery('')
+                          return
+                        }
+                        handleKeyDown(e)
+                      }}
+                      onBlur={(e) => {
+                        if (searchRef.current && !searchRef.current.contains(e.relatedTarget as Node)) {
+                          setTimeout(() => {
+                            setSearchOpen(false)
+                            setQuery('')
+                            setIsOpen(false)
+                            setHighlightedIndex(-1)
+                          }, 150)
+                        }
+                      }}
+                      autoComplete="off"
+                      className="col-start-1 row-start-1 block w-full rounded-md bg-white py-1.5 pr-3 pl-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                      role="combobox"
+                      aria-expanded={isOpen && filteredCountries.length > 0}
+                      aria-controls="search-results"
+                      aria-activedescendant={highlightedIndex >= 0 ? `search-result-${highlightedIndex}` : undefined}
+                    />
+                    <Search
+                      aria-hidden="true"
+                      className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
+                    />
                   </div>
-                )}
-              </div>
+
+                  {isOpen && filteredCountries.length > 0 && (
+                    <ul
+                      id="search-results"
+                      role="listbox"
+                      className="absolute z-50 mt-1 w-full overflow-hidden rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
+                    >
+                      {filteredCountries.map((country, index) => (
+                        <li
+                          key={country.slug}
+                          id={`search-result-${index}`}
+                          role="option"
+                          aria-selected={index === highlightedIndex}
+                          className={`flex cursor-pointer items-center gap-3 px-4 py-2 text-sm ${
+                            index === highlightedIndex
+                              ? 'bg-indigo-600 text-white'
+                              : 'text-gray-900 hover:bg-gray-50'
+                          }`}
+                          onMouseEnter={() => setHighlightedIndex(index)}
+                          onMouseDown={(e) => {
+                            e.preventDefault()
+                            handleSelect(country)
+                            setSearchOpen(false)
+                          }}
+                        >
+                          <img
+                            src={`https://flagcdn.com/w40/${country.iso_alpha2.trim().toLowerCase()}.png`}
+                            alt=""
+                            className="h-4 w-6 object-cover"
+                          />
+                          <span>{country.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {isOpen && query.length >= 1 && filteredCountries.length === 0 && countries.length > 0 && (
+                    <div className="absolute z-50 mt-1 w-full rounded-md bg-white py-3 px-4 text-sm text-gray-500 shadow-lg ring-1 ring-black/5">
+                      No countries found for &ldquo;{query}&rdquo;
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
           <div className="flex items-center lg:hidden">
