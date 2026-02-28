@@ -1258,7 +1258,89 @@ export default function CountryPage({
       </div>
 
     {/* ============================================================
-        SECTION 1: VISA & ENTRY
+        SECTION 1: OVERVIEW
+        ============================================================ */}
+    <section id="overview" className="mt-10">
+
+      {/* Section Divider — #355 */}
+      <div className="flex items-center">
+        <div className="relative flex justify-start">
+          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
+            Overview
+          </span>
+        </div>
+        <div aria-hidden="true" className="w-full border-t border-gray-300" />
+      </div>
+
+      {/* ---- IDENTITY — stat grid ---- */}
+      <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Capital</dt>
+          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.capital_city ?? '—'}</dd>
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Population</dt>
+          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.population ?? '—'}</dd>
+        </div>
+      </dl>
+
+      <dl className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-white shadow-sm">
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Government</dt>
+          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.government_type ?? '—'}</dd>
+        </div>
+      </dl>
+
+      {/* ---- LANGUAGE — description list (#50) ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Language</h3>
+        <div className="mt-3 border-t border-gray-100">
+          <dl className="divide-y divide-gray-100">
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium text-gray-900">Official Languages</dt>
+              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_official ?? '—'}</dd>
+            </div>
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium text-gray-900">Common Languages</dt>
+              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_common ?? '—'}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      {/* ---- RELIGION — horizontal bar chart ---- */}
+      {religions.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Religion</h3>
+          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <div className="space-y-3">
+              {religions.map((religion, index) => (
+                <div key={religion.id}>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className={`${index === 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-500'}`}>
+                      {religion.religion_name}
+                    </span>
+                    <span className={`font-semibold ${index === 0 ? 'text-2xl text-gray-900' : 'text-gray-500'}`}>
+                      {religion.percentage}%
+                    </span>
+                  </div>
+                  <div className="mt-1 h-2 w-full rounded-full bg-gray-100">
+                    <div
+                      className="h-2 rounded-full bg-indigo-600"
+                      style={{ width: `${Math.min(religion.percentage, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+    </section>
+
+    {/* ============================================================
+        SECTION 2: VISA & ENTRY
         ============================================================ */}
     <section id="visa" className="mt-10">
 
@@ -1610,7 +1692,7 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 2: MONEY
+        SECTION 3: MONEY
         ============================================================ */}
     <section id="money" className="mt-10">
 
@@ -2032,7 +2114,7 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 3: COMMUNICATIONS
+        SECTION 4: COMMUNICATIONS
         ============================================================ */}
     <section id="communications" className="mt-10">
 
@@ -2186,7 +2268,7 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 4: TIME
+        SECTION 5: TIME
         ============================================================ */}
     <section id="time" className="mt-10">
 
@@ -2285,7 +2367,7 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 5: TRANSPORTATION
+        SECTION 6: TRANSPORTATION
         ============================================================ */}
     <section id="transport" className="mt-10">
 
@@ -2503,7 +2585,7 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 6: ELECTRICAL
+        SECTION 7: ELECTRICAL
         ============================================================ */}
     {countryElectrical && (
     <section id="electrical" className="mt-10">
@@ -2609,7 +2691,7 @@ export default function CountryPage({
     )}
 
     {/* ============================================================
-        SECTION 7: WEATHER
+        SECTION 8: WEATHER
         ============================================================ */}
     <section id="weather" className="mt-10">
 
@@ -2875,57 +2957,21 @@ export default function CountryPage({
     </section>
 
     {/* ============================================================
-        SECTION 8: OVERVIEW
+        SECTION 9: MEASUREMENTS
         ============================================================ */}
-    <section id="overview" className="mt-10">
+    <section id="measurements" className="mt-10">
 
       {/* Section Divider — #355 */}
       <div className="flex items-center">
         <div className="relative flex justify-start">
           <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Overview
+            Measurements
           </span>
         </div>
         <div aria-hidden="true" className="w-full border-t border-gray-300" />
       </div>
 
-      {/* ---- IDENTITY — stat grid (#59) ---- */}
-      <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
-        <div className="px-4 py-5 sm:p-6">
-          <dt className="text-sm font-medium text-gray-500">Capital</dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.capital_city ?? '—'}</dd>
-        </div>
-        <div className="px-4 py-5 sm:p-6">
-          <dt className="text-sm font-medium text-gray-500">Population</dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.population ?? '—'}</dd>
-        </div>
-        <div className="px-4 py-5 sm:p-6">
-          <dt className="text-sm font-medium text-gray-500">Government</dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.government_type ?? '—'}</dd>
-        </div>
-      </dl>
-
-      {/* ---- LANGUAGE — description list (#50) ---- */}
-      <div className="mt-8">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Language</h3>
-        <div className="mt-3 border-t border-gray-100">
-          <dl className="divide-y divide-gray-100">
-            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium text-gray-900">Official Languages</dt>
-              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_official ?? '—'}</dd>
-            </div>
-            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium text-gray-900">Common Languages</dt>
-              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_common ?? '—'}</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-
-      {/* ---- MEASUREMENTS — stat + unit converter ---- */}
-      <div className="mt-8">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Measurements</h3>
-        <dl className="mt-3 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+      <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
           {/* System stat — 1/3 */}
           <div className="px-4 py-5 sm:p-6">
             <dt className="text-sm font-medium text-gray-500">System</dt>
@@ -3045,41 +3091,11 @@ export default function CountryPage({
             </div>
           </div>
         </dl>
-      </div>
-
-      {/* ---- RELIGION — horizontal bar chart ---- */}
-      {religions.length > 0 && (
-        <div className="mt-8">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Religion</h3>
-          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-            <div className="space-y-3">
-              {religions.map((religion, index) => (
-                <div key={religion.id}>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className={`${index === 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-500'}`}>
-                      {religion.religion_name}
-                    </span>
-                    <span className={`font-semibold ${index === 0 ? 'text-2xl text-gray-900' : 'text-gray-500'}`}>
-                      {religion.percentage}%
-                    </span>
-                  </div>
-                  <div className="mt-1 h-2 w-full rounded-full bg-gray-100">
-                    <div
-                      className="h-2 rounded-full bg-indigo-600"
-                      style={{ width: `${Math.min(religion.percentage, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
     </section>
 
     {/* ============================================================
-        SECTION 9: EMERGENCY
+        SECTION 10: EMERGENCY
         ============================================================ */}
     <section id="emergency" className="mt-10">
 
