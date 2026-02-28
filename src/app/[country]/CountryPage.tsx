@@ -507,6 +507,16 @@ export default function CountryPage({
   const [tippingOpen, setTippingOpen] = useState(false)
   const [typicalCostsOpen, setTypicalCostsOpen] = useState(false)
 
+  // Tax Refund accordion state
+  const [taxRateOpen, setTaxRateOpen] = useState(true)
+  const [taxEligibleOpen, setTaxEligibleOpen] = useState(false)
+  const [taxMinimumOpen, setTaxMinimumOpen] = useState(false)
+  const [taxHowToClaimOpen, setTaxHowToClaimOpen] = useState(false)
+  const [taxWhereToClaimOpen, setTaxWhereToClaimOpen] = useState(false)
+  const [taxRefundMethodOpen, setTaxRefundMethodOpen] = useState(false)
+  const [taxTimeLimitOpen, setTaxTimeLimitOpen] = useState(false)
+  const [taxPortalOpen, setTaxPortalOpen] = useState(false)
+
   // Currency converter state
   const [localAmount, setLocalAmount] = useState<string>('1')
   const [foreignAmount, setForeignAmount] = useState<string>('')
@@ -2041,74 +2051,213 @@ export default function CountryPage({
         </div>
       )}
 
-      {/* ---- TAX REFUND — description list (#50) ---- */}
+      {/* ---- TAX REFUND — individually collapsible accordions ---- */}
       {taxRefund && (
         <div className="mt-8">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Tax Refund</h3>
-          <div className="mt-3 overflow-hidden bg-white shadow-sm sm:rounded-lg">
-            <div className="border-t border-gray-100">
-              <dl className="divide-y divide-gray-100">
-                {taxRefund.tax_rate && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Tax Rate</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.tax_rate}</dd>
-                  </div>
-                )}
-                {taxRefund.eligible_purchases && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Eligible Purchases</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.eligible_purchases}</dd>
-                  </div>
-                )}
-                {taxRefund.minimum_purchase && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Minimum Purchase</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.minimum_purchase}</dd>
-                  </div>
-                )}
-                {taxRefund.how_to_claim && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">How to Claim</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.how_to_claim}</dd>
-                  </div>
-                )}
-                {taxRefund.where_to_claim && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Where to Claim</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.where_to_claim}</dd>
-                  </div>
-                )}
-                {taxRefund.refund_method && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Refund Method</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.refund_method}</dd>
-                  </div>
-                )}
-                {taxRefund.time_limit && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Time Limit</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxRefund.time_limit}</dd>
-                  </div>
-                )}
-                {taxRefund.refund_portal_url && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt className="text-sm font-medium text-gray-900">Official Portal</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
-                      <a
-                        href={taxRefund.refund_portal_url}
-                        className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {(() => { try { return new URL(taxRefund.refund_portal_url).hostname.replace('www.', '') } catch { return taxRefund.refund_portal_url } })()}
-                        <ExternalLink className="size-3.5" aria-hidden="true" />
-                      </a>
-                    </dd>
-                  </div>
-                )}
-              </dl>
+
+          {/* Tax Rate — open by default */}
+          {taxRefund.tax_rate && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setTaxRateOpen(!taxRateOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxRateOpen}
+              >
+                <span>Tax Rate</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxRateOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxRateOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.tax_rate}</p>
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Eligible Purchases */}
+          {taxRefund.eligible_purchases && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxEligibleOpen(!taxEligibleOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxEligibleOpen}
+              >
+                <span>Eligible Purchases</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxEligibleOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxEligibleOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.eligible_purchases}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Minimum Purchase */}
+          {taxRefund.minimum_purchase && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxMinimumOpen(!taxMinimumOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxMinimumOpen}
+              >
+                <span>Minimum Purchase</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxMinimumOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxMinimumOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.minimum_purchase}</p>
+              </div>
+            </div>
+          )}
+
+          {/* How to Claim */}
+          {taxRefund.how_to_claim && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxHowToClaimOpen(!taxHowToClaimOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxHowToClaimOpen}
+              >
+                <span>How to Claim</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxHowToClaimOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxHowToClaimOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.how_to_claim}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Where to Claim */}
+          {taxRefund.where_to_claim && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxWhereToClaimOpen(!taxWhereToClaimOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxWhereToClaimOpen}
+              >
+                <span>Where to Claim</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxWhereToClaimOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxWhereToClaimOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.where_to_claim}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Refund Method */}
+          {taxRefund.refund_method && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxRefundMethodOpen(!taxRefundMethodOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxRefundMethodOpen}
+              >
+                <span>Refund Method</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxRefundMethodOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxRefundMethodOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.refund_method}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Time Limit */}
+          {taxRefund.time_limit && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxTimeLimitOpen(!taxTimeLimitOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxTimeLimitOpen}
+              >
+                <span>Time Limit</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxTimeLimitOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxTimeLimitOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxRefund.time_limit}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Official Portal */}
+          {taxRefund.refund_portal_url && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setTaxPortalOpen(!taxPortalOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={taxPortalOpen}
+              >
+                <span>Official Portal</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxPortalOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: taxPortalOpen ? '500px' : '0px' }}
+              >
+                <div className="px-4 py-3 sm:px-0">
+                  <a
+                    href={taxRefund.refund_portal_url}
+                    className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {(() => { try { return new URL(taxRefund.refund_portal_url).hostname.replace('www.', '') } catch { return taxRefund.refund_portal_url } })()}
+                    <ExternalLink className="size-3.5" aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       )}
 
