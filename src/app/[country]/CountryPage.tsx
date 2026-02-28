@@ -1320,7 +1320,7 @@ export default function CountryPage({
                     <span className={`${index === 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-500'}`}>
                       {religion.religion_name}
                     </span>
-                    <span className={`font-semibold ${index === 0 ? 'text-2xl text-gray-900' : 'text-gray-500'}`}>
+                    <span className={`font-semibold ${index === 0 ? 'text-lg text-gray-900' : 'text-gray-500'}`}>
                       {religion.percentage}%
                     </span>
                   </div>
