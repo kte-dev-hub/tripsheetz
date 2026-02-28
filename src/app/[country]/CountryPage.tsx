@@ -7,8 +7,12 @@ import {
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
+  Label,
 } from '@headlessui/react'
-import { ChevronsUpDown, Check, Info, ChevronDown, ExternalLink, Clock, Plane } from 'lucide-react'
+import {
+  ChevronsUpDown, Check, Info, ChevronDown, ExternalLink, Clock, Plane,
+  Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind
+} from 'lucide-react'
 
 interface Country {
   id: number
@@ -17,6 +21,9 @@ interface Country {
   native_name: string
   iso_alpha2: string
   slug: string
+  capital_city: string | null
+  capital_lat: number | null
+  capital_lon: number | null
 }
 
 interface VisaRequirement {
@@ -270,6 +277,48 @@ interface CountryElectricalSummary {
   frequency: string
 }
 
+interface CityResult {
+  name: string
+  state?: string
+  country: string
+  lat: number
+  lon: number
+}
+
+interface CurrentWeather {
+  temp: number
+  feels_like: number
+  humidity: number
+  wind_speed: number
+  description: string
+  icon: string
+  precipitation: number
+  uvindex: number
+  cloudcover: number
+  visibility: number
+  sunrise: string
+  sunset: string
+}
+
+interface DayForecast {
+  date: string
+  high: number
+  low: number
+  description: string
+  icon: string
+  precipChance: number
+  humidity: number
+  uvindex: number
+}
+
+interface ClimateAverage {
+  month: string
+  high: number
+  low: number
+  precip: number
+  humidity: number
+}
+
 interface CountryPageProps {
   country: Country
   allCountries: { id: number; name: string; iso_alpha2: string; currency_code: string | null }[]
@@ -294,6 +343,39 @@ interface CountryPageProps {
   plugTypes: PlugType[]
   electricalTemplates: ElectricalTemplate[]
   allCountryElectrical: CountryElectricalSummary[]
+}
+
+function getWeatherIcon(iconName: string, size: string = 'size-8') {
+  const className = `${size} text-gray-700`
+  switch (iconName) {
+    case 'clear-day':
+    case 'clear-night':
+      return <Sun className={className} />
+    case 'partly-cloudy-day':
+    case 'partly-cloudy-night':
+      return <CloudSun className={className} />
+    case 'cloudy':
+      return <Cloud className={className} />
+    case 'rain':
+      return <CloudRain className={className} />
+    case 'showers-day':
+    case 'showers-night':
+      return <CloudDrizzle className={className} />
+    case 'thunder-rain':
+    case 'thunder-showers-day':
+    case 'thunder-showers-night':
+      return <CloudLightning className={className} />
+    case 'snow':
+    case 'snow-showers-day':
+    case 'snow-showers-night':
+      return <Snowflake className={className} />
+    case 'fog':
+      return <CloudFog className={className} />
+    case 'wind':
+      return <Wind className={className} />
+    default:
+      return <Sun className={className} />
+  }
 }
 
 export default function CountryPage({
@@ -349,6 +431,25 @@ export default function CountryPage({
   // Airport city selector
   const [selectedAirportCity, setSelectedAirportCity] = useState<string | null>(null)
   const [airportCityQuery, setAirportCityQuery] = useState('')
+
+  // Weather
+  const [weatherCity, setWeatherCity] = useState<CityResult>({
+    name: country.capital_city ?? country.name,
+    country: country.iso_alpha2,
+    lat: country.capital_lat ?? 0,
+    lon: country.capital_lon ?? 0,
+  })
+  const [cityQuery, setCityQuery] = useState('')
+  const [cityResults, setCityResults] = useState<CityResult[]>([])
+  const [cityLoading, setCityLoading] = useState(false)
+  const [currentWeather, setCurrentWeather] = useState<CurrentWeather | null>(null)
+  const [forecast, setForecast] = useState<DayForecast[]>([])
+  const [weatherLoading, setWeatherLoading] = useState(false)
+  const [weatherError, setWeatherError] = useState('')
+  const [climateAverages, setClimateAverages] = useState<ClimateAverage[]>([])
+  const [climateLoading, setClimateLoading] = useState(false)
+  const [forecastOpen, setForecastOpen] = useState(false)
+  const [climateOpen, setClimateOpen] = useState(false)
 
   const masterCountryList = allCountries
     .filter((c) => c.iso_alpha2.trim() !== country.iso_alpha2.trim())
@@ -651,6 +752,160 @@ export default function CountryPage({
     }, 1000)
     return () => clearInterval(timer)
   }, [])
+
+  // City search — Geoapify autocomplete
+  useEffect(() => {
+    if (cityQuery.length < 2) {
+      setCityResults([])
+      return
+    }
+    const debounceTimer = setTimeout(() => {
+      setCityLoading(true)
+      const apiKey = process.env.NEXT_PUBLIC_GEOAPIFY_API_KEY
+      if (!apiKey) {
+        setCityLoading(false)
+        return
+      }
+      fetch(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(cityQuery)}&type=city&filter=countrycode:${country.iso_alpha2.toLowerCase()}&limit=5&format=json&apiKey=${apiKey}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.results && Array.isArray(data.results)) {
+            setCityResults(
+              data.results.map((item: any) => ({
+                name: item.city || item.name || item.formatted,
+                state: item.state,
+                country: item.country_code?.toUpperCase() || country.iso_alpha2,
+                lat: item.lat,
+                lon: item.lon,
+              }))
+            )
+          }
+          setCityLoading(false)
+        })
+        .catch(() => {
+          setCityLoading(false)
+        })
+    }, 300)
+    return () => clearTimeout(debounceTimer)
+  }, [cityQuery, country.iso_alpha2])
+
+  // Fetch weather + forecast on mount and when city changes
+  useEffect(() => {
+    if (!weatherCity.lat || !weatherCity.lon) return
+    const apiKey = process.env.NEXT_PUBLIC_VISUALCROSSING_API_KEY
+    if (!apiKey) {
+      setWeatherError('Weather API key not configured.')
+      return
+    }
+    setWeatherLoading(true)
+    setWeatherError('')
+    setCurrentWeather(null)
+    setForecast([])
+
+    fetch(
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${weatherCity.lat},${weatherCity.lon}?unitGroup=metric&include=current,days&key=${apiKey}&contentType=json`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error(`Weather API error: ${res.status}`)
+        return res.json()
+      })
+      .then((data) => {
+        if (data.currentConditions) {
+          const cc = data.currentConditions
+          setCurrentWeather({
+            temp: Math.round(cc.temp),
+            feels_like: Math.round(cc.feelslike),
+            humidity: Math.round(cc.humidity),
+            wind_speed: Math.round(cc.windspeed),
+            description: cc.conditions || '',
+            icon: cc.icon || 'clear-day',
+            precipitation: cc.precip ?? 0,
+            uvindex: cc.uvindex ?? 0,
+            cloudcover: Math.round(cc.cloudcover ?? 0),
+            visibility: Math.round(cc.visibility ?? 0),
+            sunrise: cc.sunrise ? cc.sunrise.substring(0, 5) : '',
+            sunset: cc.sunset ? cc.sunset.substring(0, 5) : '',
+          })
+        }
+
+        if (data.days && Array.isArray(data.days)) {
+          const days: DayForecast[] = data.days.slice(0, 15).map((day: any) => {
+            const date = new Date(day.datetime + 'T12:00:00')
+            return {
+              date: date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+              high: Math.round(day.tempmax),
+              low: Math.round(day.tempmin),
+              description: day.conditions || '',
+              icon: day.icon || 'clear-day',
+              precipChance: Math.round(day.precipprob ?? 0),
+              humidity: Math.round(day.humidity ?? 0),
+              uvindex: Math.round(day.uvindex ?? 0),
+            }
+          })
+          setForecast(days)
+        }
+
+        setWeatherLoading(false)
+      })
+      .catch((err) => {
+        console.error('Weather fetch error:', err)
+        setWeatherError('Unable to load weather data.')
+        setWeatherLoading(false)
+      })
+  }, [weatherCity])
+
+  // Fetch climate averages on mount and when city changes
+  useEffect(() => {
+    if (!weatherCity.lat || !weatherCity.lon) return
+    const apiKey = process.env.NEXT_PUBLIC_VISUALCROSSING_API_KEY
+    if (!apiKey) return
+
+    setClimateLoading(true)
+    setClimateAverages([])
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    let cancelled = false
+
+    async function fetchClimateData() {
+      const averages: ClimateAverage[] = []
+      for (let i = 0; i < 12; i++) {
+        if (cancelled) return
+        const month = String(i + 1).padStart(2, '0')
+        try {
+          const res = await fetch(
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${weatherCity.lat},${weatherCity.lon}/2027-${month}-15/2027-${month}-15?unitGroup=metric&include=days&key=${apiKey}&contentType=json&elements=tempmax,tempmin,precip,humidity`
+          )
+          if (!res.ok) {
+            averages.push({ month: monthNames[i], high: 0, low: 0, precip: 0, humidity: 0 })
+          } else {
+            const data = await res.json()
+            const day = data.days?.[0]
+            averages.push({
+              month: monthNames[i],
+              high: day ? Math.round(day.tempmax) : 0,
+              low: day ? Math.round(day.tempmin) : 0,
+              precip: day ? Math.round(day.precip ?? 0) : 0,
+              humidity: day ? Math.round(day.humidity ?? 0) : 0,
+            })
+          }
+          if (i < 11) {
+            await new Promise((resolve) => setTimeout(resolve, 200))
+          }
+        } catch {
+          averages.push({ month: monthNames[i], high: 0, low: 0, precip: 0, humidity: 0 })
+        }
+      }
+      if (!cancelled) {
+        setClimateAverages(averages)
+        setClimateLoading(false)
+      }
+    }
+
+    fetchClimateData()
+    return () => { cancelled = true }
+  }, [weatherCity])
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -2135,6 +2390,272 @@ export default function CountryPage({
 
     </section>
     )}
+
+    {/* ============================================================
+        SECTION 7: WEATHER
+        ============================================================ */}
+    <section id="weather" className="mt-10">
+
+      {/* Section Divider — #355 */}
+      <div className="flex items-center">
+        <div className="relative flex justify-start">
+          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
+            Weather
+          </span>
+        </div>
+        <div aria-hidden="true" className="w-full border-t border-gray-300" />
+      </div>
+
+      {/* ---- CITY SELECTOR — Geoapify search ---- */}
+      <div className="mt-6">
+        <Combobox
+          as="div"
+          value={weatherCity}
+          onChange={(city: CityResult | null) => {
+            setCityQuery('')
+            if (city) setWeatherCity(city)
+          }}
+        >
+          <Label className="text-sm font-medium text-gray-900">City</Label>
+          <p className="mt-1 text-sm text-gray-500">Search for a city to see its weather data.</p>
+          <div className="relative mt-2 max-w-xs">
+            <ComboboxInput
+              className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              onChange={(event) => setCityQuery(event.target.value)}
+              onBlur={() => setCityQuery('')}
+              displayValue={(city: CityResult) => city?.name ?? ''}
+              placeholder={`Search cities in ${country.name}...`}
+            />
+            <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
+              <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+            </ComboboxButton>
+            {(cityResults.length > 0 || cityLoading) && (
+              <ComboboxOptions
+                transition
+                className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+              >
+                {cityLoading && cityResults.length === 0 && (
+                  <div className="px-3 py-2 text-sm text-gray-500">Searching...</div>
+                )}
+                {cityResults.map((city, index) => (
+                  <ComboboxOption
+                    key={`${city.lat}-${city.lon}-${index}`}
+                    value={city}
+                    className="cursor-default px-3 py-2 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                  >
+                    <div className="flex">
+                      <span className="block truncate">{city.name}</span>
+                      {city.state && (
+                        <span className="ml-2 block truncate text-gray-500 in-data-focus:text-white">
+                          {city.state}
+                        </span>
+                      )}
+                    </div>
+                  </ComboboxOption>
+                ))}
+              </ComboboxOptions>
+            )}
+          </div>
+        </Combobox>
+      </div>
+
+      {/* ---- CURRENT CONDITIONS ---- */}
+      <div className="mt-6">
+        {weatherLoading && !currentWeather && (
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <p className="text-sm text-gray-500">Loading weather data...</p>
+          </div>
+        )}
+
+        {weatherError && (
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <p className="text-sm text-red-600">{weatherError}</p>
+          </div>
+        )}
+
+        {currentWeather && (
+          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+            {/* Hero: icon + temp + description */}
+            <div className="px-4 py-5 sm:px-6">
+              <div className="flex items-center gap-4">
+                {getWeatherIcon(currentWeather.icon, 'size-12')}
+                <div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-semibold tracking-tight text-gray-900">
+                      {currentWeather.temp}°C
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      Feels like {currentWeather.feels_like}°C
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-gray-700 capitalize">
+                    {currentWeather.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* Stat grid */}
+            <dl className="grid grid-cols-2 divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Humidity</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.humidity}%</dd>
+              </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Wind</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.wind_speed} km/h</dd>
+              </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Precipitation</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.precipitation} mm</dd>
+              </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">UV Index</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.uvindex}</dd>
+              </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Cloud Cover</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.cloudcover}%</dd>
+              </div>
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Visibility</dt>
+                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.visibility} km</dd>
+              </div>
+            </dl>
+            {/* Footer: sunrise/sunset */}
+            <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
+              <p className="text-sm text-gray-500">
+                Sunrise {currentWeather.sunrise} · Sunset {currentWeather.sunset}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ---- 15-DAY FORECAST — SEO-safe accordion ---- */}
+      {forecast.length > 0 && (
+        <div className="mt-8">
+          <button
+            type="button"
+            onClick={() => setForecastOpen(!forecastOpen)}
+            className="flex w-full items-center justify-between border-b border-gray-200 pb-3"
+            aria-expanded={forecastOpen}
+          >
+            <span className="text-sm font-semibold text-gray-900">15-Day Forecast</span>
+            <ChevronDown
+              className={`size-5 text-gray-500 transition-transform duration-200 ${forecastOpen ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          </button>
+          <div
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{ maxHeight: forecastOpen ? '2000px' : '0' }}
+          >
+            <div className="mt-3 flow-root">
+              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                    <table className="min-w-full divide-y divide-gray-300">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Day</th>
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
+                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Conditions</th>
+                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Precip %</th>
+                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Humidity</th>
+                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">UV</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        {forecast.map((day, index) => (
+                          <tr key={index}>
+                            <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{day.date}</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.high}°C</td>
+                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.low}°C</td>
+                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.description}</td>
+                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.precipChance}%</td>
+                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.humidity}%</td>
+                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.uvindex}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- CLIMATE AVERAGES — SEO-safe accordion ---- */}
+      <div className="mt-8">
+        <button
+          type="button"
+          onClick={() => setClimateOpen(!climateOpen)}
+          className="flex w-full items-center justify-between border-b border-gray-200 pb-3"
+          aria-expanded={climateOpen}
+        >
+          <span className="text-sm font-semibold text-gray-900">Climate Averages</span>
+          <ChevronDown
+            className={`size-5 text-gray-500 transition-transform duration-200 ${climateOpen ? 'rotate-180' : ''}`}
+            aria-hidden="true"
+          />
+        </button>
+        <div
+          className="overflow-hidden transition-all duration-300 ease-in-out"
+          style={{ maxHeight: climateOpen ? '2000px' : '0' }}
+        >
+          <div className="mt-3 flow-root">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-300">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Month</th>
+                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
+                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
+                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rain (mm)</th>
+                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Humidity</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white">
+                      {climateLoading && climateAverages.length === 0 && (
+                        <tr>
+                          <td colSpan={5} className="px-3 py-4 text-sm text-gray-500 text-center">Loading climate data...</td>
+                        </tr>
+                      )}
+                      {climateAverages.map((avg, index) => (
+                        <tr key={index}>
+                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{avg.month}</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.high}°C</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.low}°C</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.precip}</td>
+                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.humidity}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Attribution */}
+      <div className="mt-4">
+        <p className="text-xs text-gray-400">
+          Weather data provided by{' '}
+          <a href="https://www.visualcrossing.com/" className="inline-flex items-center gap-1 text-indigo-500 hover:text-indigo-400" target="_blank" rel="noopener noreferrer">
+            Visual Crossing
+            <ExternalLink className="size-3" aria-hidden="true" />
+          </a>
+        </p>
+      </div>
+
+    </section>
 
     </div>
   )
