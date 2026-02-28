@@ -1,8 +1,9 @@
 import { getSupabase } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
+import CountryPage from './CountryPage'
 import CountrySheet from './CountrySheet'
 
-export default async function CountryPage({ params }: { params: Promise<{ country: string }> }) {
+export default async function Page({ params }: { params: Promise<{ country: string }> }) {
   const { country: slug } = await params
 
   const { data: country } = await getSupabase()
@@ -165,35 +166,28 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
     .single()
 
   return (
-    <CountrySheet
+    <>
+    <CountryPage
       country={country}
       allCountries={allCountries ?? []}
       visaRequirements={visaRequirements ?? []}
-      entryRequirements={entryRequirements}
-      embassies={embassies ?? []}
+      entryRequirements={entryRequirements ?? null}
       governmentResources={governmentResources ?? []}
-      currency={currency}
-      paymentMethods={paymentMethods}
+      currency={currency ?? null}
+      paymentMethods={paymentMethods ?? null}
       tippingCustoms={tippingCustoms ?? []}
       averageCosts={averageCosts ?? []}
-      taxRefund={taxRefund}
-      countryElectrical={countryElectrical}
-      plugTypes={plugTypes ?? []}
-      electricalTemplates={electricalTemplates ?? []}
-      allCountryElectrical={allCountryElectrical ?? []}
+      taxRefund={taxRefund ?? null}
       currencyReference={currencyReferenceData ?? []}
-      airports={airportsData ?? []}
-      taxisRidehailing={taxisRidehailingData}
-      publicTransit={publicTransitData}
-      driving={drivingData}
-      phoneInfo={phoneInfoData}
-      mobileData={mobileDataData}
-      appsAccess={appsAccessData}
-      religions={religionsData ?? []}
+      phoneInfo={phoneInfoData ?? null}
+      mobileData={mobileDataData ?? null}
+      appsAccess={appsAccessData ?? null}
       countryTimezones={countryTimezonesData ?? []}
-      emergencyNumbers={emergencyNumbersData}
-      travelAdvisory={travelAdvisoryData}
-      healthSafety={healthSafetyData}
+      airports={airportsData ?? []}
+      taxisRidehailing={taxisRidehailingData ?? null}
+      publicTransit={publicTransitData ?? null}
+      driving={drivingData ?? null}
     />
+    </>
   )
 }
