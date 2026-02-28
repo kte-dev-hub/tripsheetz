@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "TripSheetz — Your Survival Kit for Every Country",
@@ -20,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="min-h-full bg-gray-50">
-        <body className={`${jetbrainsMono.variable} min-h-full antialiased`} style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
+        <body className={`${GeistSans.className} min-h-full antialiased`}>
         <Navbar />
         {children}
       </body>
