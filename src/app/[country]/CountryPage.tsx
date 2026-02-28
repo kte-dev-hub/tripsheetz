@@ -3514,9 +3514,9 @@ export default function CountryPage({
                           )}
                           {mainEmbassy.google_maps_url && (
                             <div className="mt-1">
-                              <a href={mainEmbassy.google_maps_url} className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                              <a href={mainEmbassy.google_maps_url} className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
                                 <MapPin className="size-3.5" aria-hidden="true" />
-                                View on Google Maps
+                                Google Maps
                               </a>
                             </div>
                           )}
@@ -3526,7 +3526,10 @@ export default function CountryPage({
                         <dt className="text-sm font-medium text-gray-900">Phone</dt>
                         <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                           {mainEmbassy.phone ? (
-                            <a href={`tel:${mainEmbassy.phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{mainEmbassy.phone}</a>
+                            <a href={`tel:${mainEmbassy.phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                              {mainEmbassy.phone}
+                              <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                            </a>
                           ) : '—'}
                         </dd>
                       </div>
@@ -3534,7 +3537,10 @@ export default function CountryPage({
                         <dt className="text-sm font-medium text-gray-900">Emergency After-Hours</dt>
                         <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                           {mainEmbassy.emergency_phone ? (
-                            <a href={`tel:${mainEmbassy.emergency_phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{mainEmbassy.emergency_phone}</a>
+                            <a href={`tel:${mainEmbassy.emergency_phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                              {mainEmbassy.emergency_phone}
+                              <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                            </a>
                           ) : '—'}
                         </dd>
                       </div>
@@ -3544,7 +3550,7 @@ export default function CountryPage({
                           <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                             <a
                               href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`}
-                              className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
+                              className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -3604,9 +3610,9 @@ export default function CountryPage({
                               )}
                               {consulate.google_maps_url && (
                                 <div className="mt-1">
-                                  <a href={consulate.google_maps_url} className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                                  <a href={consulate.google_maps_url} className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
                                     <MapPin className="size-3.5" aria-hidden="true" />
-                                    View on Google Maps
+                                    Google Maps
                                   </a>
                                 </div>
                               )}
@@ -3616,7 +3622,10 @@ export default function CountryPage({
                             <dt className="text-sm font-medium text-gray-900">Phone</dt>
                             <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                               {consulate.phone ? (
-                                <a href={`tel:${consulate.phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{consulate.phone}</a>
+                                <a href={`tel:${consulate.phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                                  {consulate.phone}
+                                  <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                                </a>
                               ) : '—'}
                             </dd>
                           </div>
@@ -3624,7 +3633,10 @@ export default function CountryPage({
                             <dt className="text-sm font-medium text-gray-900">Emergency After-Hours</dt>
                             <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                               {consulate.emergency_phone ? (
-                                <a href={`tel:${consulate.emergency_phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{consulate.emergency_phone}</a>
+                                <a href={`tel:${consulate.emergency_phone.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                                  {consulate.emergency_phone}
+                                  <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                                </a>
                               ) : '—'}
                             </dd>
                           </div>
@@ -3634,7 +3646,7 @@ export default function CountryPage({
                               <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
                                 <a
                                   href={consulate.website.startsWith('http') ? consulate.website : `https://${consulate.website}`}
-                                  className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
+                                  className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
                                   target="_blank"
                                   rel="noopener noreferrer"
                                 >
