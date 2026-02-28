@@ -76,7 +76,9 @@ interface EntryRequirement {
   dutyfree_penalties: string | null
   restricted_items: string | null
   immigration_website: string | null
+  immigration_authority_name: string | null
   customs_website: string | null
+  customs_authority_name: string | null
   entry_portal_name: string | null
   entry_portal_url: string | null
   entry_portal_description: string | null
@@ -1449,9 +1451,10 @@ export default function CountryPage({
                 href={entryRequirements.immigration_website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
               >
-                Immigration authority <ExternalLink className="ml-1 inline size-3.5" aria-hidden="true" />
+                {entryRequirements.immigration_authority_name ?? 'Immigration authority'}
+                <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
               </a>
             </p>
           )}
@@ -1509,9 +1512,10 @@ export default function CountryPage({
                   href={entryRequirements.entry_portal_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-block font-medium text-indigo-600 hover:text-indigo-500"
+                  className="mt-1 inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
                 >
-                  Complete online <ExternalLink className="ml-1 inline size-3.5" aria-hidden="true" />
+                  Complete online
+                  <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
                 </a>
               )}
             </div>
@@ -1667,9 +1671,10 @@ export default function CountryPage({
                 href={entryRequirements.customs_website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-500"
               >
-                Customs authority <ExternalLink className="ml-1 inline size-3.5" aria-hidden="true" />
+                {entryRequirements.customs_authority_name ?? 'Customs authority'}
+                <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
               </a>
             </p>
           )}
@@ -1943,60 +1948,6 @@ export default function CountryPage({
             Tipping customs and typical costs in {country.name}.
           </p>
 
-          {/* Tipping Accordion */}
-          {tippingCustoms.length > 0 && (
-            <div className="mt-3">
-              <button
-                type="button"
-                onClick={() => setTippingOpen(!tippingOpen)}
-                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
-                aria-expanded={tippingOpen}
-              >
-                <span>Tipping</span>
-                <ChevronDown
-                  className={`size-5 text-gray-400 transition-transform duration-200 ${tippingOpen ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-
-              <div
-                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                style={{ maxHeight: tippingOpen ? '2000px' : '0px' }}
-              >
-                <div className="mt-1">
-                  <table className="min-w-full divide-y divide-gray-300">
-                    <thead>
-                      <tr>
-                        <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                          Context
-                        </th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                          Expected
-                        </th>
-                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
-                          Amount
-                        </th>
-                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
-                          Note
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {tippingCustoms.map((tip) => (
-                        <tr key={tip.id}>
-                          <td className="py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">{tip.context}</td>
-                          <td className="px-3 py-3 text-sm text-gray-500">{tip.expected}</td>
-                          <td className="hidden px-3 py-3 text-sm text-gray-500 sm:table-cell">{tip.typical_amount ?? '—'}</td>
-                          <td className="hidden px-3 py-3 text-sm text-gray-500 lg:table-cell">{tip.note ?? '—'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Typical Costs Accordion */}
           {averageCosts.length > 0 && (
             <div className="mt-3">
@@ -2044,6 +1995,60 @@ export default function CountryPage({
                           </td>
                           <td className="hidden px-3 py-3 text-sm text-gray-500 sm:table-cell">{cost.cost_local}</td>
                           <td className="px-3 py-3 text-sm text-gray-500">{cost.cost_usd}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tipping Accordion */}
+          {tippingCustoms.length > 0 && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => setTippingOpen(!tippingOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={tippingOpen}
+              >
+                <span>Tipping</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${tippingOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: tippingOpen ? '2000px' : '0px' }}
+              >
+                <div className="mt-1">
+                  <table className="min-w-full divide-y divide-gray-300">
+                    <thead>
+                      <tr>
+                        <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+                          Context
+                        </th>
+                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                          Expected
+                        </th>
+                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+                          Amount
+                        </th>
+                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
+                          Note
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {tippingCustoms.map((tip) => (
+                        <tr key={tip.id}>
+                          <td className="py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">{tip.context}</td>
+                          <td className="px-3 py-3 text-sm text-gray-500">{tip.expected}</td>
+                          <td className="hidden px-3 py-3 text-sm text-gray-500 sm:table-cell">{tip.typical_amount ?? '—'}</td>
+                          <td className="hidden px-3 py-3 text-sm text-gray-500 lg:table-cell">{tip.note ?? '—'}</td>
                         </tr>
                       ))}
                     </tbody>
