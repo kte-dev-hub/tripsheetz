@@ -191,6 +191,7 @@ export default async function Page({ params }: { params: Promise<{ country: stri
       plugTypes={plugTypes ?? []}
       electricalTemplates={electricalTemplates ?? []}
       allCountryElectrical={allCountryElectrical ?? []}
+      religions={religionsData ?? []}
     />
     </>
   )

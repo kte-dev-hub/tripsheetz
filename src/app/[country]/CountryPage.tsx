@@ -8,6 +8,10 @@ import {
   ComboboxOption,
   ComboboxOptions,
   Label,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
 } from '@headlessui/react'
 import {
   ChevronsUpDown, Check, Info, ChevronDown, ExternalLink, Clock, Plane,
@@ -24,6 +28,14 @@ interface Country {
   capital_city: string | null
   capital_lat: number | null
   capital_lon: number | null
+  population: string | null
+  government_type: string | null
+  languages_official: string | null
+  languages_common: string | null
+  measurement_system: string | null
+  dialing_code: string | null
+  driving_side: string | null
+  currency_code: string | null
 }
 
 interface VisaRequirement {
@@ -319,6 +331,14 @@ interface ClimateAverage {
   humidity: number
 }
 
+interface Religion {
+  id: number
+  country_code: string
+  religion_name: string
+  percentage: number
+  display_order: number
+}
+
 interface CountryPageProps {
   country: Country
   allCountries: { id: number; name: string; iso_alpha2: string; currency_code: string | null }[]
@@ -343,6 +363,7 @@ interface CountryPageProps {
   plugTypes: PlugType[]
   electricalTemplates: ElectricalTemplate[]
   allCountryElectrical: CountryElectricalSummary[]
+  religions: Religion[]
 }
 
 function getWeatherIcon(iconName: string, size: string = 'size-8') {
@@ -402,6 +423,7 @@ export default function CountryPage({
   plugTypes,
   electricalTemplates,
   allCountryElectrical,
+  religions,
 }: CountryPageProps) {
   const [masterTravelingFrom, setMasterTravelingFrom] = useState<string | null>(null)
   const [masterNationality, setMasterNationality] = useState<string | null>(null)
@@ -450,6 +472,33 @@ export default function CountryPage({
   const [climateLoading, setClimateLoading] = useState(false)
   const [forecastOpen, setForecastOpen] = useState(false)
   const [climateOpen, setClimateOpen] = useState(false)
+
+  // Unit converter
+  const [tempC, setTempC] = useState('')
+  const [tempF, setTempF] = useState('')
+  const [distKm, setDistKm] = useState('')
+  const [distMi, setDistMi] = useState('')
+  const [weightKg, setWeightKg] = useState('')
+  const [weightLbs, setWeightLbs] = useState('')
+  const [volL, setVolL] = useState('')
+  const [volGal, setVolGal] = useState('')
+  const [heightCm, setHeightCm] = useState('')
+  const [heightIn, setHeightIn] = useState('')
+  const [speedKmh, setSpeedKmh] = useState('')
+  const [speedMph, setSpeedMph] = useState('')
+  const [areaSqm, setAreaSqm] = useState('')
+  const [areaSqft, setAreaSqft] = useState('')
+  const [activeConverter, setActiveConverter] = useState('temperature')
+  const converterOptions = [
+    { id: 'temperature', name: 'Temperature' },
+    { id: 'distance', name: 'Distance' },
+    { id: 'weight', name: 'Weight' },
+    { id: 'volume', name: 'Volume' },
+    { id: 'height', name: 'Height' },
+    { id: 'speed', name: 'Speed' },
+    { id: 'area', name: 'Area' },
+  ]
+  const activeConverterOption = converterOptions.find(c => c.id === activeConverter) || converterOptions[0]
 
   const masterCountryList = allCountries
     .filter((c) => c.iso_alpha2.trim() !== country.iso_alpha2.trim())
@@ -632,6 +681,92 @@ export default function CountryPage({
   }
 
   const electricalComparison = getElectricalComparison()
+
+  // Unit converter handlers
+  const onTempCChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const c = e.target.value
+    setTempC(c)
+    const n = parseFloat(c)
+    setTempF(isNaN(n) ? '' : String(Math.round((n * 9 / 5 + 32) * 10) / 10))
+  }
+  const onTempFChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.value
+    setTempF(f)
+    const n = parseFloat(f)
+    setTempC(isNaN(n) ? '' : String(Math.round((n - 32) * 5 / 9 * 10) / 10))
+  }
+  const onDistKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const km = e.target.value
+    setDistKm(km)
+    const n = parseFloat(km)
+    setDistMi(isNaN(n) ? '' : String(Math.round(n * 0.621371 * 100) / 100))
+  }
+  const onDistMiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const mi = e.target.value
+    setDistMi(mi)
+    const n = parseFloat(mi)
+    setDistKm(isNaN(n) ? '' : String(Math.round(n / 0.621371 * 100) / 100))
+  }
+  const onWeightKgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const kg = e.target.value
+    setWeightKg(kg)
+    const n = parseFloat(kg)
+    setWeightLbs(isNaN(n) ? '' : String(Math.round(n * 2.20462 * 10) / 10))
+  }
+  const onWeightLbsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const lbs = e.target.value
+    setWeightLbs(lbs)
+    const n = parseFloat(lbs)
+    setWeightKg(isNaN(n) ? '' : String(Math.round(n / 2.20462 * 10) / 10))
+  }
+  const onVolLChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const l = e.target.value
+    setVolL(l)
+    const n = parseFloat(l)
+    setVolGal(isNaN(n) ? '' : String(Math.round(n * 0.264172 * 100) / 100))
+  }
+  const onVolGalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const gal = e.target.value
+    setVolGal(gal)
+    const n = parseFloat(gal)
+    setVolL(isNaN(n) ? '' : String(Math.round(n / 0.264172 * 100) / 100))
+  }
+  const onHeightCmToInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const cm = e.target.value
+    setHeightCm(cm)
+    const n = parseFloat(cm)
+    setHeightIn(isNaN(n) ? '' : String(Math.round(n / 2.54 * 10) / 10))
+  }
+  const onHeightInToCmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inVal = e.target.value
+    setHeightIn(inVal)
+    const n = parseFloat(inVal)
+    setHeightCm(isNaN(n) ? '' : String(Math.round(n * 2.54 * 10) / 10))
+  }
+  const onSpeedKmhChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setSpeedKmh(val)
+    const n = parseFloat(val)
+    setSpeedMph(isNaN(n) ? '' : String(Math.round(n * 0.621371 * 10) / 10))
+  }
+  const onSpeedMphChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setSpeedMph(val)
+    const n = parseFloat(val)
+    setSpeedKmh(isNaN(n) ? '' : String(Math.round(n * 1.60934 * 10) / 10))
+  }
+  const onAreaSqmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setAreaSqm(val)
+    const n = parseFloat(val)
+    setAreaSqft(isNaN(n) ? '' : String(Math.round(n * 10.7639 * 10) / 10))
+  }
+  const onAreaSqftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setAreaSqft(val)
+    const n = parseFloat(val)
+    setAreaSqm(isNaN(n) ? '' : String(Math.round(n * 0.092903 * 10) / 10))
+  }
 
   const getCurrencySymbol = (code: string): string => {
     const ref = currencyReference.find((c) => c.currency_code === code)
@@ -2654,6 +2789,210 @@ export default function CountryPage({
           </a>
         </p>
       </div>
+
+    </section>
+
+    {/* ============================================================
+        SECTION 8: OVERVIEW
+        ============================================================ */}
+    <section id="overview" className="mt-10">
+
+      {/* Section Divider — #355 */}
+      <div className="flex items-center">
+        <div className="relative flex justify-start">
+          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
+            Overview
+          </span>
+        </div>
+        <div aria-hidden="true" className="w-full border-t border-gray-300" />
+      </div>
+
+      {/* ---- IDENTITY — stat grid (#59) ---- */}
+      <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Capital</dt>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.capital_city ?? '—'}</dd>
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Population</dt>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.population ?? '—'}</dd>
+        </div>
+        <div className="px-4 py-5 sm:p-6">
+          <dt className="text-sm font-medium text-gray-500">Government</dt>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.government_type ?? '—'}</dd>
+        </div>
+      </dl>
+
+      {/* ---- LANGUAGE — description list (#50) ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Language</h3>
+        <div className="mt-3 border-t border-gray-100">
+          <dl className="divide-y divide-gray-100">
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium text-gray-900">Official Languages</dt>
+              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_official ?? '—'}</dd>
+            </div>
+            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium text-gray-900">Common Languages</dt>
+              <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_common ?? '—'}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      {/* ---- MEASUREMENTS — stat + unit converter ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Measurements</h3>
+        <dl className="mt-3 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+          {/* System stat — 1/3 */}
+          <div className="px-4 py-5 sm:p-6">
+            <dt className="text-sm font-medium text-gray-500">System</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.measurement_system ?? '—'}</dd>
+          </div>
+          {/* Unit converter — 2/3 */}
+          <div className="md:col-span-2 px-4 py-5 sm:p-6">
+            <dt className="truncate text-sm font-medium text-gray-500">Unit Converter</dt>
+            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+              {/* Converter type dropdown — Listbox */}
+              <Listbox value={activeConverterOption} onChange={(option) => setActiveConverter(option.id)}>
+                <div className="relative inline-block">
+                  <ListboxButton className="inline-flex items-center gap-x-2 rounded-md bg-white py-1.5 pr-3 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-indigo-600 sm:text-sm/6">
+                    <span className="truncate">{activeConverterOption.name}</span>
+                    <ChevronsUpDown aria-hidden="true" className="size-4 shrink-0 text-gray-500" />
+                  </ListboxButton>
+                  <ListboxOptions
+                    transition
+                    className="absolute z-10 mt-1 max-h-60 min-w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline-1 outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                  >
+                    {converterOptions.map((option) => (
+                      <ListboxOption
+                        key={option.id}
+                        value={option}
+                        className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                      >
+                        <span className="block truncate font-normal group-data-selected:font-semibold">{option.name}</span>
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                          <Check aria-hidden="true" className="size-5" />
+                        </span>
+                      </ListboxOption>
+                    ))}
+                  </ListboxOptions>
+                </div>
+              </Listbox>
+
+              {/* Left input */}
+              <div className="flex-1">
+                <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={
+                      activeConverter === 'temperature' ? tempC :
+                      activeConverter === 'distance' ? distKm :
+                      activeConverter === 'weight' ? weightKg :
+                      activeConverter === 'volume' ? volL :
+                      activeConverter === 'height' ? heightCm :
+                      activeConverter === 'speed' ? speedKmh :
+                      areaSqm
+                    }
+                    onChange={
+                      activeConverter === 'temperature' ? onTempCChange :
+                      activeConverter === 'distance' ? onDistKmChange :
+                      activeConverter === 'weight' ? onWeightKgChange :
+                      activeConverter === 'volume' ? onVolLChange :
+                      activeConverter === 'height' ? onHeightCmToInChange :
+                      activeConverter === 'speed' ? onSpeedKmhChange :
+                      onAreaSqmChange
+                    }
+                    className="block min-w-0 grow py-1.5 pl-3 pr-2 text-base font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                  <div className="shrink-0 text-sm text-gray-500 select-none">
+                    {activeConverter === 'temperature' ? '°C' :
+                     activeConverter === 'distance' ? 'km' :
+                     activeConverter === 'weight' ? 'kg' :
+                     activeConverter === 'volume' ? 'L' :
+                     activeConverter === 'height' ? 'cm' :
+                     activeConverter === 'speed' ? 'km/h' :
+                     'm²'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Equals */}
+              <span className="text-lg font-semibold text-gray-400 text-center">=</span>
+
+              {/* Right input */}
+              <div className="flex-1">
+                <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={
+                      activeConverter === 'temperature' ? tempF :
+                      activeConverter === 'distance' ? distMi :
+                      activeConverter === 'weight' ? weightLbs :
+                      activeConverter === 'volume' ? volGal :
+                      activeConverter === 'height' ? heightIn :
+                      activeConverter === 'speed' ? speedMph :
+                      areaSqft
+                    }
+                    onChange={
+                      activeConverter === 'temperature' ? onTempFChange :
+                      activeConverter === 'distance' ? onDistMiChange :
+                      activeConverter === 'weight' ? onWeightLbsChange :
+                      activeConverter === 'volume' ? onVolGalChange :
+                      activeConverter === 'height' ? onHeightInToCmChange :
+                      activeConverter === 'speed' ? onSpeedMphChange :
+                      onAreaSqftChange
+                    }
+                    className="block min-w-0 grow py-1.5 pl-3 pr-2 text-base font-semibold text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                  />
+                  <div className="shrink-0 text-sm text-gray-500 select-none">
+                    {activeConverter === 'temperature' ? '°F' :
+                     activeConverter === 'distance' ? 'mi' :
+                     activeConverter === 'weight' ? 'lbs' :
+                     activeConverter === 'volume' ? 'gal' :
+                     activeConverter === 'height' ? 'in' :
+                     activeConverter === 'speed' ? 'mph' :
+                     'ft²'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </dl>
+      </div>
+
+      {/* ---- RELIGION — horizontal bar chart ---- */}
+      {religions.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Religion</h3>
+          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <div className="space-y-3">
+              {religions.map((religion, index) => (
+                <div key={religion.id}>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className={`${index === 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-500'}`}>
+                      {religion.religion_name}
+                    </span>
+                    <span className={`font-semibold ${index === 0 ? 'text-2xl text-gray-900' : 'text-gray-500'}`}>
+                      {religion.percentage}%
+                    </span>
+                  </div>
+                  <div className="mt-1 h-2 w-full rounded-full bg-gray-100">
+                    <div
+                      className="h-2 rounded-full bg-indigo-600"
+                      style={{ width: `${Math.min(religion.percentage, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
     </section>
 
