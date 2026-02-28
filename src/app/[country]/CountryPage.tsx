@@ -15,7 +15,8 @@ import {
 } from '@headlessui/react'
 import {
   ChevronsUpDown, Check, Info, ChevronDown, ExternalLink, Clock, Plane,
-  Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind
+  Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind,
+  Phone, MapPin
 } from 'lucide-react'
 
 interface Country {
@@ -36,6 +37,9 @@ interface Country {
   dialing_code: string | null
   driving_side: string | null
   currency_code: string | null
+  emergency_police: string | null
+  emergency_ambulance: string | null
+  emergency_fire: string | null
 }
 
 interface VisaRequirement {
@@ -339,6 +343,65 @@ interface Religion {
   display_order: number
 }
 
+interface Embassy {
+  id: number
+  country_code: string
+  nationality_code: string
+  type: string
+  official_name: string | null
+  city: string | null
+  address: string | null
+  local_address: string | null
+  google_maps_url: string | null
+  phone: string | null
+  emergency_phone: string | null
+  email: string | null
+  website: string | null
+  verified: boolean | null
+  last_verified: string | null
+}
+
+interface EmergencyNumbers {
+  id: number
+  country_code: string
+  tourist_police: string | null
+  coast_guard: string | null
+  roadside_assistance: string | null
+  roadside_assistance_name: string | null
+  other_emergency_name_1: string | null
+  other_emergency_number_1: string | null
+  other_emergency_name_2: string | null
+  other_emergency_number_2: string | null
+  other_emergency_name_3: string | null
+  other_emergency_number_3: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface TravelAdvisory {
+  id: number
+  country_code: string
+  advisory_us: string | null
+  advisory_us_url: string | null
+  advisory_uk: string | null
+  advisory_uk_url: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface HealthSafety {
+  id: number
+  country_code: string
+  required_vaccinations: string | null
+  health_insurance_required: string | null
+  tap_water_safe: string | null
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
 interface CountryPageProps {
   country: Country
   allCountries: { id: number; name: string; iso_alpha2: string; currency_code: string | null }[]
@@ -364,6 +427,10 @@ interface CountryPageProps {
   electricalTemplates: ElectricalTemplate[]
   allCountryElectrical: CountryElectricalSummary[]
   religions: Religion[]
+  embassies: Embassy[]
+  emergencyNumbers: EmergencyNumbers | null
+  travelAdvisory: TravelAdvisory | null
+  healthSafety: HealthSafety | null
 }
 
 function getWeatherIcon(iconName: string, size: string = 'size-8') {
@@ -424,6 +491,10 @@ export default function CountryPage({
   electricalTemplates,
   allCountryElectrical,
   religions,
+  embassies,
+  emergencyNumbers,
+  travelAdvisory,
+  healthSafety,
 }: CountryPageProps) {
   const [masterTravelingFrom, setMasterTravelingFrom] = useState<string | null>(null)
   const [masterNationality, setMasterNationality] = useState<string | null>(null)
@@ -681,6 +752,17 @@ export default function CountryPage({
   }
 
   const electricalComparison = getElectricalComparison()
+
+  // Embassy — filter by master nationality
+  const selectedEmbassies = masterNationality
+    ? embassies.filter((e) => e.nationality_code.trim() === masterNationality)
+    : []
+  const mainEmbassy = selectedEmbassies.find((e) => e.type === 'embassy') ?? null
+
+  // Nationality name for display
+  const nationalityName = masterNationality
+    ? (allCountries.find((c) => c.iso_alpha2.trim() === masterNationality)?.name ?? masterNationality)
+    : null
 
   // Unit converter handlers
   const onTempCChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -2993,6 +3075,291 @@ export default function CountryPage({
           </div>
         </div>
       )}
+
+    </section>
+
+    {/* ============================================================
+        SECTION 9: EMERGENCY
+        ============================================================ */}
+    <section id="emergency" className="mt-10">
+
+      {/* Section Divider — #355 */}
+      <div className="flex items-center">
+        <div className="relative flex justify-start">
+          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
+            Emergency
+          </span>
+        </div>
+        <div aria-hidden="true" className="w-full border-t border-gray-300" />
+      </div>
+
+      {/* ---- EMERGENCY NUMBERS — primary ---- */}
+      <div className="mt-6">
+        <dl className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+              <Phone className="size-4" aria-hidden="true" />
+              Police
+            </dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_police ? (
+                <a href={`tel:${country.emergency_police.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_police}</a>
+              ) : '—'}
+            </dd>
+          </div>
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+              <Phone className="size-4" aria-hidden="true" />
+              Ambulance
+            </dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_ambulance ? (
+                <a href={`tel:${country.emergency_ambulance.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_ambulance}</a>
+              ) : '—'}
+            </dd>
+          </div>
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+              <Phone className="size-4" aria-hidden="true" />
+              Fire
+            </dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_fire ? (
+                <a href={`tel:${country.emergency_fire.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{country.emergency_fire}</a>
+              ) : '—'}
+            </dd>
+          </div>
+        </dl>
+      </div>
+
+      {/* ---- SUPPLEMENTARY NUMBERS ---- */}
+      {emergencyNumbers && (emergencyNumbers.tourist_police || emergencyNumbers.roadside_assistance || emergencyNumbers.coast_guard) && (
+        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          {emergencyNumbers.tourist_police && (
+            <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+                <Phone className="size-4" aria-hidden="true" />
+                Tourist Police
+              </dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                <a href={`tel:${emergencyNumbers.tourist_police.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.tourist_police}</a>
+              </dd>
+            </div>
+          )}
+          {emergencyNumbers.roadside_assistance && (
+            <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+                <Phone className="size-4" aria-hidden="true" />
+                Roadside{emergencyNumbers.roadside_assistance_name ? ` (${emergencyNumbers.roadside_assistance_name})` : ''}
+              </dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                <a href={`tel:${emergencyNumbers.roadside_assistance.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.roadside_assistance}</a>
+              </dd>
+            </div>
+          )}
+          {emergencyNumbers.coast_guard && (
+            <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+              <dt className="flex items-center gap-1.5 truncate text-sm font-medium text-gray-500">
+                <Phone className="size-4" aria-hidden="true" />
+                Coast Guard
+              </dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+                <a href={`tel:${emergencyNumbers.coast_guard.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.coast_guard}</a>
+              </dd>
+            </div>
+          )}
+        </dl>
+      )}
+
+      {/* ---- OTHER EMERGENCY NUMBERS ---- */}
+      {emergencyNumbers && (emergencyNumbers.other_emergency_name_1 || emergencyNumbers.other_emergency_name_2 || emergencyNumbers.other_emergency_name_3) && (
+        <div className="mt-5 border-t border-gray-100">
+          <dl className="divide-y divide-gray-100">
+            {emergencyNumbers.other_emergency_name_1 && emergencyNumbers.other_emergency_number_1 && (
+              <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_1}</dt>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                  <a href={`tel:${emergencyNumbers.other_emergency_number_1.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_1}</a>
+                </dd>
+              </div>
+            )}
+            {emergencyNumbers.other_emergency_name_2 && emergencyNumbers.other_emergency_number_2 && (
+              <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_2}</dt>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                  <a href={`tel:${emergencyNumbers.other_emergency_number_2.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_2}</a>
+                </dd>
+              </div>
+            )}
+            {emergencyNumbers.other_emergency_name_3 && emergencyNumbers.other_emergency_number_3 && (
+              <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt className="text-sm font-medium text-gray-900">{emergencyNumbers.other_emergency_name_3}</dt>
+                <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                  <a href={`tel:${emergencyNumbers.other_emergency_number_3.replace(/[#\s]/g, (m: string) => m === '#' ? '%23' : '')}`} className="text-indigo-600 hover:text-indigo-500">{emergencyNumbers.other_emergency_number_3}</a>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      )}
+
+      {/* ---- YOUR EMBASSY — driven by master Nationality ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Your Embassy</h3>
+        {masterNationality && nationalityName ? (
+          <>
+            <p className="mt-1 text-sm text-gray-600">
+              Showing embassy information for {nationalityName} citizens in {country.name}.
+            </p>
+            <div className="mt-3 border-t border-gray-100">
+              <dl className="divide-y divide-gray-100">
+                {mainEmbassy ? (
+                  <>
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Embassy{mainEmbassy.city ? ` — ${mainEmbassy.city}` : ''}</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mainEmbassy.official_name ?? `${nationalityName} Embassy in ${mainEmbassy.city ?? '—'}`}</dd>
+                    </div>
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Address</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                        <div>{mainEmbassy.address ?? '—'}</div>
+                        {mainEmbassy.local_address && (
+                          <div className="mt-1 text-gray-500">{mainEmbassy.local_address}</div>
+                        )}
+                        {mainEmbassy.google_maps_url && (
+                          <div className="mt-1">
+                            <a href={mainEmbassy.google_maps_url} className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                              <MapPin className="size-3.5" aria-hidden="true" />
+                              View on Google Maps
+                            </a>
+                          </div>
+                        )}
+                      </dd>
+                    </div>
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Phone</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                        {mainEmbassy.phone ? (
+                          <a href={`tel:${mainEmbassy.phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{mainEmbassy.phone}</a>
+                        ) : '—'}
+                      </dd>
+                    </div>
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Emergency After-Hours</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                        {mainEmbassy.emergency_phone ? (
+                          <a href={`tel:${mainEmbassy.emergency_phone.replace(/\s/g, '')}`} className="text-indigo-600 hover:text-indigo-500">{mainEmbassy.emergency_phone}</a>
+                        ) : '—'}
+                      </dd>
+                    </div>
+                    {mainEmbassy.website && (
+                      <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                        <dt className="text-sm font-medium text-gray-900">Website</dt>
+                        <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                          <a
+                            href={mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`}
+                            className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {(() => { try { return new URL(mainEmbassy.website.startsWith('http') ? mainEmbassy.website : `https://${mainEmbassy.website}`).hostname.replace('www.', '') } catch { return mainEmbassy.website } })()}
+                            <ExternalLink className="size-3.5" aria-hidden="true" />
+                          </a>
+                        </dd>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="px-4 py-4 sm:px-0">
+                    <p className="text-sm text-gray-500">No embassy data available for this nationality.</p>
+                  </div>
+                )}
+              </dl>
+            </div>
+          </>
+        ) : (
+          <p className="mt-1 text-sm text-gray-500">
+            Select your nationality in the master selector above to see embassy information.
+          </p>
+        )}
+      </div>
+
+      {/* ---- HEALTH ---- */}
+      {healthSafety && (
+        <div className="mt-8">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Health</h3>
+          <div className="mt-3 border-t border-gray-100">
+            <dl className="divide-y divide-gray-100">
+              {healthSafety.required_vaccinations && (
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">Required Vaccinations</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.required_vaccinations}</dd>
+                </div>
+              )}
+              {healthSafety.health_insurance_required && (
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">Health Insurance</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.health_insurance_required}</dd>
+                </div>
+              )}
+              {healthSafety.tap_water_safe && (
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">Tap Water</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{healthSafety.tap_water_safe}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TRAVEL ADVISORIES ---- */}
+      {travelAdvisory && (
+        <div className="mt-8">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Travel Advisories</h3>
+          <div className="mt-3 border-t border-gray-100">
+            <dl className="divide-y divide-gray-100">
+              {travelAdvisory.advisory_us && (
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">US Advisory</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                    {travelAdvisory.advisory_us}
+                    {travelAdvisory.advisory_us_url && (
+                      <>
+                        {' · '}
+                        <a href={travelAdvisory.advisory_us_url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                          Source <ExternalLink className="inline size-3.5" aria-hidden="true" />
+                        </a>
+                      </>
+                    )}
+                  </dd>
+                </div>
+              )}
+              {travelAdvisory.advisory_uk && (
+                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">UK Advisory</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                    {travelAdvisory.advisory_uk}
+                    {travelAdvisory.advisory_uk_url && (
+                      <>
+                        {' · '}
+                        <a href={travelAdvisory.advisory_uk_url} className="font-medium text-indigo-600 hover:text-indigo-500" target="_blank" rel="noopener noreferrer">
+                          Source <ExternalLink className="inline size-3.5" aria-hidden="true" />
+                        </a>
+                      </>
+                    )}
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </div>
+        </div>
+      )}
+
+      {/* ---- DISCLAIMER ---- */}
+      <div className="mt-8 overflow-hidden rounded-lg bg-gray-100 px-4 py-5 sm:p-6">
+        <p className="text-sm text-gray-500">This information is for reference only and may not reflect the most current data. In any emergency, contact local emergency services immediately. Always verify embassy details before travel. Travel advisories are subject to change — check official government sources for the latest information.</p>
+      </div>
 
     </section>
 
