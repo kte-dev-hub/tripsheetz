@@ -2447,23 +2447,19 @@ export default function CountryPage({
                   <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
                     {/* Card header */}
                     <div className="px-4 py-5 sm:px-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-base font-semibold text-gray-900">{airport.airport_name}</h4>
-                          {airport.website && (
-                            <a
-                              href={airport.website}
-                              className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
-                              <ExternalLink className="size-3.5" aria-hidden="true" />
-                            </a>
-                          )}
-                        </div>
-                        <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
-                      </div>
+                      <p className="text-lg font-semibold text-gray-400">{airport.iata_code}</p>
+                      <h4 className="mt-1 text-base font-semibold text-gray-900">{airport.airport_name}</h4>
+                      {airport.website && (
+                        <a
+                          href={airport.website}
+                          className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
+                          <ExternalLink className="size-3.5" aria-hidden="true" />
+                        </a>
+                      )}
                     </div>
                     {/* Card body */}
                     <div className="px-4 py-5 sm:p-6">
@@ -2506,23 +2502,19 @@ export default function CountryPage({
                     >
                       {/* Card header */}
                       <div className="px-4 py-5 sm:px-6">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-900">{airport.airport_name}</h4>
-                            {airport.website && (
-                              <a
-                                href={airport.website}
-                                className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
-                                <ExternalLink className="size-3.5" aria-hidden="true" />
-                              </a>
-                            )}
-                          </div>
-                          <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
-                        </div>
+                        <p className="text-lg font-semibold text-gray-400">{airport.iata_code}</p>
+                        <h4 className="mt-1 text-sm font-semibold text-gray-900">{airport.airport_name}</h4>
+                        {airport.website && (
+                          <a
+                            href={airport.website}
+                            className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
+                            <ExternalLink className="size-3.5" aria-hidden="true" />
+                          </a>
+                        )}
                       </div>
                       {/* Card body */}
                       <div className="px-4 py-5 sm:p-6">
