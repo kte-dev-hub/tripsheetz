@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-const inter = Inter({
-  variable: "--font-inter",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
 });
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="min-h-full bg-gray-50">
-      <body className={`${inter.variable} font-sans min-h-full antialiased`}>
+        <body className={`${jetbrainsMono.variable} min-h-full antialiased`} style={{ fontFamily: 'var(--font-jetbrains), monospace' }}>
         <Navbar />
         {children}
       </body>
