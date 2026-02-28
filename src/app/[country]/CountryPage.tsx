@@ -238,6 +238,38 @@ interface Driving {
   source_urls: string | null
 }
 
+interface CountryElectrical {
+  id: number
+  country_code: string
+  plug_types: string
+  voltage: string
+  frequency: string
+  last_verified: string | null
+  verified: boolean | null
+  source_urls: string | null
+}
+
+interface PlugType {
+  id: number
+  type_letter: string
+  description: string
+  svg_filename: string
+}
+
+interface ElectricalTemplate {
+  id: number
+  scenario: string
+  heading: string
+  description: string
+}
+
+interface CountryElectricalSummary {
+  country_code: string
+  plug_types: string
+  voltage: string
+  frequency: string
+}
+
 interface CountryPageProps {
   country: Country
   allCountries: { id: number; name: string; iso_alpha2: string; currency_code: string | null }[]
@@ -258,6 +290,10 @@ interface CountryPageProps {
   taxisRidehailing: TaxisRidehailing | null
   publicTransit: PublicTransit | null
   driving: Driving | null
+  countryElectrical: CountryElectrical | null
+  plugTypes: PlugType[]
+  electricalTemplates: ElectricalTemplate[]
+  allCountryElectrical: CountryElectricalSummary[]
 }
 
 export default function CountryPage({
@@ -280,6 +316,10 @@ export default function CountryPage({
   taxisRidehailing,
   publicTransit,
   driving,
+  countryElectrical,
+  plugTypes,
+  electricalTemplates,
+  allCountryElectrical,
 }: CountryPageProps) {
   const [masterTravelingFrom, setMasterTravelingFrom] = useState<string | null>(null)
   const [masterNationality, setMasterNationality] = useState<string | null>(null)
@@ -416,6 +456,81 @@ export default function CountryPage({
     if (raw === 'GMT') return '+00:00'
     return raw.replace('GMT', '')
   }
+
+  const homeCountries = allCountryElectrical
+    .filter((ce) => ce.country_code.trim() !== country.iso_alpha2.trim())
+    .map((ce) => {
+      const match = allCountries.find((c) => c.iso_alpha2.trim() === ce.country_code.trim())
+      return {
+        code: ce.country_code.trim(),
+        name: match?.name ?? ce.country_code,
+        plug_types: ce.plug_types,
+        voltage: ce.voltage,
+        frequency: ce.frequency,
+      }
+    })
+    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const selectedHomeElectrical = masterTravelingFrom
+    ? homeCountries.find((c) => c.code === masterTravelingFrom) ?? null
+    : null
+
+  function getElectricalComparison() {
+    if (!countryElectrical || !selectedHomeElectrical) return null
+
+    const destTypes = countryElectrical.plug_types.split(',').map((t) => t.trim())
+    const homeTypes = selectedHomeElectrical.plug_types.split(',').map((t) => t.trim())
+
+    const matching = destTypes.filter((t) => homeTypes.includes(t))
+    const nonMatchingHome = homeTypes.filter((t) => !destTypes.includes(t))
+
+    let adapterScenario: string
+    if (matching.length === homeTypes.length) {
+      adapterScenario = 'adapter_not_needed'
+    } else if (matching.length > 0) {
+      adapterScenario = 'adapter_partial'
+    } else {
+      adapterScenario = 'adapter_needed'
+    }
+
+    const destV = parseInt(countryElectrical.voltage)
+    const homeV = parseInt(selectedHomeElectrical.voltage)
+    const voltageSameRange =
+      (destV >= 100 && destV <= 127 && homeV >= 100 && homeV <= 127) ||
+      (destV >= 220 && destV <= 240 && homeV >= 220 && homeV <= 240)
+    const voltageScenario = voltageSameRange ? 'voltage_same' : 'voltage_different'
+
+    const fillTemplate = (template: string) => {
+      const homePlugTypeNames = homeTypes.map((t) => `Type ${t}`).join(', ')
+      const destPlugTypeNames = destTypes.map((t) => `Type ${t}`).join(', ')
+      const matchingTypeNames = matching.map((t) => `Type ${t}`).join(', ')
+      const nonMatchingTypeNames = nonMatchingHome.map((t) => `Type ${t}`).join(', ')
+
+      return template
+        .replace(/{home_country}/g, selectedHomeElectrical.name)
+        .replace(/{destination_country}/g, country.name)
+        .replace(/{home_plug_types}/g, homePlugTypeNames)
+        .replace(/{destination_plug_types}/g, destPlugTypeNames)
+        .replace(/{matching_types}/g, matchingTypeNames)
+        .replace(/{non_matching_types}/g, nonMatchingTypeNames)
+        .replace(/{home_voltage}/g, selectedHomeElectrical.voltage)
+        .replace(/{destination_voltage}/g, countryElectrical.voltage)
+    }
+
+    const adapterTemplate = electricalTemplates.find((t) => t.scenario === adapterScenario)
+    const voltageTemplate = electricalTemplates.find((t) => t.scenario === voltageScenario)
+
+    return {
+      adapter: adapterTemplate
+        ? { heading: adapterTemplate.heading, description: fillTemplate(adapterTemplate.description) }
+        : null,
+      voltage: voltageTemplate
+        ? { heading: voltageTemplate.heading, description: fillTemplate(voltageTemplate.description) }
+        : null,
+    }
+  }
+
+  const electricalComparison = getElectricalComparison()
 
   const getCurrencySymbol = (code: string): string => {
     const ref = currencyReference.find((c) => c.currency_code === code)
@@ -1914,6 +2029,112 @@ export default function CountryPage({
       )}
 
     </section>
+
+    {/* ============================================================
+        SECTION 6: ELECTRICAL
+        ============================================================ */}
+    {countryElectrical && (
+    <section id="electrical" className="mt-10">
+
+      {/* Section Divider — #355 */}
+      <div className="flex items-center">
+        <div className="relative flex justify-start">
+          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
+            Electrical
+          </span>
+        </div>
+        <div aria-hidden="true" className="w-full border-t border-gray-300" />
+      </div>
+
+      {/* ---- PLUG TYPES — SVG grid (#107 pattern) ---- */}
+      <ul role="list" className="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-x-6 lg:grid-cols-5 xl:gap-x-8">
+        {countryElectrical.plug_types.split(',').map((typeCode) => {
+          const trimmed = typeCode.trim()
+          const plugType = plugTypes.find((p) => p.type_letter.trim() === trimmed)
+          if (!plugType) return null
+          return (
+            <li key={trimmed} className="relative">
+              <div className="overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center p-3" style={{ aspectRatio: '1' }}>
+                <img
+                  alt={`Type ${plugType.type_letter.trim()} plug diagram`}
+                  src={`/plugs/${plugType.svg_filename}`}
+                  className="w-full h-full"
+                />
+              </div>
+              <p className="mt-2 block truncate text-sm font-medium text-gray-900">
+                Type {plugType.type_letter.trim()}
+              </p>
+              <p className="block text-sm font-medium text-gray-500">{plugType.description}</p>
+            </li>
+          )
+        })}
+      </ul>
+
+      {/* ---- POWER — stat cards (#57) ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Power</h3>
+        <dl className="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-4">
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <dt className="truncate text-sm font-medium text-gray-500">Voltage</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.voltage}</dd>
+          </div>
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <dt className="truncate text-sm font-medium text-gray-500">Frequency</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.frequency}</dd>
+          </div>
+        </dl>
+      </div>
+
+      {/* ---- WHAT YOU NEED — personalized verdict ---- */}
+      <div className="mt-8">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">What You Need</h3>
+        {selectedHomeElectrical ? (
+          <>
+            <p className="mt-1 text-sm text-gray-600">
+              Comparing {selectedHomeElectrical.name} → {country.name}.
+            </p>
+            {electricalComparison && (
+              <div className="mt-3 border-t border-gray-100">
+                <dl className="divide-y divide-gray-100">
+                  {electricalComparison.adapter && (
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Adapter Needed</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="font-semibold">{electricalComparison.adapter.heading}</span>
+                        <span> — </span>
+                        {electricalComparison.adapter.description}
+                      </dd>
+                    </div>
+                  )}
+                  {electricalComparison.voltage && (
+                    <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                      <dt className="text-sm font-medium text-gray-900">Voltage Converter</dt>
+                      <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span className="font-semibold">{electricalComparison.voltage.heading}</span>
+                        <span> — </span>
+                        {electricalComparison.voltage.description}
+                      </dd>
+                    </div>
+                  )}
+                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium text-gray-900">Tip</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">
+                      Contact your hotel or accommodation in advance to ask about available adapters, voltage converters, and outlet types in your room. Many hotels provide adapters upon request or have universal outlets installed.
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="mt-1 text-sm text-gray-500">
+            Select your home country in the master selector above to see if you need an adapter or voltage converter.
+          </p>
+        )}
+      </div>
+
+    </section>
+    )}
 
     </div>
   )
