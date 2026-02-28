@@ -520,6 +520,7 @@ export default function CountryPage({
   // Live clock
   const [currentTime, setCurrentTime] = useState(new Date())
   const [activeTimezoneIndex, setActiveTimezoneIndex] = useState(0)
+  const [activeAirportIndex, setActiveAirportIndex] = useState(0)
 
   // Airport city selector
   const [selectedAirportCity, setSelectedAirportCity] = useState<string | null>(null)
@@ -2395,7 +2396,10 @@ export default function CountryPage({
                 <Combobox
                   value={activeAirportCity}
                   onChange={(val: string | null) => {
-                    if (val) setSelectedAirportCity(val)
+                    if (val) {
+                      setSelectedAirportCity(val)
+                      setActiveAirportIndex(0)
+                    }
                   }}
                 >
                   <div className="relative">
@@ -2435,47 +2439,122 @@ export default function CountryPage({
               </div>
             )}
 
-            {/* Airport cards — #328 pattern */}
-            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
-              {filteredAirports.map((airport) => (
-                <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
-                  {/* Card header */}
-                  <div className="px-4 py-5 sm:px-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-base font-semibold text-gray-900">{airport.airport_name}</h4>
-                        {airport.website && (
-                          <a
-                            href={airport.website}
-                            className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
-                            <ExternalLink className="size-3.5" aria-hidden="true" />
-                          </a>
-                        )}
+            {/* Airport cards */}
+            {filteredAirports.length === 1 ? (
+              /* Single airport — full width card */
+              <div className="mt-5">
+                {filteredAirports.map((airport) => (
+                  <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+                    {/* Card header */}
+                    <div className="px-4 py-5 sm:px-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-base font-semibold text-gray-900">{airport.airport_name}</h4>
+                          {airport.website && (
+                            <a
+                              href={airport.website}
+                              className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
+                              <ExternalLink className="size-3.5" aria-hidden="true" />
+                            </a>
+                          )}
+                        </div>
+                        <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
                       </div>
-                      <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
+                    </div>
+                    {/* Card body */}
+                    <div className="px-4 py-5 sm:p-6">
+                      <p className="text-sm text-gray-500">{airport.distance_to_city}</p>
+                      {airport.transport_options && (
+                        <>
+                          <h5 className="mt-4 text-sm font-medium text-gray-900">Getting to the city</h5>
+                          <ul className="mt-2 space-y-1.5 text-sm text-gray-700">
+                            {airport.transport_options.split(' · ').map((option, i) => (
+                              <li key={i}>• {option}</li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
                     </div>
                   </div>
-                  {/* Card body */}
-                  <div className="px-4 py-5 sm:p-6">
-                    <p className="text-sm text-gray-500">{airport.distance_to_city}</p>
-                    {airport.transport_options && (
-                      <>
-                        <h5 className="mt-4 text-sm font-medium text-gray-900">Getting to the city</h5>
-                        <ul className="mt-2 space-y-1.5 text-sm text-gray-700">
-                          {airport.transport_options.split(' · ').map((option, i) => (
-                            <li key={i}>• {option}</li>
-                          ))}
-                        </ul>
-                      </>
-                    )}
-                  </div>
+                ))}
+              </div>
+            ) : filteredAirports.length > 1 ? (
+              /* Multiple airports — carousel */
+              <div className="relative mt-5">
+                <div
+                  className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+                  ref={(el) => {
+                    if (!el) return
+                    const handleScroll = () => {
+                      const scrollLeft = el.scrollLeft
+                      const cardWidth = 288 + 16
+                      const index = Math.round(scrollLeft / cardWidth)
+                      setActiveAirportIndex(index)
+                    }
+                    el.onscroll = handleScroll
+                  }}
+                >
+                  {filteredAirports.map((airport) => (
+                    <div
+                      key={airport.id}
+                      className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm"
+                    >
+                      {/* Card header */}
+                      <div className="px-4 py-5 sm:px-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-900">{airport.airport_name}</h4>
+                            {airport.website && (
+                              <a
+                                href={airport.website}
+                                className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {(() => { try { return new URL(airport.website).hostname.replace('www.', '') } catch { return airport.website } })()}
+                                <ExternalLink className="size-3.5" aria-hidden="true" />
+                              </a>
+                            )}
+                          </div>
+                          <span className="text-lg font-semibold text-gray-400">{airport.iata_code}</span>
+                        </div>
+                      </div>
+                      {/* Card body */}
+                      <div className="px-4 py-5 sm:p-6">
+                        <p className="text-sm text-gray-500">{airport.distance_to_city}</p>
+                        {airport.transport_options && (
+                          <>
+                            <h5 className="mt-4 text-sm font-medium text-gray-900">Getting to the city</h5>
+                            <ul className="mt-2 space-y-1.5 text-sm text-gray-700">
+                              {airport.transport_options.split(' · ').map((option, i) => (
+                                <li key={i}>• {option}</li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+
+                {/* Dot indicators */}
+                <div className="mt-3 flex justify-center gap-1.5">
+                  {filteredAirports.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`block h-1.5 rounded-full transition-all duration-200 ${
+                        i === activeAirportIndex ? 'w-4 bg-gray-800' : 'w-1.5 bg-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </>
         ) : (
           <p className="mt-2 text-sm text-gray-500">Airport data not available.</p>
