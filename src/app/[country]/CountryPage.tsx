@@ -1142,7 +1142,11 @@ export default function CountryPage({
   }, [weatherCity])
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <div>
+
+      {/* Page Header + Master Selector — white band */}
+      <div className="bg-white py-8">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
       {/* ============================================================
           PAGE HEADER — Flag + Country Name
@@ -1274,20 +1278,17 @@ export default function CountryPage({
         </div>
       </div>
 
+        </div>
+      </div>
+
     {/* ============================================================
         SECTION 1: OVERVIEW
         ============================================================ */}
-    <section id="overview" className="mt-10">
+    <div className="bg-gray-50 py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="overview">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Overview
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Overview</h2>
 
       {/* ---- IDENTITY — stat grid ---- */}
       <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
@@ -1355,21 +1356,17 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 2: VISA & ENTRY
         ============================================================ */}
-    <section id="visa" className="mt-10">
+    <div className="bg-white py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="visa">
 
-      {/* Section Divider — #355 With Title On Left */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Visa & Entry
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Visa & Entry</h2>
 
       {/* ---- P1: VISA STATUS VERDICT ---- */}
       {masterNationality && activeVisa ? (
@@ -1710,21 +1707,17 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 3: MONEY
         ============================================================ */}
-    <section id="money" className="mt-10">
+    <div className="bg-gray-50 py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="money">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Money
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Money</h2>
 
       {/* ---- CURRENCY — stat grid (#59 simplified) ---- */}
       {currency && (
@@ -1912,7 +1905,7 @@ export default function CountryPage({
           <div className="mt-3 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
               {paymentMethods.cash_vs_card && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+                <div className="bg-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
                   <dt className="text-sm font-medium text-gray-900">Cash vs. Card</dt>
                   <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.cash_vs_card}</dd>
                 </div>
@@ -1924,7 +1917,7 @@ export default function CountryPage({
                 </div>
               )}
               {paymentMethods.atm_availability && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
+                <div className="bg-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
                   <dt className="text-sm font-medium text-gray-900">ATMs</dt>
                   <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{paymentMethods.atm_availability}</dd>
                 </div>
@@ -2271,21 +2264,17 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 4: COMMUNICATIONS
         ============================================================ */}
-    <section id="communications" className="mt-10">
+    <div className="bg-white py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="communications">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Communications
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Communications</h2>
 
       {/* ---- PHONE — hero stat + description list ---- */}
       {phoneInfo && (
@@ -2293,7 +2282,7 @@ export default function CountryPage({
 
           {/* Hero dialing code — #57 Simple Stats In Cards (single card) */}
           {phoneInfo.dialing_code && (
-            <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+            <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
               <dt className="truncate text-sm font-medium text-gray-500">Country Dialing Code</dt>
               <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{phoneInfo.dialing_code}</dd>
             </div>
@@ -2425,21 +2414,17 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 5: TIME
         ============================================================ */}
-    <section id="time" className="mt-10">
+    <div className="bg-gray-50 py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="time">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Time
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Time</h2>
 
       {countryTimezones.length > 0 ? (
         <div className="relative mt-6">
@@ -2524,21 +2509,17 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 6: TRANSPORTATION
         ============================================================ */}
-    <section id="transport" className="mt-10">
+    <div className="bg-white py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="transport">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Transportation
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Transportation</h2>
 
       {/* ---- AIRPORTS — city selector + card grid ---- */}
       <div className="mt-6">
@@ -2602,7 +2583,7 @@ export default function CountryPage({
               /* Single airport — full width card */
               <div className="mt-5">
                 {filteredAirports.map((airport) => (
-                  <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+                  <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 shadow-sm">
                     {/* Card header */}
                     <div className="px-4 py-5 sm:px-6">
                       <p className="text-lg font-semibold text-gray-400">{airport.iata_code}</p>
@@ -2610,7 +2591,7 @@ export default function CountryPage({
                       {airport.website && (
                         <a
                           href={airport.website}
-                          className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                          className="mt-1 inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-500"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -2656,7 +2637,7 @@ export default function CountryPage({
                   {filteredAirports.map((airport) => (
                     <div
                       key={airport.id}
-                      className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm"
+                      className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-sm"
                     >
                       {/* Card header */}
                       <div className="px-4 py-5 sm:px-6">
@@ -2665,7 +2646,7 @@ export default function CountryPage({
                         {airport.website && (
                           <a
                             href={airport.website}
-                            className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                            className="mt-1 inline-flex items-center gap-1 text-sm text-indigo-600 hover:text-indigo-500"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -2812,22 +2793,19 @@ export default function CountryPage({
       )}
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 7: ELECTRICAL
         ============================================================ */}
-    {countryElectrical && (
-    <section id="electrical" className="mt-10">
+    <div className="bg-gray-50 py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="electrical">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Electrical
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Electrical</h2>
+      {countryElectrical && (
+        <>
 
       {/* ---- PLUG TYPES — SVG grid (#107 pattern) ---- */}
       <ul role="list" className="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4 sm:gap-x-6 lg:grid-cols-5 xl:gap-x-8">
@@ -2916,23 +2894,20 @@ export default function CountryPage({
         )}
       </div>
 
+        </>
+      )}
     </section>
-    )}
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 8: WEATHER
         ============================================================ */}
-    <section id="weather" className="mt-10">
+    <div className="bg-white py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="weather">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Weather
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Weather</h2>
 
       {/* ---- CITY SELECTOR — Geoapify search ---- */}
       <div className="mt-6">
@@ -2990,19 +2965,19 @@ export default function CountryPage({
       {/* ---- CURRENT CONDITIONS ---- */}
       <div className="mt-6">
         {weatherLoading && !currentWeather && (
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
             <p className="text-sm text-gray-500">Loading weather data...</p>
           </div>
         )}
 
         {weatherError && (
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
             <p className="text-sm text-red-600">{weatherError}</p>
           </div>
         )}
 
         {currentWeather && (
-          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 shadow-sm">
             {/* Hero: icon + temp + description */}
             <div className="px-4 py-5 sm:px-6">
               <div className="flex items-center gap-4">
@@ -3094,7 +3069,7 @@ export default function CountryPage({
                           <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">UV</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-200 bg-white">
+                      <tbody className="divide-y divide-gray-200 bg-gray-50">
                         {forecast.map((day, index) => (
                           <tr key={index}>
                             <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{day.date}</td>
@@ -3148,7 +3123,7 @@ export default function CountryPage({
                         <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Humidity</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
+                    <tbody className="divide-y divide-gray-200 bg-gray-50">
                       {climateLoading && climateAverages.length === 0 && (
                         <tr>
                           <td colSpan={5} className="px-3 py-4 text-sm text-gray-500 text-center">Loading climate data...</td>
@@ -3184,21 +3159,17 @@ export default function CountryPage({
       </div>
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 9: MEASUREMENTS
         ============================================================ */}
-    <section id="measurements" className="mt-10">
+    <div className="bg-gray-50 py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="measurements">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Measurements
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Measurements</h2>
 
       <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
           {/* System stat — 1/3 */}
@@ -3322,25 +3293,21 @@ export default function CountryPage({
         </dl>
 
     </section>
+      </div>
+    </div>
 
     {/* ============================================================
         SECTION 10: EMERGENCY
         ============================================================ */}
-    <section id="emergency" className="mt-10">
+    <div className="bg-white py-12">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="emergency">
 
-      {/* Section Divider — #355 */}
-      <div className="flex items-center">
-        <div className="relative flex justify-start">
-          <span className="pr-3 text-base font-semibold whitespace-nowrap text-gray-900">
-            Emergency
-          </span>
-        </div>
-        <div aria-hidden="true" className="w-full border-t border-gray-300" />
-      </div>
+      <h2 className="text-2xl font-bold text-orange-600">Emergency</h2>
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
       <dl className="mt-6 grid grid-cols-3 gap-3">
-        <div className="overflow-hidden rounded-lg bg-white px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Police
           </dt>
@@ -3353,7 +3320,7 @@ export default function CountryPage({
             ) : '—'}
           </dd>
         </div>
-        <div className="overflow-hidden rounded-lg bg-white px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Ambulance
           </dt>
@@ -3366,7 +3333,7 @@ export default function CountryPage({
             ) : '—'}
           </dd>
         </div>
-        <div className="overflow-hidden rounded-lg bg-white px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Fire
           </dt>
@@ -3754,6 +3721,8 @@ export default function CountryPage({
       </div>
 
     </section>
+      </div>
+    </div>
 
     </div>
   )
