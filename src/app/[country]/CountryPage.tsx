@@ -2410,7 +2410,7 @@ export default function CountryPage({
 
             {/* City selector — only if 2+ cities */}
             {airportCities.length > 1 && (
-              <div className="mt-3 max-w-xs">
+              <div className="mt-3 w-48">
                 <Combobox
                   value={activeAirportCity}
                   onChange={(val: string | null) => {
@@ -2434,7 +2434,7 @@ export default function CountryPage({
                     {filteredAirportCities.length > 0 && (
                       <ComboboxOptions
                         transition
-                        className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                        className="absolute z-10 mt-1 max-h-60 min-w-full w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
                       >
                         {filteredAirportCities.map((city) => (
                           <ComboboxOption
