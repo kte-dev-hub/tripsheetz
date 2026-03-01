@@ -2807,7 +2807,7 @@ export default function CountryPage({
         >
           <Label className="text-sm font-medium text-gray-900">City</Label>
           <p className="mt-1 text-sm text-gray-500">Search for a city to see its weather data.</p>
-          <div className="relative mt-2 w-48">
+          <div className="relative mt-2 inline-block min-w-48">
             <ComboboxInput
               className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               onChange={(event) => setCityQuery(event.target.value)}
