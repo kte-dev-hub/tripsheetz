@@ -1146,7 +1146,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="overview">
 
-      <h2 className="text-base font-semibold text-orange-600">Overview</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Overview</h2>
 
       {/* ---- IDENTITY — stat grid ---- */}
       <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
@@ -1224,7 +1224,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="visa">
 
-      <h2 className="text-base font-semibold text-orange-600">Visa & Entry</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Visa & Entry</h2>
 
       {/* ---- P1: VISA STATUS VERDICT ---- */}
       {masterNationality && activeVisa ? (
@@ -1571,7 +1571,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="money">
 
-      <h2 className="text-base font-semibold text-orange-600">Money</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Money</h2>
 
       {/* ---- CURRENCY — stat grid (#59 simplified) ---- */}
       {currency && (
@@ -2128,7 +2128,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="communications">
 
-      <h2 className="text-base font-semibold text-orange-600">Communications</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Communications</h2>
 
       {/* ---- PHONE — hero stat + description list ---- */}
       {phoneInfo && (
@@ -2278,7 +2278,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="time">
 
-      <h2 className="text-base font-semibold text-orange-600">Time</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Time</h2>
 
       {countryTimezones.length > 0 ? (
         <div className="relative mt-6">
@@ -2373,7 +2373,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="transport">
 
-      <h2 className="text-base font-semibold text-orange-600">Transportation</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Transportation</h2>
 
       {/* ---- AIRPORTS — city selector + card grid ---- */}
       <div className="mt-6">
@@ -2657,7 +2657,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="electrical">
 
-      <h2 className="text-base font-semibold text-orange-600">Electrical</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Electrical</h2>
       {countryElectrical && (
         <>
 
@@ -2761,7 +2761,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="weather">
 
-      <h2 className="text-base font-semibold text-orange-600">Weather</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Weather</h2>
 
       {/* ---- CITY SELECTOR — Geoapify search ---- */}
       <div className="mt-6">
@@ -3023,7 +3023,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="measurements">
 
-      <h2 className="text-base font-semibold text-orange-600">Measurements</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Measurements</h2>
 
       <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
           {/* System stat — 1/3 */}
@@ -3157,7 +3157,7 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="emergency">
 
-      <h2 className="text-base font-semibold text-orange-600">Emergency</h2>
+      <h2 className="text-lg font-semibold text-orange-600">Emergency</h2>
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
       <dl className="mt-6 grid grid-cols-3 gap-3">
