@@ -2640,34 +2640,37 @@ export default function CountryPage({
       {driving && (driving.driving_side || driving.idp_required || driving.road_conditions) && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Driving</h3>
-          <dl className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-3">
+          {/* Row 1: Drives On (1/3) + International Driving Permit (2/3) — single card */}
+          <dl className="mt-3 grid grid-cols-3 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
             {driving.driving_side && (
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="truncate text-sm font-medium text-gray-500">Drives On</dt>
-                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{driving.driving_side}</dd>
+              <div className="col-span-1 px-4 py-4 sm:p-6 border-r border-gray-200">
+                <dt className="text-sm font-normal text-gray-900">Drives On</dt>
+                <dd className="mt-1 text-lg font-semibold text-indigo-600">{driving.driving_side}</dd>
               </div>
             )}
             {driving.idp_required && (
-              <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                <dt className="text-sm font-medium text-gray-500">International Driving Permit</dt>
-                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{driving.idp_required}</dd>
+              <div className="col-span-2 px-4 py-4 sm:p-6">
+                <dt className="text-sm font-normal text-gray-900">International Driving Permit</dt>
+                <dd className="mt-1 text-lg font-semibold text-indigo-600">{driving.idp_required}</dd>
               </div>
             )}
-            {driving.road_conditions && (() => {
-              const firstDot = driving.road_conditions.indexOf('. ')
-              const headline = firstDot !== -1 ? driving.road_conditions.substring(0, firstDot) : driving.road_conditions
-              const description = firstDot !== -1 ? driving.road_conditions.substring(firstDot + 2) : null
-              return (
-                <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
-                  <dt className="text-sm font-medium text-gray-500">Road Conditions</dt>
-                  <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{headline}</dd>
-                  {description && (
-                    <p className="mt-2 text-sm text-gray-500">{description}</p>
-                  )}
-                </div>
-              )
-            })()}
           </dl>
+
+          {/* Row 2: Road Conditions (full width) */}
+          {driving.road_conditions && (() => {
+            const firstDot = driving.road_conditions.indexOf('. ')
+            const headline = firstDot !== -1 ? driving.road_conditions.substring(0, firstDot) : driving.road_conditions
+            const description = firstDot !== -1 ? driving.road_conditions.substring(firstDot + 2) : null
+            return (
+              <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-4 ring-1 ring-gray-200 sm:p-6">
+                <dt className="text-sm font-normal text-gray-900">Road Conditions</dt>
+                <dd className="mt-1 text-lg font-semibold text-indigo-600">{headline}</dd>
+                {description && (
+                  <p className="mt-2 text-sm text-gray-500">{description}</p>
+                )}
+              </div>
+            )
+          })()}
         </div>
       )}
 
