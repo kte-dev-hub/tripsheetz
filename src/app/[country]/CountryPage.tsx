@@ -16,7 +16,8 @@ import {
 import {
   ChevronsUpDown, Check, ChevronDown, ExternalLink, Clock, Plane,
   Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind,
-  Phone, MapPin, Globe, Stamp, Wallet, Smartphone, Zap, Ruler, ShieldAlert
+  Phone, MapPin, Globe, Stamp, Wallet, Smartphone, Zap, Ruler, ShieldAlert,
+  Sunrise, Sunset
 } from 'lucide-react'
 
 interface Country {
@@ -2911,9 +2912,16 @@ export default function CountryPage({
               </div>
             </dl>
             {/* Footer: sunrise/sunset */}
-            <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
-              <p className="text-sm text-gray-500">
-                Sunrise {currentWeather.sunrise} · Sunset {currentWeather.sunset}
+            <div className="px-4 py-3 sm:px-6">
+              <p className="flex items-center gap-4 text-sm text-gray-500">
+                <span className="inline-flex items-center gap-1">
+                  <Sunrise className="size-4" aria-hidden="true" />
+                  {currentWeather.sunrise}
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <Sunset className="size-4" aria-hidden="true" />
+                  {currentWeather.sunset}
+                </span>
               </p>
             </div>
           </div>
