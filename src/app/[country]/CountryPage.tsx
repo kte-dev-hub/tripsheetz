@@ -1169,7 +1169,7 @@ export default function CountryPage({
       </dl>
 
       {/* ---- LANGUAGE — description list (#50) ---- */}
-      <div className="mt-8">
+      <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Language</h3>
         <div className="mt-3 border-t border-gray-100">
           <dl className="divide-y divide-gray-100">
@@ -1187,7 +1187,7 @@ export default function CountryPage({
 
       {/* ---- RELIGION — horizontal bar chart ---- */}
       {religions.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Religion</h3>
           <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
             <div className="space-y-3">
@@ -1320,7 +1320,7 @@ export default function CountryPage({
 
       {/* ---- P2: BEFORE YOU FLY (stat grid) ---- */}
       {entryRequirements && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Before You Fly</h3>
 
           {/* Stats With Shared Borders — #59 (simplified, no change arrows) */}
@@ -1378,7 +1378,7 @@ export default function CountryPage({
 
       {/* ---- SECONDARY: CUSTOMS (accordions) ---- */}
       {entryRequirements && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Customs</h3>
           <p className="mt-1 text-sm text-gray-600">
             Customs regulations for entering {country.name}.
@@ -1536,7 +1536,7 @@ export default function CountryPage({
 
       {/* ---- GOVERNMENT RESOURCES ---- */}
       {visaGovResources.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Government Resources</h3>
           <ul className="mt-3 space-y-2">
             {visaGovResources.map((resource) => (
@@ -1634,7 +1634,7 @@ export default function CountryPage({
 
       {/* ---- CURRENCY CONVERTER ---- */}
       {currency && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Currency Converter</h3>
           {/* Summary text */}
           <div className="mt-3 mb-4">
@@ -1757,7 +1757,7 @@ export default function CountryPage({
 
       {/* ---- PAYING — description list (#51 striped, no card) ---- */}
       {paymentMethods && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Paying</h3>
           <div className="mt-3 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
@@ -1792,7 +1792,7 @@ export default function CountryPage({
 
       {/* ---- LOCAL SPENDING subhead ---- */}
       {(tippingCustoms.length > 0 || averageCosts.length > 0) && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Local Spending</h3>
           <p className="mt-1 text-sm text-gray-600">
             Tipping customs and typical costs in {country.name}.
@@ -1912,7 +1912,7 @@ export default function CountryPage({
 
       {/* ---- TAX REFUND — individually collapsible accordions ---- */}
       {taxRefund && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Tax Refund</h3>
 
           {/* Tax Rate — open by default */}
@@ -2182,7 +2182,7 @@ export default function CountryPage({
 
       {/* ---- MOBILE DATA — striped description list (#51) ---- */}
       {mobileData && (mobileData.major_carriers || mobileData.esim_available || mobileData.sim_purchase_locations) && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Mobile Data</h3>
           <p className="mt-1 text-sm text-gray-600">
             Staying connected in {country.name}.
@@ -2244,7 +2244,7 @@ export default function CountryPage({
 
       {/* ---- APPS & ACCESS — description list (#50 pattern) ---- */}
       {appsAccess && (appsAccess.messaging_apps || appsAccess.vpn_needed || appsAccess.blocked_services) && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Apps & Access</h3>
           <div className="mt-3 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
@@ -2554,7 +2554,7 @@ export default function CountryPage({
 
       {/* ---- GETTING AROUND subhead ---- */}
       {(taxisRidehailing || publicTransit) && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Getting Around</h3>
 
           {/* Taxis & Ride-Hailing — description list (#50 pattern) */}
@@ -2619,7 +2619,7 @@ export default function CountryPage({
 
       {/* ---- DRIVING — stat cards (#57) ---- */}
       {driving && (driving.driving_side || driving.idp_required || driving.road_conditions) && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Driving</h3>
           <dl className="mt-3 grid grid-cols-1 gap-5 sm:grid-cols-3">
             {driving.driving_side && (
@@ -2693,7 +2693,7 @@ export default function CountryPage({
       </ul>
 
       {/* ---- POWER — stat cards (#57) ---- */}
-      <div className="mt-8">
+      <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Power</h3>
         <dl className="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-4">
           <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
@@ -2708,7 +2708,7 @@ export default function CountryPage({
       </div>
 
       {/* ---- WHAT YOU NEED — personalized verdict ---- */}
-      <div className="mt-8">
+      <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">What You Need</h3>
         {selectedHomeElectrical ? (
           <>
@@ -3308,7 +3308,7 @@ export default function CountryPage({
       )}
 
       {/* ---- YOUR EMBASSY & CONSULATES — driven by master Nationality ---- */}
-      <div className="mt-8">
+      <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Your Embassy & Consulates</h3>
         {masterNationality && nationalityName ? (
           <>
@@ -3505,7 +3505,7 @@ export default function CountryPage({
 
       {/* ---- HEALTH ---- */}
       {healthSafety && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Health</h3>
           <div className="mt-3 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
@@ -3534,7 +3534,7 @@ export default function CountryPage({
 
       {/* ---- TRAVEL ADVISORIES ---- */}
       {travelAdvisory && (
-        <div className="mt-8">
+        <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Travel Advisories</h3>
           <div className="mt-3 border-t border-gray-100">
             <dl className="divide-y divide-gray-100">
