@@ -1147,6 +1147,7 @@ export default function CountryPage({
     <section id="overview">
 
       <h2 className="text-lg font-semibold text-orange-600">Overview</h2>
+      <p className="mt-1 text-sm text-gray-500">Key facts about {country.name}</p>
 
       {/* ---- IDENTITY — stat grid ---- */}
       <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
@@ -1225,6 +1226,7 @@ export default function CountryPage({
     <section id="visa">
 
       <h2 className="text-lg font-semibold text-orange-600">Visa & Entry</h2>
+      <p className="mt-1 text-sm text-gray-500">Entry requirements for U.S. passport holders visiting {country.name}</p>
 
       {/* ---- P1: VISA STATUS VERDICT ---- */}
       {masterNationality && activeVisa ? (
@@ -1572,6 +1574,7 @@ export default function CountryPage({
     <section id="money">
 
       <h2 className="text-lg font-semibold text-orange-600">Money</h2>
+      <p className="mt-1 text-sm text-gray-500">Currency, payments, and costs in {country.name}</p>
 
       {/* ---- CURRENCY — stat grid (#59 simplified) ---- */}
       {currency && (
@@ -2129,6 +2132,7 @@ export default function CountryPage({
     <section id="communications">
 
       <h2 className="text-lg font-semibold text-orange-600">Communications</h2>
+      <p className="mt-1 text-sm text-gray-500">Phone, SIM, and internet in {country.name}</p>
 
       {/* ---- PHONE — hero stat + description list ---- */}
       {phoneInfo && (
@@ -2279,6 +2283,7 @@ export default function CountryPage({
     <section id="time">
 
       <h2 className="text-lg font-semibold text-orange-600">Time</h2>
+      <p className="mt-1 text-sm text-gray-500">Local time in {country.name}</p>
 
       {countryTimezones.length > 0 ? (
         <div className="relative mt-6">
@@ -2374,6 +2379,7 @@ export default function CountryPage({
     <section id="transport">
 
       <h2 className="text-lg font-semibold text-orange-600">Transportation</h2>
+      <p className="mt-1 text-sm text-gray-500">Getting around {country.name}</p>
 
       {/* ---- AIRPORTS — city selector + card grid ---- */}
       <div className="mt-6">
@@ -2658,6 +2664,7 @@ export default function CountryPage({
     <section id="electrical">
 
       <h2 className="text-lg font-semibold text-orange-600">Electrical</h2>
+      <p className="mt-1 text-sm text-gray-500">Plugs, voltage, and adapters in {country.name}</p>
       {countryElectrical && (
         <>
 
@@ -2762,6 +2769,7 @@ export default function CountryPage({
     <section id="weather">
 
       <h2 className="text-lg font-semibold text-orange-600">Weather</h2>
+      <p className="mt-1 text-sm text-gray-500">Current conditions and forecasts for {country.name}</p>
 
       {/* ---- CITY SELECTOR — Geoapify search ---- */}
       <div className="mt-6">
@@ -3024,6 +3032,7 @@ export default function CountryPage({
     <section id="measurements">
 
       <h2 className="text-lg font-semibold text-orange-600">Measurements</h2>
+      <p className="mt-1 text-sm text-gray-500">Units and conversions for {country.name}</p>
 
       <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
           {/* System stat — 1/3 */}
@@ -3158,6 +3167,7 @@ export default function CountryPage({
     <section id="emergency">
 
       <h2 className="text-lg font-semibold text-orange-600">Emergency</h2>
+      <p className="mt-1 text-sm text-gray-500">Emergency numbers and U.S. embassy in {country.name}</p>
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
       <dl className="mt-6 grid grid-cols-3 gap-3">
