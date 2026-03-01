@@ -16,7 +16,7 @@ import {
 import {
   ChevronsUpDown, Check, ChevronDown, ExternalLink, Clock, Plane,
   Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind,
-  Phone, MapPin
+  Phone, MapPin, Globe, Stamp, Wallet, Smartphone, Zap, Ruler, ShieldAlert
 } from 'lucide-react'
 
 interface Country {
@@ -1146,7 +1146,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="overview">
 
-      <h2 className="text-lg font-semibold text-orange-600">Overview</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Globe className="size-5" aria-hidden="true" />
+        Overview
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Key facts about {country.name}</p>
 
       {/* ---- IDENTITY — stat grid ---- */}
@@ -1225,7 +1228,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="visa">
 
-      <h2 className="text-lg font-semibold text-orange-600">Visa & Entry</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Stamp className="size-5" aria-hidden="true" />
+        Visa & Entry
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Entry requirements for U.S. passport holders visiting {country.name}</p>
 
       {/* ---- P1: VISA STATUS VERDICT ---- */}
@@ -1573,7 +1579,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="money">
 
-      <h2 className="text-lg font-semibold text-orange-600">Money</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Wallet className="size-5" aria-hidden="true" />
+        Money
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Currency, payments, and costs in {country.name}</p>
 
       {/* ---- CURRENCY — stat grid (#59 simplified) ---- */}
@@ -2131,7 +2140,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="communications">
 
-      <h2 className="text-lg font-semibold text-orange-600">Communications</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Smartphone className="size-5" aria-hidden="true" />
+        Communications
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Phone, SIM, and internet in {country.name}</p>
 
       {/* ---- PHONE — hero stat + description list ---- */}
@@ -2282,7 +2294,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="time">
 
-      <h2 className="text-lg font-semibold text-orange-600">Time</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Clock className="size-5" aria-hidden="true" />
+        Time
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Local time in {country.name}</p>
 
       {countryTimezones.length > 0 ? (
@@ -2378,7 +2393,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="transport">
 
-      <h2 className="text-lg font-semibold text-orange-600">Transportation</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Plane className="size-5" aria-hidden="true" />
+        Transportation
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Getting around {country.name}</p>
 
       {/* ---- AIRPORTS — city selector + card grid ---- */}
@@ -2663,7 +2681,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="electrical">
 
-      <h2 className="text-lg font-semibold text-orange-600">Electrical</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Zap className="size-5" aria-hidden="true" />
+        Electrical
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Plugs, voltage, and adapters in {country.name}</p>
       {countryElectrical && (
         <>
@@ -2768,7 +2789,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="weather">
 
-      <h2 className="text-lg font-semibold text-orange-600">Weather</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <CloudSun className="size-5" aria-hidden="true" />
+        Weather
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Current conditions and forecasts for {country.name}</p>
 
       {/* ---- CITY SELECTOR — Geoapify search ---- */}
@@ -3031,7 +3055,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="measurements">
 
-      <h2 className="text-lg font-semibold text-orange-600">Measurements</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <Ruler className="size-5" aria-hidden="true" />
+        Measurements
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Units and conversions for {country.name}</p>
 
       <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
@@ -3166,7 +3193,10 @@ export default function CountryPage({
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="emergency">
 
-      <h2 className="text-lg font-semibold text-orange-600">Emergency</h2>
+      <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
+        <ShieldAlert className="size-5" aria-hidden="true" />
+        Emergency
+      </h2>
       <p className="mt-1 text-sm text-gray-500">Emergency numbers and U.S. embassy in {country.name}</p>
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
