@@ -14,7 +14,7 @@ import {
   ListboxOptions,
 } from '@headlessui/react'
 import {
-  ChevronsUpDown, Check, Info, ChevronDown, ExternalLink, Clock, Plane,
+  ChevronsUpDown, Check, ChevronDown, ExternalLink, Clock, Plane,
   Sun, Cloud, CloudRain, CloudDrizzle, CloudLightning, CloudSun, CloudFog, Snowflake, Wind,
   Phone, MapPin
 } from 'lucide-react'
@@ -498,10 +498,8 @@ export default function CountryPage({
   travelAdvisory,
   healthSafety,
 }: CountryPageProps) {
-  const [masterTravelingFrom, setMasterTravelingFrom] = useState<string | null>(null)
-  const [masterNationality, setMasterNationality] = useState<string | null>(null)
-  const [travelingFromQuery, setTravelingFromQuery] = useState('')
-  const [masterNationalityQuery, setMasterNationalityQuery] = useState('')
+  const masterTravelingFrom = 'US'
+  const masterNationality = 'US'
   const [dutyFreeOpen, setDutyFreeOpen] = useState(false)
   const [restrictedItemsOpen, setRestrictedItemsOpen] = useState(false)
 
@@ -586,33 +584,6 @@ export default function CountryPage({
     { id: 'area', name: 'Area' },
   ]
   const activeConverterOption = converterOptions.find(c => c.id === activeConverter) || converterOptions[0]
-
-  const masterCountryList = allCountries
-    .filter((c) => c.iso_alpha2.trim() !== country.iso_alpha2.trim())
-    .map((c) => ({
-      code: c.iso_alpha2.trim(),
-      name: c.name,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name))
-
-  const filteredTravelingFrom = travelingFromQuery === ''
-    ? masterCountryList
-    : masterCountryList.filter((c) =>
-        c.name.toLowerCase().includes(travelingFromQuery.toLowerCase())
-      )
-
-  const filteredMasterNationality = masterNationalityQuery === ''
-    ? masterCountryList
-    : masterCountryList.filter((c) =>
-        c.name.toLowerCase().includes(masterNationalityQuery.toLowerCase())
-      )
-
-  const handleTravelingFromChange = (countryCode: string | null) => {
-    setMasterTravelingFrom(countryCode)
-    if (countryCode && (!masterNationality || masterNationality === masterTravelingFrom)) {
-      setMasterNationality(countryCode)
-    }
-  }
 
   const activeVisa = masterNationality
     ? visaRequirements.find((v) => v.passport_code.trim() === masterNationality)
@@ -1165,119 +1136,6 @@ export default function CountryPage({
         </div>
       </div>
 
-      {/* ============================================================
-          MASTER SELECTOR — Well On Gray (#334) container
-          ============================================================ */}
-      <div className="mt-6 overflow-hidden rounded-lg bg-gray-200">
-        <div className="px-4 py-5 sm:p-6">
-
-          {/* Header row with info icon */}
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-gray-900">Personalize your trip</p>
-            <span className="group relative">
-              <Info className="size-4 text-gray-400 cursor-help" aria-hidden="true" />
-              <span className="pointer-events-none absolute bottom-full right-0 z-20 mb-2 w-64 rounded-md bg-gray-900 px-3 py-2 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                Select your home country and passport nationality to personalize visa requirements, embassy info, electrical comparisons, and currency defaults.
-              </span>
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-
-            {/* Traveling From — Combobox (#182) */}
-            <Combobox
-              as="div"
-              value={masterTravelingFrom}
-              onChange={handleTravelingFromChange}
-              className="flex-1"
-            >
-              <label className="block text-sm/6 font-medium text-gray-900">Traveling from</label>
-              <div className="relative mt-1.5">
-                <ComboboxInput
-                  className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                  onChange={(event) => setTravelingFromQuery(event.target.value)}
-                  onBlur={() => setTravelingFromQuery('')}
-                  displayValue={(code: string | null) =>
-                    code ? (masterCountryList.find((c) => c.code === code)?.name ?? '') : ''
-                  }
-                  placeholder="Select a country"
-                />
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
-                  <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
-                </ComboboxButton>
-                <ComboboxOptions
-                  transition
-                  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                >
-                  {filteredTravelingFrom.map((c) => (
-                    <ComboboxOption
-                      key={c.code}
-                      value={c.code}
-                      className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
-                    >
-                      <span className="block truncate font-normal group-data-selected:font-semibold">{c.name}</span>
-                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                        <Check aria-hidden="true" className="size-5" />
-                      </span>
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              </div>
-            </Combobox>
-
-            {/* Nationality — Combobox (#182) */}
-            <Combobox
-              as="div"
-              value={masterNationality}
-              onChange={setMasterNationality}
-              className="flex-1"
-            >
-              <label className="block text-sm/6 font-medium text-gray-900">Nationality</label>
-              <div className="relative mt-1.5">
-                <ComboboxInput
-                  className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                  onChange={(event) => setMasterNationalityQuery(event.target.value)}
-                  onBlur={() => setMasterNationalityQuery('')}
-                  displayValue={(code: string | null) =>
-                    code ? (masterCountryList.find((c) => c.code === code)?.name ?? '') : ''
-                  }
-                  placeholder="Select a country"
-                />
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
-                  <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
-                </ComboboxButton>
-                <ComboboxOptions
-                  transition
-                  className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                >
-                  {filteredMasterNationality.map((c) => (
-                    <ComboboxOption
-                      key={c.code}
-                      value={c.code}
-                      className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
-                    >
-                      <span className="block truncate font-normal group-data-selected:font-semibold">{c.name}</span>
-                      <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                        <Check aria-hidden="true" className="size-5" />
-                      </span>
-                    </ComboboxOption>
-                  ))}
-                </ComboboxOptions>
-              </div>
-            </Combobox>
-
-          </div>
-
-          {/* Helper text */}
-          <p className="mt-3 text-xs text-gray-500">
-            {masterTravelingFrom || masterNationality
-              ? 'Your selections personalize visa requirements, embassy info, electrical comparisons, and currency defaults.'
-              : 'Select your country to personalize visa requirements, embassy info, electrical comparisons, and currency defaults.'}
-          </p>
-
-        </div>
-      </div>
-
         </div>
       </div>
 
@@ -1456,10 +1314,6 @@ export default function CountryPage({
             </p>
           )}
         </div>
-      ) : !masterNationality ? (
-        <p className="mt-6 text-sm text-gray-500">
-          Select your nationality above to see visa requirements for {country.name}.
-        </p>
       ) : null}
 
       {/* ---- P2: BEFORE YOU FLY (stat grid) ---- */}
@@ -3636,11 +3490,7 @@ export default function CountryPage({
               </div>
             )}
           </>
-        ) : (
-          <p className="mt-1 text-sm text-gray-500">
-            Select your nationality in the master selector above to see embassy and consulate information.
-          </p>
-        )}
+        ) : null}
       </div>
 
       {/* ---- HEALTH ---- */}
