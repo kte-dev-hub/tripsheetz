@@ -2916,11 +2916,11 @@ export default function CountryPage({
               <p className="flex items-center gap-4 text-sm text-gray-500">
                 <span className="inline-flex items-center gap-1">
                   <Sunrise className="size-4" aria-hidden="true" />
-                  {currentWeather.sunrise}
+                  Sunrise {currentWeather.sunrise}
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <Sunset className="size-4" aria-hidden="true" />
-                  {currentWeather.sunset}
+                  Sunset {currentWeather.sunset}
                 </span>
               </p>
             </div>
