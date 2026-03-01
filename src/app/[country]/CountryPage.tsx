@@ -2807,7 +2807,7 @@ export default function CountryPage({
         >
           <Label className="text-sm font-medium text-gray-900">City</Label>
           <p className="mt-1 text-sm text-gray-500">Search for a city to see its weather data.</p>
-          <div className="relative mt-2 inline-block min-w-48">
+          <div className="relative mt-2 w-48">
             <ComboboxInput
               className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               onChange={(event) => setCityQuery(event.target.value)}
@@ -2821,7 +2821,7 @@ export default function CountryPage({
             {(cityResults.length > 0 || cityLoading) && (
               <ComboboxOptions
                 transition
-                className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                className="absolute z-10 mt-1 max-h-60 min-w-full w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
               >
                 {cityLoading && cityResults.length === 0 && (
                   <div className="px-3 py-2 text-sm text-gray-500">Searching...</div>
