@@ -3081,7 +3081,7 @@ export default function CountryPage({
           {/* Unit converter — 2/3 */}
           <div className="md:col-span-2 px-4 py-5 sm:p-6">
             <dt className="truncate text-sm font-medium text-gray-500">Unit Converter</dt>
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-3 space-y-3">
               {/* Converter type dropdown — Listbox */}
               <Listbox value={activeConverterOption} onChange={(option) => setActiveConverter(option.id)}>
                 <div className="relative inline-block">
@@ -3109,6 +3109,7 @@ export default function CountryPage({
                 </div>
               </Listbox>
 
+              <div className="flex items-center gap-3">
               {/* Left input */}
               <div className="flex-1">
                 <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
@@ -3188,6 +3189,7 @@ export default function CountryPage({
                      'ft²'}
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
