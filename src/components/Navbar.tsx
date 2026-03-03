@@ -134,7 +134,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                   />
                   <Search
                     aria-hidden="true"
-                    strokeWidth={1.5}
+                    strokeWidth={1}
                     className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
                   />
                 </div>
@@ -189,7 +189,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                 className="shrink-0 rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
                 aria-label="Close search"
               >
-                <X className="size-5" aria-hidden="true" strokeWidth={1.5} />
+                <X className="size-5" aria-hidden="true" strokeWidth={1} />
               </button>
             </div>
           ) : (
@@ -230,7 +230,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                     className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
                     aria-label="Search countries"
                   >
-                    <Search className="size-5" aria-hidden="true" strokeWidth={1.5} />
+                    <Search className="size-5" aria-hidden="true" strokeWidth={1} />
                   </button>
                 )}
 
@@ -247,8 +247,8 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                   <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
-                    <MenuIcon aria-hidden="true" strokeWidth={1.5} className="block size-6 group-data-open:hidden" />
-                    <X aria-hidden="true" strokeWidth={1.5} className="hidden size-6 group-data-open:block" />
+                    <MenuIcon aria-hidden="true" strokeWidth={1} className="block size-6 group-data-open:hidden" />
+                    <X aria-hidden="true" strokeWidth={1} className="hidden size-6 group-data-open:block" />
                   </DisclosureButton>
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
               />
               <Search
                 aria-hidden="true"
-                strokeWidth={1.5}
+                strokeWidth={1}
                 className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
               />
             </div>
