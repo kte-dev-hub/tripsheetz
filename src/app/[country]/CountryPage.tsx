@@ -1193,8 +1193,8 @@ export default function CountryPage({
       {/* ---- LANGUAGE — description list (#50) ---- */}
       <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Language</h3>
-        <div className="mt-3 border-t border-gray-100">
-          <dl className="divide-y divide-gray-100">
+        <div className="mt-3 border-t border-gray-200">
+          <dl className="divide-y divide-gray-200">
             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium text-gray-900">Official Languages</dt>
               <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{country.languages_official ?? '—'}</dd>
