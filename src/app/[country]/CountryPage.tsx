@@ -19,6 +19,7 @@ import {
   Phone, MapPin, Globe, Stamp, Wallet, Smartphone, Zap, Ruler, ShieldAlert,
   Sunrise, Sunset
 } from 'lucide-react'
+import SectionNav from '@/components/SectionNav'
 
 interface Country {
   id: number
@@ -1158,12 +1159,14 @@ export default function CountryPage({
         </div>
       )}
 
+      <SectionNav />
+
     {/* ============================================================
         SECTION 1: OVERVIEW
         ============================================================ */}
     <div className="bg-gray-50 pt-12 pb-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="overview">
+    <section id="overview" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Globe className="size-5" aria-hidden="true" />
@@ -1245,7 +1248,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="visa">
+    <section id="visa" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Stamp className="size-5" aria-hidden="true" />
@@ -1596,7 +1599,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="money">
+    <section id="money" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Wallet className="size-5" aria-hidden="true" />
@@ -2157,7 +2160,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="communications">
+    <section id="communications" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Smartphone className="size-5" aria-hidden="true" />
@@ -2311,7 +2314,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="time">
+    <section id="time" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Clock className="size-5" aria-hidden="true" />
@@ -2410,7 +2413,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="transport">
+    <section id="transport" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Plane className="size-5" aria-hidden="true" />
@@ -2701,7 +2704,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="electrical">
+    <section id="electrical" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Zap className="size-5" aria-hidden="true" />
@@ -2809,7 +2812,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="weather">
+    <section id="weather" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <CloudSun className="size-5" aria-hidden="true" />
@@ -3082,7 +3085,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="measurements">
+    <section id="measurements" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Ruler className="size-5" aria-hidden="true" />
@@ -3222,7 +3225,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="emergency">
+    <section id="emergency" className="scroll-mt-28">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <ShieldAlert className="size-5" aria-hidden="true" />
