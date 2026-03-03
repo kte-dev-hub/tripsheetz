@@ -100,7 +100,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
   return (
     <Disclosure
       as="nav"
-      className="relative bg-white shadow-sm"
+      className="relative bg-white"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between">
