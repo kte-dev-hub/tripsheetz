@@ -107,7 +107,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
 
           {/* ===== SEARCH TAKEOVER MODE ===== */}
           {searchOpen ? (
-            <div ref={searchRef} className="relative flex flex-1 items-center gap-3 px-2 sm:px-4 lg:px-0">
+            <div ref={searchRef} className="relative flex flex-1 items-center gap-3">
               <div className="relative flex-1">
                 <div className="grid w-full grid-cols-1">
                   <input
@@ -194,7 +194,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
           ) : (
             /* ===== NORMAL NAVBAR MODE ===== */
             <>
-              <div className="flex px-2 lg:px-0">
+              <div className="flex">
                 <a href="/" className="flex shrink-0 items-center">
                   <span className="text-xl font-bold italic">
                     <span className="text-indigo-600">Trip</span>
