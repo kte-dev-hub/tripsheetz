@@ -1149,7 +1149,7 @@ export default function CountryPage({
           HERO IMAGE
           ============================================================ */}
       {country.hero_image_url && (
-        <div className="bg-gray-50 pt-6 pb-6">
+        <div className="bg-white pt-6 pb-6">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <div className="overflow-hidden rounded-lg">
               <img

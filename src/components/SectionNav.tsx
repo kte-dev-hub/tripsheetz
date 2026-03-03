@@ -127,13 +127,13 @@ export default function SectionNav() {
   return (
     <>
       {/* Sentinel: when this scrolls out of view, the fixed bar appears */}
-      <div ref={sentinelRef} className="bg-gray-50 border-b border-gray-200">
+      <div ref={sentinelRef} className="bg-white border-b border-gray-200">
         {pillBar}
       </div>
 
       {/* Fixed bar that appears when sentinel scrolls away */}
       {isStuck && (
-        <div className="fixed top-14 left-0 right-0 z-40 bg-gray-50 border-b border-gray-200">
+        <div className="fixed top-14 left-0 right-0 z-40 bg-white border-b border-gray-200">
           {pillBar}
         </div>
       )}
