@@ -3111,7 +3111,7 @@ export default function CountryPage({
 
               <div className="flex items-center gap-3">
               {/* Left input */}
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                   <input
                     type="text"
@@ -3153,7 +3153,7 @@ export default function CountryPage({
               <span className="text-lg font-semibold text-gray-400 text-center">=</span>
 
               {/* Right input */}
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center rounded-md bg-white pr-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
                   <input
                     type="text"
