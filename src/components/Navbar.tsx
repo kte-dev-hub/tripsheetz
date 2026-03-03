@@ -196,7 +196,14 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
             /* ===== NORMAL NAVBAR MODE ===== */
             <>
               <div className="flex">
-                <a href="/" className="flex shrink-0 items-center">
+                <a href="/" className="flex shrink-0 items-center gap-2">
+                  <svg width="22" height="22" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                    <path d="M56 8L8 30L30 35Z" fill="#4f46e5" />
+                    <path d="M8 30L30 35L38 56Z" fill="#ea580c" />
+                    <path d="M56 8L30 35" stroke="#fff" strokeWidth="4" />
+                    <path d="M8 30L30 35" stroke="#fff" strokeWidth="4" />
+                    <path d="M30 35L38 56" stroke="#fff" strokeWidth="4" />
+                  </svg>
                   <span className="text-xl font-bold italic">
                     <span className="text-indigo-600">Trip</span>
                     <span className="text-orange-600">Sheetz</span>
