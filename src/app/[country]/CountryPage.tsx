@@ -1117,7 +1117,7 @@ export default function CountryPage({
     <div>
 
       {/* Page Header + Master Selector — white band */}
-      <div className="bg-gray-50 py-8">
+      <div className="bg-gray-50 pt-8 pb-0">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
       {/* ============================================================
@@ -1143,7 +1143,7 @@ export default function CountryPage({
     {/* ============================================================
         SECTION 1: OVERVIEW
         ============================================================ */}
-    <div className="bg-gray-50 py-12">
+    <div className="bg-gray-50 pt-6 pb-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="overview">
 
