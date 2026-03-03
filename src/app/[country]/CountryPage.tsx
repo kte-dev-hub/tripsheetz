@@ -1211,7 +1211,7 @@ export default function CountryPage({
       {religions.length > 0 && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Religion</h3>
-          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
             <div className="space-y-3">
               {religions.map((religion, index) => (
                 <div key={religion.id}>
@@ -2171,7 +2171,7 @@ export default function CountryPage({
 
           {/* Hero dialing code — #57 Simple Stats In Cards (single card) */}
           {phoneInfo.dialing_code && (
-            <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
+            <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 ring-1 ring-gray-200 sm:p-6">
               <dt className="truncate text-sm font-medium text-gray-500">Country Dialing Code</dt>
               <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{phoneInfo.dialing_code}</dd>
             </div>
@@ -2342,7 +2342,7 @@ export default function CountryPage({
               return (
                 <div
                   key={tz.id}
-                  className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm"
+                  className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white"
                 >
                   {/* Card header */}
                   <div className="px-4 py-4 sm:px-6">
@@ -2480,7 +2480,7 @@ export default function CountryPage({
               /* Single airport — full width card */
               <div className="mt-5">
                 {filteredAirports.map((airport) => (
-                  <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 shadow-sm">
+                  <div key={airport.id} className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
                     {/* Card header */}
                     <div className="px-4 py-5 sm:px-6">
                       <p className="text-lg font-semibold text-gray-400">{airport.iata_code}</p>
@@ -2534,7 +2534,7 @@ export default function CountryPage({
                   {filteredAirports.map((airport) => (
                     <div
                       key={airport.id}
-                      className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-gray-50 shadow-sm"
+                      className="w-72 shrink-0 snap-start divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-gray-50"
                     >
                       {/* Card header */}
                       <div className="px-4 py-5 sm:px-6">
@@ -2739,11 +2739,11 @@ export default function CountryPage({
       <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Power</h3>
         <dl className="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-4">
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
             <dt className="truncate text-sm font-medium text-gray-500">Voltage</dt>
             <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.voltage}</dd>
           </div>
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
             <dt className="truncate text-sm font-medium text-gray-500">Frequency</dt>
             <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.frequency}</dd>
           </div>
@@ -2873,19 +2873,19 @@ export default function CountryPage({
       {/* ---- CURRENT CONDITIONS ---- */}
       <div className="mt-6">
         {weatherLoading && !currentWeather && (
-          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 ring-1 ring-gray-200 sm:p-6">
             <p className="text-sm text-gray-500">Loading weather data...</p>
           </div>
         )}
 
         {weatherError && (
-          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 shadow-sm sm:p-6">
+          <div className="overflow-hidden rounded-lg bg-gray-50 px-4 py-5 ring-1 ring-gray-200 sm:p-6">
             <p className="text-sm text-red-600">{weatherError}</p>
           </div>
         )}
 
         {currentWeather && (
-          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 shadow-sm">
+          <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
             {/* Hero: icon + temp + description */}
             <div className="px-4 py-5 sm:px-6">
               <div className="flex items-center gap-4">
@@ -3090,7 +3090,7 @@ export default function CountryPage({
       </h2>
       <p className="mt-1 text-sm text-gray-500">Units and conversions for {country.name}</p>
 
-      <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white shadow-sm md:grid-cols-3 md:divide-x md:divide-y-0">
+      <dl className="mt-6 grid grid-cols-1 divide-y divide-gray-200 rounded-lg bg-white ring-1 ring-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
           {/* System stat — 1/3 */}
           <div className="px-4 py-5 sm:p-6">
             <dt className="text-sm font-medium text-gray-500">System</dt>
@@ -3232,7 +3232,7 @@ export default function CountryPage({
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
       <dl className="mt-6 grid grid-cols-3 gap-3">
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Police
           </dt>
@@ -3245,7 +3245,7 @@ export default function CountryPage({
             ) : '—'}
           </dd>
         </div>
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Ambulance
           </dt>
@@ -3258,7 +3258,7 @@ export default function CountryPage({
             ) : '—'}
           </dd>
         </div>
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 shadow-sm sm:px-4 sm:py-5">
+        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
           <dt className="text-sm font-medium text-gray-500">
             Fire
           </dt>
