@@ -196,8 +196,8 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
             /* ===== NORMAL NAVBAR MODE ===== */
             <>
               <div className="flex">
-                <a href="/" className="flex shrink-0 items-center gap-1">
-                  <svg width="30" height="30" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                <a href="/" className="flex shrink-0 items-center -space-x-1">
+                  <svg width="38" height="38" viewBox="0 0 64 64" fill="none" aria-hidden="true">
                     <path d="M56 8L8 30L30 35Z" fill="#4f46e5" />
                     <path d="M8 30L30 35L38 56Z" fill="#ea580c" />
                     <path d="M56 8L30 35" stroke="#fff" strokeWidth="4" />
