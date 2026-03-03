@@ -196,7 +196,10 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
             <>
               <div className="flex px-2 lg:px-0">
                 <a href="/" className="flex shrink-0 items-center">
-                  <span className="text-xl font-bold text-gray-900">TripSheetz</span>
+                  <span className="text-xl font-bold italic">
+                    <span className="text-indigo-600">Trip</span>
+                    <span className="text-orange-600">Sheetz</span>
+                  </span>
                 </a>
                 <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
                   <a
