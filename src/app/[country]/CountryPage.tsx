@@ -41,6 +41,7 @@ interface Country {
   emergency_police: string | null
   emergency_ambulance: string | null
   emergency_fire: string | null
+  hero_image_url: string | null
 }
 
 interface VisaRequirement {
@@ -1139,6 +1140,23 @@ export default function CountryPage({
 
         </div>
       </div>
+
+      {/* ============================================================
+          HERO IMAGE
+          ============================================================ */}
+      {country.hero_image_url && (
+        <div className="bg-gray-50 pt-6 pb-0">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="overflow-hidden rounded-lg">
+              <img
+                src={country.hero_image_url}
+                alt={`${country.name} landscape`}
+                className="h-48 w-full object-cover sm:h-64 lg:h-72"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
     {/* ============================================================
         SECTION 1: OVERVIEW
