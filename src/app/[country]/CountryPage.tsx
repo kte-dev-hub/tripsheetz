@@ -1122,7 +1122,7 @@ export default function CountryPage({
       <div className="h-14" />
 
       {/* Page Header + Master Selector — white band */}
-      <div className="bg-gray-50 pt-8 pb-0">
+      <div className="bg-white pt-8 pb-0">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
       {/* ============================================================
@@ -1132,7 +1132,7 @@ export default function CountryPage({
         <img
           alt={`Flag of ${country.name}`}
           src={`https://flagcdn.com/w80/${country.iso_alpha2.trim().toLowerCase()}.png`}
-          className="h-10 w-auto"
+          className="h-12 w-auto"
         />
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-gray-900">{country.name}</h1>
