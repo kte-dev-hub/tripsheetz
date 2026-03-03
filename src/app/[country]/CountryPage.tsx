@@ -1123,11 +1123,11 @@ export default function CountryPage({
       {/* ============================================================
           PAGE HEADER — Flag + Country Name
           ============================================================ */}
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         <img
           alt={`Flag of ${country.name}`}
           src={`https://flagcdn.com/w80/${country.iso_alpha2.trim().toLowerCase()}.png`}
-          className="h-6 w-auto"
+          className="h-7 w-auto"
         />
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-gray-900">{country.name}</h1>
