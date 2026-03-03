@@ -186,7 +186,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
               <button
                 type="button"
                 onClick={closeSearch}
-                className="shrink-0 rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
+                className="shrink-0 rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
                 aria-label="Close search"
               >
                 <X className="size-5" aria-hidden="true" strokeWidth={1} />
@@ -234,7 +234,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                       setSearchOpen(true)
                       setTimeout(() => inputRef.current?.focus(), 50)
                     }}
-                    className="rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
+                    className="rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600"
                     aria-label="Search countries"
                   >
                     <Search className="size-5" aria-hidden="true" strokeWidth={1} />
@@ -251,7 +251,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
 
                 {/* Hamburger — mobile */}
                 <div className="flex items-center lg:hidden">
-                  <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600">
+                  <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-700 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
                     <Equal aria-hidden="true" strokeWidth={1} className="block size-6 group-data-open:hidden" />
