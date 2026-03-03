@@ -1127,10 +1127,10 @@ export default function CountryPage({
         <img
           alt={`Flag of ${country.name}`}
           src={`https://flagcdn.com/w80/${country.iso_alpha2.trim().toLowerCase()}.png`}
-          className="h-8 w-auto"
+          className="h-6 w-auto"
         />
         <div>
-          <h1 className="text-3xl font-semibold text-gray-900">{country.name}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">{country.name}</h1>
           <p className="text-sm text-gray-500">
             {country.native_name && country.native_name !== country.name && `${country.native_name} · `}{country.official_name}
           </p>
