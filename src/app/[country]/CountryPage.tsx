@@ -1132,7 +1132,7 @@ export default function CountryPage({
         <img
           alt={`Flag of ${country.name}`}
           src={`https://flagcdn.com/w80/${country.iso_alpha2.trim().toLowerCase()}.png`}
-          className="h-7 w-auto"
+          className="h-10 w-auto"
         />
         <div>
           <h1 className="text-3xl font-semibold tracking-tight text-gray-900">{country.name}</h1>
