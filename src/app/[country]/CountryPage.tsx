@@ -1172,7 +1172,7 @@ export default function CountryPage({
       <p className="mt-1 text-sm text-gray-500">Key facts about {country.name}</p>
 
       {/* ---- IDENTITY — stat grid ---- */}
-      <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white shadow-sm">
+      <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-sm font-medium text-gray-500">Capital</dt>
           <dd className="mt-1 text-lg font-semibold text-gray-900">{country.capital_city ?? '—'}</dd>
@@ -1183,7 +1183,7 @@ export default function CountryPage({
         </div>
       </dl>
 
-      <dl className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-white shadow-sm">
+      <dl className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-sm font-medium text-gray-500">Government</dt>
           <dd className="mt-1 text-lg font-semibold text-gray-900">{country.government_type ?? '—'}</dd>
