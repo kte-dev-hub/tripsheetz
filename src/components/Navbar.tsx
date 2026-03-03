@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
-import { Menu as MenuIcon, X, Search } from 'lucide-react'
+import { Equal, X, Search } from 'lucide-react'
 import { getSupabase } from '@/lib/supabase'
 
 interface CountryOption {
@@ -254,7 +254,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                   <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-600">
                     <span className="absolute -inset-0.5" />
                     <span className="sr-only">Open main menu</span>
-                    <MenuIcon aria-hidden="true" strokeWidth={1} className="block size-6 group-data-open:hidden" />
+                    <Equal aria-hidden="true" strokeWidth={1} className="block size-6 group-data-open:hidden" />
                     <X aria-hidden="true" strokeWidth={1} className="hidden size-6 group-data-open:block" />
                   </DisclosureButton>
                 </div>
