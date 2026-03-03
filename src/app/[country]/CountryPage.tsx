@@ -1117,7 +1117,7 @@ export default function CountryPage({
     <div>
 
       {/* Page Header + Master Selector — white band */}
-      <div className="bg-white py-8">
+      <div className="bg-gray-50 py-8">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
       {/* ============================================================
