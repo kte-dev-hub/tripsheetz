@@ -98,10 +98,10 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
   }
 
   return (
-    <Disclosure
-      as="nav"
-      className="relative bg-white"
-    >
+<Disclosure
+  as="nav"
+  className="sticky top-0 z-40 bg-white border-b border-gray-200"
+>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 justify-between">
 

@@ -87,7 +87,7 @@ export default function SectionNav() {
   }, [])
 
   return (
-    <div className="sticky top-14 z-30 bg-gray-50 pt-6 border-b border-gray-200">
+    <div className="sticky top-14 z-30 bg-gray-50 border-b border-gray-200">
       <div
         ref={scrollContainerRef}
         className="section-nav-scroll mx-auto max-w-5xl overflow-x-auto px-4 sm:px-6 lg:px-8"
