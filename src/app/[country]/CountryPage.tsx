@@ -1161,7 +1161,7 @@ export default function CountryPage({
     {/* ============================================================
         SECTION 1: OVERVIEW
         ============================================================ */}
-    <div className="bg-gray-50 pt-6 pb-12">
+    <div className="bg-gray-50 pt-12 pb-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
     <section id="overview">
 
