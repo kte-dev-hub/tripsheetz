@@ -1118,6 +1118,9 @@ export default function CountryPage({
   return (
     <div>
 
+      {/* Spacer for fixed navbar */}
+      <div className="h-14" />
+
       {/* Page Header + Master Selector — white band */}
       <div className="bg-gray-50 pt-8 pb-0">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -1167,7 +1170,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 pt-12 pb-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="overview" className="scroll-mt-28">
+    <section id="overview" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Globe className="size-5" aria-hidden="true" />
@@ -1249,7 +1252,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="visa" className="scroll-mt-28">
+    <section id="visa" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Stamp className="size-5" aria-hidden="true" />
@@ -1600,7 +1603,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="money" className="scroll-mt-28">
+    <section id="money" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Wallet className="size-5" aria-hidden="true" />
@@ -2161,7 +2164,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="communications" className="scroll-mt-28">
+    <section id="communications" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Smartphone className="size-5" aria-hidden="true" />
@@ -2315,7 +2318,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="time" className="scroll-mt-28">
+    <section id="time" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Clock className="size-5" aria-hidden="true" />
@@ -2414,7 +2417,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="transport" className="scroll-mt-28">
+    <section id="transport" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Plane className="size-5" aria-hidden="true" />
@@ -2705,7 +2708,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="electrical" className="scroll-mt-28">
+    <section id="electrical" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Zap className="size-5" aria-hidden="true" />
@@ -2813,7 +2816,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="weather" className="scroll-mt-28">
+    <section id="weather" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <CloudSun className="size-5" aria-hidden="true" />
@@ -3086,7 +3089,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-gray-50 py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="measurements" className="scroll-mt-28">
+    <section id="measurements" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <Ruler className="size-5" aria-hidden="true" />
@@ -3226,7 +3229,7 @@ export default function CountryPage({
         ============================================================ */}
     <div className="bg-white py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-    <section id="emergency" className="scroll-mt-28">
+    <section id="emergency" className="scroll-mt-[120px]">
 
       <h2 className="flex items-center gap-2 text-lg font-semibold text-orange-600">
         <ShieldAlert className="size-5" aria-hidden="true" />
