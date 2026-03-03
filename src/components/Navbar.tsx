@@ -103,7 +103,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
       className="relative bg-white"
     >
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 justify-between">
+        <div className="flex h-14 justify-between">
 
           {/* ===== SEARCH TAKEOVER MODE ===== */}
           {searchOpen ? (
