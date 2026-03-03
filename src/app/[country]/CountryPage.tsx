@@ -1131,7 +1131,7 @@ export default function CountryPage({
       <div className="flex items-center gap-4">
         <img
           alt={`Flag of ${country.name}`}
-          src={`https://flagcdn.com/w80/${country.iso_alpha2.trim().toLowerCase()}.png`}
+          src={`https://flagcdn.com/w320/${country.iso_alpha2.trim().toLowerCase()}.png`}
           className="h-12 w-auto"
         />
         <div>
