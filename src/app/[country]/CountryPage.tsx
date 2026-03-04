@@ -1665,8 +1665,11 @@ export default function CountryPage({
       {currency && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Currency Converter</h3>
+          {/* Currency converter card */}
+          <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
+
           {/* Summary text */}
-          <div className="mt-3 mb-4">
+          <div className="mb-4">
             {selectedCurrency && localAmount && foreignAmount ? (
               <>
                 <p className="text-sm text-gray-500">
@@ -1781,6 +1784,8 @@ export default function CountryPage({
           ) : (
             <p className="text-sm text-gray-500">Currency data not available.</p>
           )}
+
+          </div>
         </div>
       )}
 
