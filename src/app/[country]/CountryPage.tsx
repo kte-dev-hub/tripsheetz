@@ -533,6 +533,8 @@ export default function CountryPage({
   const [consulatesOpen, setConsulatesOpen] = useState(false)
   const [otherEmergencyOpen, setOtherEmergencyOpen] = useState(false)
   const [transitCardOpen, setTransitCardOpen] = useState(false)
+  const [transitSystemsOpen, setTransitSystemsOpen] = useState(false)
+  const [intercityOpen, setIntercityOpen] = useState(false)
 
   // Currency converter state
   const [localAmount, setLocalAmount] = useState<string>('1')
@@ -2764,11 +2766,27 @@ export default function CountryPage({
           {/* Public Transit — striped description list (#51 pattern) */}
           {publicTransit && (publicTransit.transit_systems || publicTransit.transit_card_name || publicTransit.intercity_options) && (
             <div className="mt-6">
-              {/* Transit Systems — description list item */}
+              {/* Transit Systems accordion */}
               {publicTransit.transit_systems && (
-                <div className="border-b border-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium text-gray-900">Transit Systems</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_systems}</dd>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setTransitSystemsOpen(!transitSystemsOpen)}
+                    className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                    aria-expanded={transitSystemsOpen}
+                  >
+                    <span>Transit Systems</span>
+                    <ChevronDown
+                      className={`size-5 text-gray-400 transition-transform duration-200 ${transitSystemsOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{ maxHeight: transitSystemsOpen ? '500px' : '0px' }}
+                  >
+                    <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{publicTransit.transit_systems}</p>
+                  </div>
                 </div>
               )}
 
@@ -2815,11 +2833,27 @@ export default function CountryPage({
                 </div>
               )}
 
-              {/* Intercity Options — description list item */}
+              {/* Intercity Options accordion */}
               {publicTransit.intercity_options && (
-                <div className="border-b border-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium text-gray-900">Intercity Options</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.intercity_options}</dd>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIntercityOpen(!intercityOpen)}
+                    className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                    aria-expanded={intercityOpen}
+                  >
+                    <span>Intercity Options</span>
+                    <ChevronDown
+                      className={`size-5 text-gray-400 transition-transform duration-200 ${intercityOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{ maxHeight: intercityOpen ? '500px' : '0px' }}
+                  >
+                    <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{publicTransit.intercity_options}</p>
+                  </div>
                 </div>
               )}
             </div>
