@@ -3382,47 +3382,43 @@ export default function CountryPage({
       <p className="mt-1 text-sm text-gray-500">Emergency numbers and U.S. embassy in {country.name}</p>
 
       {/* ---- PRIMARY EMERGENCY NUMBERS — always visible ---- */}
-      <dl className="mt-6 grid grid-cols-3 gap-3">
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
-          <dt className="text-sm font-medium text-gray-500">
-            Police
-          </dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
-            {country.emergency_police ? (
-              <a href={`tel:${country.emergency_police.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
-                {country.emergency_police}
-                <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-              </a>
-            ) : '—'}
-          </dd>
-        </div>
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
-          <dt className="text-sm font-medium text-gray-500">
-            Ambulance
-          </dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
-            {country.emergency_ambulance ? (
-              <a href={`tel:${country.emergency_ambulance.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
-                {country.emergency_ambulance}
-                <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-              </a>
-            ) : '—'}
-          </dd>
-        </div>
-        <div className="overflow-hidden rounded-lg bg-gray-50 px-3 py-4 ring-1 ring-gray-200 sm:px-4 sm:py-5">
-          <dt className="text-sm font-medium text-gray-500">
-            Fire
-          </dt>
-          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
-            {country.emergency_fire ? (
-              <a href={`tel:${country.emergency_fire.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
-                {country.emergency_fire}
-                <Phone className="size-3.5 shrink-0" aria-hidden="true" />
-              </a>
-            ) : '—'}
-          </dd>
-        </div>
-      </dl>
+      <div className="mt-6 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
+        <dl className="grid grid-cols-3 divide-x divide-gray-200">
+          <div className="px-3 py-4 sm:px-4 sm:py-5">
+            <dt className="text-sm font-medium text-gray-500">Police</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_police ? (
+                <a href={`tel:${country.emergency_police.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                  {country.emergency_police}
+                  <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                </a>
+              ) : '—'}
+            </dd>
+          </div>
+          <div className="px-3 py-4 sm:px-4 sm:py-5">
+            <dt className="text-sm font-medium text-gray-500">Ambulance</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_ambulance ? (
+                <a href={`tel:${country.emergency_ambulance.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                  {country.emergency_ambulance}
+                  <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                </a>
+              ) : '—'}
+            </dd>
+          </div>
+          <div className="px-3 py-4 sm:px-4 sm:py-5">
+            <dt className="text-sm font-medium text-gray-500">Fire</dt>
+            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
+              {country.emergency_fire ? (
+                <a href={`tel:${country.emergency_fire.replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 text-indigo-600 hover:text-indigo-500">
+                  {country.emergency_fire}
+                  <Phone className="size-3.5 shrink-0" aria-hidden="true" />
+                </a>
+              ) : '—'}
+            </dd>
+          </div>
+        </dl>
+      </div>
 
       {/* ---- OTHER EMERGENCY NUMBERS — accordion ---- */}
       {emergencyNumbers && (emergencyNumbers.tourist_police || emergencyNumbers.roadside_assistance || emergencyNumbers.coast_guard || emergencyNumbers.other_emergency_name_1 || emergencyNumbers.other_emergency_name_2 || emergencyNumbers.other_emergency_name_3) && (
