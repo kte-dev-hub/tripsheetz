@@ -538,8 +538,6 @@ export default function CountryPage({
 
   // Airport city selector
   const [selectedAirportCity, setSelectedAirportCity] = useState<string | null>(null)
-  const [airportCityQuery, setAirportCityQuery] = useState('')
-
   // Weather
   const [weatherCity, setWeatherCity] = useState<CityResult>({
     name: country.capital_city ?? country.name,
@@ -875,12 +873,6 @@ export default function CountryPage({
   const activeAirportCity = selectedAirportCity || airportCities[0] || null
 
   const filteredAirports = airports.filter(a => a.city === activeAirportCity)
-
-  const filteredAirportCities = airportCityQuery === ''
-    ? airportCities
-    : airportCities.filter(city =>
-        city.toLowerCase().includes(airportCityQuery.toLowerCase())
-      )
 
   const handleLocalAmountChange = (value: string) => {
     setLocalAmount(value)
@@ -2444,49 +2436,41 @@ export default function CountryPage({
             {/* City selector — only if 2+ cities */}
             {airportCities.length > 1 && (
               <div className="mt-3 w-48">
-                <Combobox
+                <Listbox
                   value={activeAirportCity}
-                  onChange={(val: string | null) => {
-                    if (val) {
-                      setSelectedAirportCity(val)
-                      setActiveAirportIndex(0)
-                    }
+                  onChange={(val: string) => {
+                    setSelectedAirportCity(val)
+                    setActiveAirportIndex(0)
                   }}
                 >
                   <div className="relative">
-                    <ComboboxInput
-                      className="block w-full rounded-md bg-white py-1.5 pr-12 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                      onChange={(event) => setAirportCityQuery(event.target.value)}
-                      onBlur={() => setAirportCityQuery('')}
-                      displayValue={(city: string) => city || ''}
-                      placeholder="Select a city"
-                    />
-                    <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
-                      <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
-                    </ComboboxButton>
-                    {filteredAirportCities.length > 0 && (
-                      <ComboboxOptions
-                        transition
-                        className="absolute z-10 mt-1 max-h-60 min-w-full w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
-                      >
-                        {filteredAirportCities.map((city) => (
-                          <ComboboxOption
-                            key={city}
-                            value={city}
-                            className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
-                          >
-                            <span className="block truncate font-normal group-data-selected:font-semibold">
-                              {city}
-                            </span>
-                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
-                              <Check aria-hidden="true" className="size-5" />
-                            </span>
-                          </ComboboxOption>
-                        ))}
-                      </ComboboxOptions>
-                    )}
+                    <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pr-10 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
+                      <span className="block truncate">{activeAirportCity}</span>
+                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <ChevronsUpDown className="size-5 text-gray-400" aria-hidden="true" />
+                      </span>
+                    </ListboxButton>
+                    <ListboxOptions
+                      transition
+                      className="absolute z-10 mt-1 max-h-60 min-w-full w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg outline outline-black/5 data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
+                    >
+                      {airportCities.map((city) => (
+                        <ListboxOption
+                          key={city}
+                          value={city}
+                          className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
+                        >
+                          <span className="block truncate font-normal group-data-selected:font-semibold">
+                            {city}
+                          </span>
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-not-data-selected:hidden group-data-focus:text-white">
+                            <Check aria-hidden="true" className="size-5" />
+                          </span>
+                        </ListboxOption>
+                      ))}
+                    </ListboxOptions>
                   </div>
-                </Combobox>
+                </Listbox>
               </div>
             )}
 
