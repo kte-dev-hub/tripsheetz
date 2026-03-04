@@ -1353,25 +1353,25 @@ export default function CountryPage({
           <dl className="mt-3 grid grid-cols-2 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
             <div className="px-4 py-4 sm:p-6 border-b border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Return Ticket</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">
+              <dd className="mt-1 text-lg font-semibold text-gray-900">
                 {boolStatus(entryRequirements.return_ticket_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-b border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Proof of Funds</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">
+              <dd className="mt-1 text-lg font-semibold text-gray-900">
                 {boolStatus(entryRequirements.proof_of_funds_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Customs Declaration</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">
+              <dd className="mt-1 text-lg font-semibold text-gray-900">
                 {boolStatus(entryRequirements.customs_declaration_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6">
               <dt className="text-sm font-normal text-gray-900">Arrival Card</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">
+              <dd className="mt-1 text-lg font-semibold text-gray-900">
                 {boolStatus(entryRequirements.arrival_card_required)}
               </dd>
             </div>
@@ -1612,15 +1612,15 @@ export default function CountryPage({
           <dl className="mt-3 grid grid-cols-3 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Currency</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">{currency.currency_name}</dd>
+              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_name}</dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Symbol</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">{currency.currency_symbol ?? '—'}</dd>
+              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_symbol ?? '—'}</dd>
             </div>
             <div className="px-4 py-4 sm:p-6">
               <dt className="text-sm font-normal text-gray-900">Code</dt>
-              <dd className="mt-1 text-lg font-semibold text-indigo-600">{currency.currency_code}</dd>
+              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_code}</dd>
             </div>
           </dl>
 
@@ -2789,13 +2789,13 @@ export default function CountryPage({
             {driving.driving_side && (
               <div className="col-span-1 px-4 py-4 sm:p-6 border-r border-gray-200">
                 <dt className="text-sm font-normal text-gray-900">Drives On</dt>
-                <dd className="mt-1 text-lg font-semibold text-indigo-600">{driving.driving_side}</dd>
+                <dd className="mt-1 text-lg font-semibold text-gray-900">{driving.driving_side}</dd>
               </div>
             )}
             {driving.idp_required && (
               <div className="col-span-2 px-4 py-4 sm:p-6">
                 <dt className="text-sm font-normal text-gray-900">International Driving Permit</dt>
-                <dd className="mt-1 text-lg font-semibold text-indigo-600">{driving.idp_required}</dd>
+                <dd className="mt-1 text-lg font-semibold text-gray-900">{driving.idp_required}</dd>
               </div>
             )}
           </dl>
@@ -2808,7 +2808,7 @@ export default function CountryPage({
             return (
               <div className="mt-3 overflow-hidden rounded-lg bg-gray-50 px-4 py-4 ring-1 ring-gray-200 sm:p-6">
                 <dt className="text-sm font-normal text-gray-900">Road Conditions</dt>
-                <dd className="mt-1 text-lg font-semibold text-indigo-600">{headline}</dd>
+                <dd className="mt-1 text-lg font-semibold text-gray-900">{headline}</dd>
                 {description && (
                   <p className="mt-2 text-sm text-gray-500">{description}</p>
                 )}
