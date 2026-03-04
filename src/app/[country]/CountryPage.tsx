@@ -518,7 +518,6 @@ export default function CountryPage({
   const [taxRefundMethodOpen, setTaxRefundMethodOpen] = useState(false)
   const [taxTimeLimitOpen, setTaxTimeLimitOpen] = useState(false)
   // Mobile Data accordion states
-  const [mobileCarriersOpen, setMobileCarriersOpen] = useState(false)
   const [mobileEsimOpen, setMobileEsimOpen] = useState(false)
   const [mobileEsimProvidersOpen, setMobileEsimProvidersOpen] = useState(false)
   const [mobileSimPurchaseOpen, setMobileSimPurchaseOpen] = useState(false)
@@ -2187,30 +2186,14 @@ export default function CountryPage({
             Staying connected in {country.name}.
           </p>
 
-          <div className="mt-6">
           {mobileData.major_carriers && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setMobileCarriersOpen(!mobileCarriersOpen)}
-                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
-                aria-expanded={mobileCarriersOpen}
-              >
-                <span>Major Carriers</span>
-                <ChevronDown
-                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileCarriersOpen ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                style={{ maxHeight: mobileCarriersOpen ? '500px' : '0px' }}
-              >
-                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.major_carriers}</p>
-              </div>
+            <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
+              <dt className="truncate text-sm font-medium text-gray-500">Major Carriers</dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{mobileData.major_carriers}</dd>
             </div>
           )}
 
+          <div className="mt-6">
           {mobileData.esim_available && (
             <div>
               <button
