@@ -2286,7 +2286,57 @@ export default function CountryPage({
       </h2>
       <p className="mt-1 text-sm text-gray-500">Local time in {country.name}</p>
 
-      {countryTimezones.length > 0 ? (
+      {countryTimezones.length === 1 ? (
+        /* Single timezone — full width card */
+        <div className="mt-6">
+          {countryTimezones.map((tz) => {
+            const { time24, time12, dateStr } = formatTimeForZone(currentTime, tz.timezone_id)
+            const utcOffset = getUtcOffset(currentTime, tz.timezone_id)
+            return (
+              <div
+                key={tz.id}
+                className="divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 bg-white"
+              >
+                {/* Card header */}
+                <div className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900">{tz.city}</h4>
+                      <p className="text-sm text-gray-500">
+                        {tz.timezone_name}
+                        {tz.timezone_abbreviation && ` (${tz.timezone_abbreviation})`}
+                      </p>
+                    </div>
+                    <Clock className="h-5 w-5 text-gray-400" />
+                  </div>
+                </div>
+                {/* Card body */}
+                <div className="px-4 py-4 sm:px-6 sm:py-4">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+                      {time24}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500 tabular-nums">
+                      {time12} · {dateStr}
+                    </p>
+                  </div>
+                  <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                    <div>
+                      <dt className="text-xs font-medium text-gray-500">UTC Offset</dt>
+                      <dd className="mt-1 text-sm font-semibold text-gray-900">UTC {utcOffset}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs font-medium text-gray-500">DST Observed</dt>
+                      <dd className="mt-1 text-sm font-semibold text-gray-900">{tz.dst_observed ? 'Yes' : 'No'}</dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ) : countryTimezones.length > 1 ? (
+        /* Multiple timezones — carousel */
         <div className="relative mt-6">
           <div
             className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory"
@@ -2350,19 +2400,17 @@ export default function CountryPage({
             })}
           </div>
 
-          {/* Dot indicators — only if 2+ timezones */}
-          {countryTimezones.length > 1 && (
-            <div className="mt-3 flex justify-center gap-1.5">
-              {countryTimezones.map((_, i) => (
-                <span
-                  key={i}
-                  className={`block h-1.5 rounded-full transition-all duration-200 ${
-                    i === activeTimezoneIndex ? 'w-4 bg-gray-800' : 'w-1.5 bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
+          {/* Dot indicators */}
+          <div className="mt-3 flex justify-center gap-1.5">
+            {countryTimezones.map((_, i) => (
+              <span
+                key={i}
+                className={`block h-1.5 rounded-full transition-all duration-200 ${
+                  i === activeTimezoneIndex ? 'w-4 bg-gray-800' : 'w-1.5 bg-gray-300'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <p className="mt-6 text-sm text-gray-500">Timezone data not available.</p>
