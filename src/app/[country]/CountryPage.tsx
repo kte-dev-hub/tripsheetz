@@ -1946,7 +1946,7 @@ export default function CountryPage({
 
           {/* Eligible Purchases */}
           {taxRefund.eligible_purchases && (
-            <div>
+            <div className="mt-6">
               <button
                 type="button"
                 onClick={() => setTaxEligibleOpen(!taxEligibleOpen)}
