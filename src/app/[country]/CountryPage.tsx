@@ -517,7 +517,6 @@ export default function CountryPage({
   const [taxWhereToClaimOpen, setTaxWhereToClaimOpen] = useState(false)
   const [taxRefundMethodOpen, setTaxRefundMethodOpen] = useState(false)
   const [taxTimeLimitOpen, setTaxTimeLimitOpen] = useState(false)
-  const [taxPortalOpen, setTaxPortalOpen] = useState(false)
   const [embassyOpen, setEmbassyOpen] = useState(true)
   const [consulatesOpen, setConsulatesOpen] = useState(false)
   const [otherEmergencyOpen, setOtherEmergencyOpen] = useState(false)
@@ -2101,38 +2100,20 @@ export default function CountryPage({
             </div>
           )}
 
-          {/* Official Portal */}
+          {/* Official Portal — plain text below accordions */}
           {taxRefund.refund_portal_url && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setTaxPortalOpen(!taxPortalOpen)}
-                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
-                aria-expanded={taxPortalOpen}
+            <p className="mt-4 text-sm text-gray-500">
+              Official portal:{' '}
+              <a
+                href={taxRefund.refund_portal_url}
+                className="inline-flex items-center gap-1 font-medium text-indigo-600 hover:text-indigo-500"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <span>Official Portal</span>
-                <ChevronDown
-                  className={`size-5 text-gray-400 transition-transform duration-200 ${taxPortalOpen ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                style={{ maxHeight: taxPortalOpen ? '500px' : '0px' }}
-              >
-                <div className="px-4 py-3 sm:px-0">
-                  <a
-                    href={taxRefund.refund_portal_url}
-                    className="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {(() => { try { return new URL(taxRefund.refund_portal_url).hostname.replace('www.', '') } catch { return taxRefund.refund_portal_url } })()}
-                    <ExternalLink className="size-3.5" aria-hidden="true" />
-                  </a>
-                </div>
-              </div>
-            </div>
+                {(() => { try { return new URL(taxRefund.refund_portal_url).hostname.replace('www.', '') } catch { return taxRefund.refund_portal_url } })()}
+                <ExternalLink className="size-3.5" aria-hidden="true" />
+              </a>
+            </p>
           )}
 
         </div>
