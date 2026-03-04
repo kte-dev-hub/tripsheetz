@@ -532,6 +532,7 @@ export default function CountryPage({
   const [embassyOpen, setEmbassyOpen] = useState(true)
   const [consulatesOpen, setConsulatesOpen] = useState(false)
   const [otherEmergencyOpen, setOtherEmergencyOpen] = useState(false)
+  const [transitCardOpen, setTransitCardOpen] = useState(false)
 
   // Currency converter state
   const [localAmount, setLocalAmount] = useState<string>('1')
@@ -2762,39 +2763,65 @@ export default function CountryPage({
 
           {/* Public Transit — striped description list (#51 pattern) */}
           {publicTransit && (publicTransit.transit_systems || publicTransit.transit_card_name || publicTransit.intercity_options) && (
-            <div className="mt-4 border-t border-gray-100">
-              <dl className="divide-y divide-gray-100">
-                {publicTransit.transit_systems && (
-                  <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                    <dt className="text-sm font-medium text-gray-900">Transit Systems</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_systems}</dd>
+            <div className="mt-6">
+              {/* Transit Systems — description list item */}
+              {publicTransit.transit_systems && (
+                <div className="border-b border-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">Transit Systems</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_systems}</dd>
+                </div>
+              )}
+
+              {/* Transit Cards — merged accordion */}
+              {(publicTransit.transit_card_name || publicTransit.transit_card_where_to_buy || publicTransit.transit_contactless) && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setTransitCardOpen(!transitCardOpen)}
+                    className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                    aria-expanded={transitCardOpen}
+                  >
+                    <span>Transit Cards</span>
+                    <ChevronDown
+                      className={`size-5 text-gray-400 transition-transform duration-200 ${transitCardOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{ maxHeight: transitCardOpen ? '500px' : '0px' }}
+                  >
+                    <div className="px-4 py-3 space-y-2 sm:px-0">
+                      {publicTransit.transit_card_name && (
+                        <div>
+                          <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Card</p>
+                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_card_name}</p>
+                        </div>
+                      )}
+                      {publicTransit.transit_card_where_to_buy && (
+                        <div>
+                          <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Where to Buy</p>
+                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_card_where_to_buy}</p>
+                        </div>
+                      )}
+                      {publicTransit.transit_contactless && (
+                        <div>
+                          <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Contactless Payment</p>
+                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_contactless}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-                {publicTransit.transit_card_name && (
-                  <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                    <dt className="text-sm font-medium text-gray-900">Transit Card</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_card_name}</dd>
-                  </div>
-                )}
-                {publicTransit.transit_card_where_to_buy && (
-                  <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                    <dt className="text-sm font-medium text-gray-900">Where to Buy</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_card_where_to_buy}</dd>
-                  </div>
-                )}
-                {publicTransit.transit_contactless && (
-                  <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                    <dt className="text-sm font-medium text-gray-900">Contactless Payment</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.transit_contactless}</dd>
-                  </div>
-                )}
-                {publicTransit.intercity_options && (
-                  <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                    <dt className="text-sm font-medium text-gray-900">Intercity Options</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.intercity_options}</dd>
-                  </div>
-                )}
-              </dl>
+                </div>
+              )}
+
+              {/* Intercity Options — description list item */}
+              {publicTransit.intercity_options && (
+                <div className="border-b border-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                  <dt className="text-sm font-medium text-gray-900">Intercity Options</dt>
+                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{publicTransit.intercity_options}</dd>
+                </div>
+              )}
             </div>
           )}
         </div>
