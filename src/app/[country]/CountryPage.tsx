@@ -2884,19 +2884,21 @@ export default function CountryPage({
         })}
       </ul>
 
-      {/* ---- POWER — stat cards (#57) ---- */}
+      {/* ---- POWER — unified card ---- */}
       <div className="mt-12">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Power</h3>
-        <dl className="mt-3 grid grid-cols-2 gap-5 sm:grid-cols-4">
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
-            <dt className="truncate text-sm font-medium text-gray-500">Voltage</dt>
-            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.voltage}</dd>
+        <div className="mt-3 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
+          <div className="grid grid-cols-2 divide-x divide-gray-200">
+            <div className="px-4 py-5 sm:p-6">
+              <dt className="text-sm font-medium text-gray-500">Voltage</dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.voltage}</dd>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+              <dt className="text-sm font-medium text-gray-500">Frequency</dt>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.frequency}</dd>
+            </div>
           </div>
-          <div className="overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
-            <dt className="truncate text-sm font-medium text-gray-500">Frequency</dt>
-            <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{countryElectrical.frequency}</dd>
-          </div>
-        </dl>
+        </div>
       </div>
 
       {/* ---- WHAT YOU NEED — personalized verdict ---- */}
