@@ -2437,7 +2437,7 @@ export default function CountryPage({
             {airportCities.length > 1 && (
               <div className="mt-3 w-48">
                 <Listbox
-                  value={activeAirportCity}
+                  value={activeAirportCity ?? undefined}
                   onChange={(val: string) => {
                     setSelectedAirportCity(val)
                     setActiveAirportIndex(0)
