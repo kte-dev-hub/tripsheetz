@@ -1116,9 +1116,6 @@ export default function CountryPage({
   return (
     <div>
 
-      {/* Spacer for fixed navbar */}
-      <div className="h-14" />
-
       {/* Page Header + Master Selector — white band */}
       <div className="bg-white pt-8 pb-0">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
