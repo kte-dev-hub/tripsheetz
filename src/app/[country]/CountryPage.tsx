@@ -1176,18 +1176,18 @@ export default function CountryPage({
       <dl className="mt-6 grid grid-cols-2 divide-x divide-gray-200 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-sm font-medium text-gray-500">Capital</dt>
-          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.capital_city ?? '—'}</dd>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.capital_city ?? '—'}</dd>
         </div>
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-sm font-medium text-gray-500">Population</dt>
-          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.population ?? '—'}</dd>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.population ?? '—'}</dd>
         </div>
       </dl>
 
       <dl className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
         <div className="px-4 py-5 sm:p-6">
           <dt className="text-sm font-medium text-gray-500">Government</dt>
-          <dd className="mt-1 text-lg font-semibold text-gray-900">{country.government_type ?? '—'}</dd>
+          <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{country.government_type ?? '—'}</dd>
         </div>
       </dl>
 
@@ -1353,25 +1353,25 @@ export default function CountryPage({
           <dl className="mt-3 grid grid-cols-2 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
             <div className="px-4 py-4 sm:p-6 border-b border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Return Ticket</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
                 {boolStatus(entryRequirements.return_ticket_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-b border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Proof of Funds</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
                 {boolStatus(entryRequirements.proof_of_funds_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Customs Declaration</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
                 {boolStatus(entryRequirements.customs_declaration_required)}
               </dd>
             </div>
             <div className="px-4 py-4 sm:p-6">
               <dt className="text-sm font-normal text-gray-900">Arrival Card</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
                 {boolStatus(entryRequirements.arrival_card_required)}
               </dd>
             </div>
@@ -1612,15 +1612,15 @@ export default function CountryPage({
           <dl className="mt-3 grid grid-cols-3 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Currency</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_name}</dd>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currency.currency_name}</dd>
             </div>
             <div className="px-4 py-4 sm:p-6 border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Symbol</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_symbol ?? '—'}</dd>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currency.currency_symbol ?? '—'}</dd>
             </div>
             <div className="px-4 py-4 sm:p-6">
               <dt className="text-sm font-normal text-gray-900">Code</dt>
-              <dd className="mt-1 text-lg font-semibold text-gray-900">{currency.currency_code}</dd>
+              <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currency.currency_code}</dd>
             </div>
           </dl>
 
@@ -1672,7 +1672,7 @@ export default function CountryPage({
                 <p className="text-sm text-gray-500">
                   {localAmount} {currency.currency_name} equals
                 </p>
-                <p className="mt-1 text-2xl font-semibold text-gray-900">
+                <p className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">
                   {foreignAmount} {getCurrencyName(selectedCurrency)}
                 </p>
               </>
@@ -2432,7 +2432,7 @@ export default function CountryPage({
                 {/* Card body */}
                 <div className="px-4 py-4 sm:px-6 sm:py-4">
                   <div className="text-center">
-                    <p className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+                    <p className="text-2xl font-semibold tracking-tight text-gray-900 tabular-nums">
                       {time24}
                     </p>
                     <p className="mt-1 text-sm text-gray-500 tabular-nums">
@@ -2496,7 +2496,7 @@ export default function CountryPage({
                   {/* Card body */}
                   <div className="px-4 py-4 sm:px-6 sm:py-4">
                     <div className="text-center">
-                      <p className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">
+                      <p className="text-2xl font-semibold tracking-tight text-gray-900 tabular-nums">
                         {time24}
                       </p>
                       <p className="mt-1 text-sm text-gray-500 tabular-nums">
@@ -2789,13 +2789,13 @@ export default function CountryPage({
             {driving.driving_side && (
               <div className="col-span-1 px-4 py-4 sm:p-6 border-r border-gray-200">
                 <dt className="text-sm font-normal text-gray-900">Drives On</dt>
-                <dd className="mt-1 text-lg font-semibold text-gray-900">{driving.driving_side}</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{driving.driving_side}</dd>
               </div>
             )}
             {driving.idp_required && (
               <div className="col-span-2 px-4 py-4 sm:p-6">
                 <dt className="text-sm font-normal text-gray-900">International Driving Permit</dt>
-                <dd className="mt-1 text-lg font-semibold text-gray-900">{driving.idp_required}</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{driving.idp_required}</dd>
               </div>
             )}
           </dl>
@@ -2808,7 +2808,7 @@ export default function CountryPage({
             return (
               <div className="mt-3 overflow-hidden rounded-lg bg-gray-50 px-4 py-4 ring-1 ring-gray-200 sm:p-6">
                 <dt className="text-sm font-normal text-gray-900">Road Conditions</dt>
-                <dd className="mt-1 text-lg font-semibold text-gray-900">{headline}</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{headline}</dd>
                 {description && (
                   <p className="mt-2 text-sm text-gray-500">{description}</p>
                 )}
@@ -3035,27 +3035,27 @@ export default function CountryPage({
             <dl className="grid grid-cols-2 divide-gray-200 md:grid-cols-3 md:divide-x md:divide-y-0">
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">Humidity</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.humidity}%</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.humidity}%</dd>
               </div>
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">Wind</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.wind_speed} km/h</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.wind_speed} km/h</dd>
               </div>
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">Precipitation</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.precipitation} mm</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.precipitation} mm</dd>
               </div>
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">UV Index</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.uvindex}</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.uvindex}</dd>
               </div>
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">Cloud Cover</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.cloudcover}%</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.cloudcover}%</dd>
               </div>
               <div className="px-4 py-5 sm:p-6">
                 <dt className="text-sm font-medium text-gray-500">Visibility</dt>
-                <dd className="mt-1 text-2xl font-semibold text-gray-900">{currentWeather.visibility} km</dd>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{currentWeather.visibility} km</dd>
               </div>
             </dl>
             {/* Footer: sunrise/sunset */}
