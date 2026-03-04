@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="min-h-full bg-gray-50">
-        <body className={`${GeistSans.className} min-h-full antialiased`}>
+    <html lang="en" className="min-h-full bg-white">
+        <body className={`${GeistSans.className} min-h-full antialiased bg-white`}>
         <Navbar />
         {children}
       </body>
