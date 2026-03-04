@@ -1350,7 +1350,7 @@ export default function CountryPage({
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Before You Fly</h3>
 
           {/* Stats With Shared Borders — #59 (simplified, no change arrows) */}
-          <dl className="mt-3 grid grid-cols-2 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
+          <dl className="mt-3 grid grid-cols-2 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
             <div className="px-4 py-4 sm:p-6 border-b border-r border-gray-200">
               <dt className="text-sm font-normal text-gray-900">Return Ticket</dt>
               <dd className="mt-1 text-lg font-semibold text-indigo-600">
@@ -2187,7 +2187,7 @@ export default function CountryPage({
           </p>
 
           {mobileData.major_carriers && (
-            <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-5 ring-1 ring-gray-200 sm:p-6">
+            <div className="mt-3 overflow-hidden rounded-lg bg-gray-50 px-4 py-5 ring-1 ring-gray-200 sm:p-6">
               <dt className="truncate text-sm font-medium text-gray-500">Major Carriers</dt>
               <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{mobileData.major_carriers}</dd>
             </div>
@@ -2785,7 +2785,7 @@ export default function CountryPage({
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Driving</h3>
           {/* Row 1: Drives On (1/3) + International Driving Permit (2/3) — single card */}
-          <dl className="mt-3 grid grid-cols-3 overflow-hidden rounded-lg bg-white ring-1 ring-gray-200">
+          <dl className="mt-3 grid grid-cols-3 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
             {driving.driving_side && (
               <div className="col-span-1 px-4 py-4 sm:p-6 border-r border-gray-200">
                 <dt className="text-sm font-normal text-gray-900">Drives On</dt>
@@ -2806,7 +2806,7 @@ export default function CountryPage({
             const headline = firstDot !== -1 ? driving.road_conditions.substring(0, firstDot) : driving.road_conditions
             const description = firstDot !== -1 ? driving.road_conditions.substring(firstDot + 2) : null
             return (
-              <div className="mt-3 overflow-hidden rounded-lg bg-white px-4 py-4 ring-1 ring-gray-200 sm:p-6">
+              <div className="mt-3 overflow-hidden rounded-lg bg-gray-50 px-4 py-4 ring-1 ring-gray-200 sm:p-6">
                 <dt className="text-sm font-normal text-gray-900">Road Conditions</dt>
                 <dd className="mt-1 text-lg font-semibold text-indigo-600">{headline}</dd>
                 {description && (
