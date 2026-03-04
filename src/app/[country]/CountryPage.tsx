@@ -525,9 +525,7 @@ export default function CountryPage({
   const [taxTimeLimitOpen, setTaxTimeLimitOpen] = useState(false)
   // Mobile Data accordion states
   const [mobileEsimOpen, setMobileEsimOpen] = useState(false)
-  const [mobileEsimProvidersOpen, setMobileEsimProvidersOpen] = useState(false)
   const [mobileSimPurchaseOpen, setMobileSimPurchaseOpen] = useState(false)
-  const [mobileSimRequirementsOpen, setMobileSimRequirementsOpen] = useState(false)
   const [mobileNetworkOpen, setMobileNetworkOpen] = useState(false)
   const [mobilePrepaidOpen, setMobilePrepaidOpen] = useState(false)
   const [mobileWifiOpen, setMobileWifiOpen] = useState(false)
@@ -2205,7 +2203,7 @@ export default function CountryPage({
           )}
 
           <div className="mt-6">
-          {mobileData.esim_available && (
+          {(mobileData.esim_available || mobileData.esim_providers) && (
             <div>
               <button
                 type="button"
@@ -2213,7 +2211,7 @@ export default function CountryPage({
                 className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
                 aria-expanded={mobileEsimOpen}
               >
-                <span>eSIM Available</span>
+                <span>eSIM</span>
                 <ChevronDown
                   className={`size-5 text-gray-400 transition-transform duration-200 ${mobileEsimOpen ? 'rotate-180' : ''}`}
                   aria-hidden="true"
@@ -2223,35 +2221,25 @@ export default function CountryPage({
                 className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                 style={{ maxHeight: mobileEsimOpen ? '500px' : '0px' }}
               >
-                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.esim_available}</p>
+                <div className="px-4 py-3 space-y-2 sm:px-0">
+                  {mobileData.esim_available && (
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Available</p>
+                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.esim_available}</p>
+                    </div>
+                  )}
+                  {mobileData.esim_providers && (
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Providers</p>
+                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.esim_providers}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
-          {mobileData.esim_providers && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setMobileEsimProvidersOpen(!mobileEsimProvidersOpen)}
-                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
-                aria-expanded={mobileEsimProvidersOpen}
-              >
-                <span>eSIM Providers</span>
-                <ChevronDown
-                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileEsimProvidersOpen ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                style={{ maxHeight: mobileEsimProvidersOpen ? '500px' : '0px' }}
-              >
-                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.esim_providers}</p>
-              </div>
-            </div>
-          )}
-
-          {mobileData.sim_purchase_locations && (
+          {(mobileData.sim_purchase_locations || mobileData.sim_requirements) && (
             <div>
               <button
                 type="button"
@@ -2259,7 +2247,7 @@ export default function CountryPage({
                 className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
                 aria-expanded={mobileSimPurchaseOpen}
               >
-                <span>SIM Purchase</span>
+                <span>SIM Cards</span>
                 <ChevronDown
                   className={`size-5 text-gray-400 transition-transform duration-200 ${mobileSimPurchaseOpen ? 'rotate-180' : ''}`}
                   aria-hidden="true"
@@ -2269,30 +2257,20 @@ export default function CountryPage({
                 className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                 style={{ maxHeight: mobileSimPurchaseOpen ? '500px' : '0px' }}
               >
-                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.sim_purchase_locations}</p>
-              </div>
-            </div>
-          )}
-
-          {mobileData.sim_requirements && (
-            <div>
-              <button
-                type="button"
-                onClick={() => setMobileSimRequirementsOpen(!mobileSimRequirementsOpen)}
-                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
-                aria-expanded={mobileSimRequirementsOpen}
-              >
-                <span>SIM Requirements</span>
-                <ChevronDown
-                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileSimRequirementsOpen ? 'rotate-180' : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
-              <div
-                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
-                style={{ maxHeight: mobileSimRequirementsOpen ? '500px' : '0px' }}
-              >
-                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.sim_requirements}</p>
+                <div className="px-4 py-3 space-y-2 sm:px-0">
+                  {mobileData.sim_purchase_locations && (
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Where to Buy</p>
+                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.sim_purchase_locations}</p>
+                    </div>
+                  )}
+                  {mobileData.sim_requirements && (
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Requirements</p>
+                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.sim_requirements}</p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
