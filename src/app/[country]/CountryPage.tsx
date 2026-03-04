@@ -2138,7 +2138,7 @@ export default function CountryPage({
 
           {/* Phone details — description list (#50 pattern, no card wrapper) */}
           {(phoneInfo.phone_number_format || phoneInfo.phone_number_length || phoneInfo.how_to_dial_local || phoneInfo.how_to_dial_international) && (
-            <div className="mt-4 border-t border-gray-100">
+            <div className="mt-6">
               <dl className="divide-y divide-gray-100">
                 {phoneInfo.phone_number_format && (
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
