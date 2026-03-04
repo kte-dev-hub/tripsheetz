@@ -199,6 +199,12 @@ interface AppsAccess {
   id: number
   country_code: string
   messaging_apps: string | null
+  primary_messaging_app: string | null
+  primary_messaging_app_note: string | null
+  alt_messaging_app_1: string | null
+  alt_messaging_app_1_note: string | null
+  alt_messaging_app_2: string | null
+  alt_messaging_app_2_note: string | null
   vpn_needed: string | null
   blocked_services: string | null
   last_verified: string | null
@@ -2364,32 +2370,63 @@ export default function CountryPage({
         </div>
       )}
 
-      {/* ---- APPS & ACCESS — description list (#50 pattern) ---- */}
-      {appsAccess && (appsAccess.messaging_apps || appsAccess.vpn_needed || appsAccess.blocked_services) && (
+      {/* ---- APPS & ACCESS ---- */}
+      {appsAccess && (appsAccess.primary_messaging_app || appsAccess.messaging_apps || appsAccess.vpn_needed || appsAccess.blocked_services) && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Apps & Access</h3>
-          <div className="mt-3 border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
-              {appsAccess.messaging_apps && (
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium text-gray-900">Messaging Apps</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.messaging_apps}</dd>
+
+          {/* Messaging Apps card */}
+          {appsAccess.primary_messaging_app && (
+            <div className="mt-3 overflow-hidden rounded-lg bg-gray-50 ring-1 ring-gray-200">
+              {/* Row 1: Primary messaging app */}
+              <div className="px-4 py-5 sm:p-6">
+                <dt className="text-sm font-medium text-gray-500">Main Messaging App</dt>
+                <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{appsAccess.primary_messaging_app}</dd>
+                {appsAccess.primary_messaging_app_note && (
+                  <p className="mt-1 text-sm text-gray-500">{appsAccess.primary_messaging_app_note}</p>
+                )}
+              </div>
+              {/* Row 2: Alternative apps — split into two columns */}
+              {(appsAccess.alt_messaging_app_1 || appsAccess.alt_messaging_app_2) && (
+                <div className="grid grid-cols-2 divide-x divide-gray-200 border-t border-gray-200">
+                  <div className="px-4 py-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">Alternative</dt>
+                    <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{appsAccess.alt_messaging_app_1 ?? '—'}</dd>
+                    {appsAccess.alt_messaging_app_1_note && (
+                      <p className="mt-1 text-sm text-gray-500">{appsAccess.alt_messaging_app_1_note}</p>
+                    )}
+                  </div>
+                  <div className="px-4 py-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">Alternative</dt>
+                    <dd className="mt-1 text-2xl font-semibold tracking-tight text-gray-900">{appsAccess.alt_messaging_app_2 ?? '—'}</dd>
+                    {appsAccess.alt_messaging_app_2_note && (
+                      <p className="mt-1 text-sm text-gray-500">{appsAccess.alt_messaging_app_2_note}</p>
+                    )}
+                  </div>
                 </div>
               )}
-              {appsAccess.vpn_needed && (
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium text-gray-900">VPN Needed</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.vpn_needed}</dd>
-                </div>
-              )}
-              {appsAccess.blocked_services && (
-                <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                  <dt className="text-sm font-medium text-gray-900">Blocked Services</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.blocked_services}</dd>
-                </div>
-              )}
-            </dl>
-          </div>
+            </div>
+          )}
+
+          {/* VPN & Blocked Services — description list (unchanged) */}
+          {(appsAccess.vpn_needed || appsAccess.blocked_services) && (
+            <div className="mt-6">
+              <dl className="divide-y divide-gray-100">
+                {appsAccess.vpn_needed && (
+                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium text-gray-900">VPN Needed</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.vpn_needed}</dd>
+                  </div>
+                )}
+                {appsAccess.blocked_services && (
+                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt className="text-sm font-medium text-gray-900">Blocked Services</dt>
+                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{appsAccess.blocked_services}</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          )}
         </div>
       )}
 
