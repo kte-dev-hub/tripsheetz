@@ -517,6 +517,15 @@ export default function CountryPage({
   const [taxWhereToClaimOpen, setTaxWhereToClaimOpen] = useState(false)
   const [taxRefundMethodOpen, setTaxRefundMethodOpen] = useState(false)
   const [taxTimeLimitOpen, setTaxTimeLimitOpen] = useState(false)
+  // Mobile Data accordion states
+  const [mobileCarriersOpen, setMobileCarriersOpen] = useState(false)
+  const [mobileEsimOpen, setMobileEsimOpen] = useState(false)
+  const [mobileEsimProvidersOpen, setMobileEsimProvidersOpen] = useState(false)
+  const [mobileSimPurchaseOpen, setMobileSimPurchaseOpen] = useState(false)
+  const [mobileSimRequirementsOpen, setMobileSimRequirementsOpen] = useState(false)
+  const [mobileNetworkOpen, setMobileNetworkOpen] = useState(false)
+  const [mobilePrepaidOpen, setMobilePrepaidOpen] = useState(false)
+  const [mobileWifiOpen, setMobileWifiOpen] = useState(false)
   const [embassyOpen, setEmbassyOpen] = useState(true)
   const [consulatesOpen, setConsulatesOpen] = useState(false)
   const [otherEmergencyOpen, setOtherEmergencyOpen] = useState(false)
@@ -2170,65 +2179,200 @@ export default function CountryPage({
         </div>
       )}
 
-      {/* ---- MOBILE DATA — striped description list (#51) ---- */}
+      {/* ---- MOBILE DATA — individually collapsible accordions ---- */}
       {mobileData && (mobileData.major_carriers || mobileData.esim_available || mobileData.sim_purchase_locations) && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Mobile Data</h3>
           <p className="mt-1 text-sm text-gray-600">
             Staying connected in {country.name}.
           </p>
-          <div className="mt-3 border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
-              {mobileData.major_carriers && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">Major Carriers</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.major_carriers}</dd>
-                </div>
-              )}
-              {mobileData.esim_available && (
-                <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">eSIM Available</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.esim_available}</dd>
-                </div>
-              )}
-              {mobileData.esim_providers && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">eSIM Providers</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.esim_providers}</dd>
-                </div>
-              )}
-              {mobileData.sim_purchase_locations && (
-                <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">SIM Purchase</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.sim_purchase_locations}</dd>
-                </div>
-              )}
-              {mobileData.sim_requirements && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">SIM Requirements</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.sim_requirements}</dd>
-                </div>
-              )}
-              {mobileData.network_standards && (
-                <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">Network Standards</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.network_standards}</dd>
-                </div>
-              )}
-              {mobileData.prepaid_plan_costs && (
-                <div className="bg-gray-50 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">Prepaid Plans</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.prepaid_plan_costs}</dd>
-                </div>
-              )}
-              {mobileData.wifi_rental && (
-                <div className="bg-white px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
-                  <dt className="text-sm font-medium text-gray-900">Pocket WiFi</dt>
-                  <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mobileData.wifi_rental}</dd>
-                </div>
-              )}
-            </dl>
+
+          <div className="mt-6">
+          {mobileData.major_carriers && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileCarriersOpen(!mobileCarriersOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileCarriersOpen}
+              >
+                <span>Major Carriers</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileCarriersOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileCarriersOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.major_carriers}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.esim_available && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileEsimOpen(!mobileEsimOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileEsimOpen}
+              >
+                <span>eSIM Available</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileEsimOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileEsimOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.esim_available}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.esim_providers && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileEsimProvidersOpen(!mobileEsimProvidersOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileEsimProvidersOpen}
+              >
+                <span>eSIM Providers</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileEsimProvidersOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileEsimProvidersOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.esim_providers}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.sim_purchase_locations && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileSimPurchaseOpen(!mobileSimPurchaseOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileSimPurchaseOpen}
+              >
+                <span>SIM Purchase</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileSimPurchaseOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileSimPurchaseOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.sim_purchase_locations}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.sim_requirements && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileSimRequirementsOpen(!mobileSimRequirementsOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileSimRequirementsOpen}
+              >
+                <span>SIM Requirements</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileSimRequirementsOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileSimRequirementsOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.sim_requirements}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.network_standards && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileNetworkOpen(!mobileNetworkOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileNetworkOpen}
+              >
+                <span>Network Standards</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileNetworkOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileNetworkOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.network_standards}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.prepaid_plan_costs && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobilePrepaidOpen(!mobilePrepaidOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobilePrepaidOpen}
+              >
+                <span>Prepaid Plans</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobilePrepaidOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobilePrepaidOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.prepaid_plan_costs}</p>
+              </div>
+            </div>
+          )}
+
+          {mobileData.wifi_rental && (
+            <div>
+              <button
+                type="button"
+                onClick={() => setMobileWifiOpen(!mobileWifiOpen)}
+                className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                aria-expanded={mobileWifiOpen}
+              >
+                <span>Pocket WiFi</span>
+                <ChevronDown
+                  className={`size-5 text-gray-400 transition-transform duration-200 ${mobileWifiOpen ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                style={{ maxHeight: mobileWifiOpen ? '500px' : '0px' }}
+              >
+                <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{mobileData.wifi_rental}</p>
+              </div>
+            </div>
+          )}
           </div>
+
         </div>
       )}
 
