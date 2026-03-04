@@ -204,7 +204,7 @@ export default function Navbar({ showSearch = true }: NavbarProps) {
                     <path d="M8 30L30 35" stroke="#fff" strokeWidth="4" />
                     <path d="M30 35L38 56" stroke="#fff" strokeWidth="4" />
                   </svg>
-                  <span className="text-xl font-bold italic">
+                  <span className="text-xl font-extrabold tracking-tight">
                     <span className="text-indigo-600">Trip</span>
                     <span className="text-orange-600">Sheetz</span>
                   </span>
