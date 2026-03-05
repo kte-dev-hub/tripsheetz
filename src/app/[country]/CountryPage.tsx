@@ -2798,7 +2798,7 @@ export default function CountryPage({
 
           {/* Public Transit — striped description list (#51 pattern) */}
           {publicTransit && (publicTransit.transit_systems || publicTransit.transit_card_name || publicTransit.intercity_options) && (
-            <div className="mt-6">
+            <div>
               {/* Transit Systems accordion */}
               {publicTransit.transit_systems && (
                 <div>
