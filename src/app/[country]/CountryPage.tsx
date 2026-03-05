@@ -1421,7 +1421,7 @@ export default function CountryPage({
 
           {/* Duty-Free Allowances Accordion */}
           {(entryRequirements.dutyfree_alcohol || entryRequirements.dutyfree_tobacco || entryRequirements.dutyfree_cash_limit || entryRequirements.dutyfree_perfume || entryRequirements.dutyfree_other) && (
-            <div className="mt-3">
+            <div className="mt-6">
               <button
                 type="button"
                 onClick={() => setDutyFreeOpen(!dutyFreeOpen)}
@@ -1496,7 +1496,7 @@ export default function CountryPage({
 
           {/* Restricted & Prohibited Items Accordion */}
           {entryRequirements.restricted_items && (
-            <div className="mt-3">
+            <div>
               <button
                 type="button"
                 onClick={() => setRestrictedItemsOpen(!restrictedItemsOpen)}
@@ -1843,7 +1843,7 @@ export default function CountryPage({
 
           {/* Typical Costs Accordion */}
           {averageCosts.length > 0 && (
-            <div className="mt-3">
+            <div className="mt-6">
               <button
                 type="button"
                 onClick={() => setTypicalCostsOpen(!typicalCostsOpen)}
@@ -1899,7 +1899,7 @@ export default function CountryPage({
 
           {/* Tipping Accordion */}
           {tippingCustoms.length > 0 && (
-            <div className="mt-3">
+            <div>
               <button
                 type="button"
                 onClick={() => setTippingOpen(!tippingOpen)}
