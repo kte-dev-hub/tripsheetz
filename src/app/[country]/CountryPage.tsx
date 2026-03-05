@@ -535,6 +535,8 @@ export default function CountryPage({
   const [transitCardOpen, setTransitCardOpen] = useState(false)
   const [transitSystemsOpen, setTransitSystemsOpen] = useState(false)
   const [intercityOpen, setIntercityOpen] = useState(false)
+  const [rideHailingOpen, setRideHailingOpen] = useState(true)
+  const [taxiInfoOpen, setTaxiInfoOpen] = useState(false)
 
   // Currency converter state
   const [localAmount, setLocalAmount] = useState<string>('1')
@@ -2743,23 +2745,54 @@ export default function CountryPage({
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Getting Around</h3>
 
-          {/* Taxis & Ride-Hailing — description list (#50 pattern) */}
+          {/* Taxis & Ride-Hailing — accordions */}
           {taxisRidehailing && (taxisRidehailing.ride_hailing_apps || taxisRidehailing.taxi_info) && (
-            <div className="mt-3 border-t border-gray-100">
-              <dl className="divide-y divide-gray-100">
-                {taxisRidehailing.ride_hailing_apps && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm font-medium text-gray-900">Ride-Hailing Apps</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxisRidehailing.ride_hailing_apps}</dd>
+            <div className="mt-6">
+              {taxisRidehailing.ride_hailing_apps && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setRideHailingOpen(!rideHailingOpen)}
+                    className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                    aria-expanded={rideHailingOpen}
+                  >
+                    <span>Ride-Hailing Apps</span>
+                    <ChevronDown
+                      className={`size-5 text-gray-400 transition-transform duration-200 ${rideHailingOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{ maxHeight: rideHailingOpen ? '500px' : '0px' }}
+                  >
+                    <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxisRidehailing.ride_hailing_apps}</p>
                   </div>
-                )}
-                {taxisRidehailing.taxi_info && (
-                  <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                    <dt className="text-sm font-medium text-gray-900">Taxis</dt>
-                    <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{taxisRidehailing.taxi_info}</dd>
+                </div>
+              )}
+
+              {taxisRidehailing.taxi_info && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setTaxiInfoOpen(!taxiInfoOpen)}
+                    className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
+                    aria-expanded={taxiInfoOpen}
+                  >
+                    <span>Taxis</span>
+                    <ChevronDown
+                      className={`size-5 text-gray-400 transition-transform duration-200 ${taxiInfoOpen ? 'rotate-180' : ''}`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <div
+                    className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+                    style={{ maxHeight: taxiInfoOpen ? '500px' : '0px' }}
+                  >
+                    <p className="px-4 py-3 text-sm text-gray-700 sm:px-0">{taxisRidehailing.taxi_info}</p>
                   </div>
-                )}
-              </dl>
+                </div>
+              )}
             </div>
           )}
 
