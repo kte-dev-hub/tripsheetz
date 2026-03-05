@@ -1871,7 +1871,7 @@ export default function CountryPage({
                         <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
                           Local Price
                         </th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        <th scope="col" className="whitespace-nowrap px-3 py-3.5 text-right text-sm font-semibold text-gray-900">
                           USD
                         </th>
                       </tr>
@@ -1879,7 +1879,7 @@ export default function CountryPage({
                     <tbody className="divide-y divide-gray-200">
                       {averageCosts.map((cost) => (
                         <tr key={cost.id}>
-                          <td className="w-full max-w-0 py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                          <td className="py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">
                             {cost.item}
                             <dl className="font-normal sm:hidden">
                               <dt className="sr-only">Local Price</dt>
@@ -1887,7 +1887,7 @@ export default function CountryPage({
                             </dl>
                           </td>
                           <td className="hidden px-3 py-3 text-sm text-gray-500 sm:table-cell">{cost.cost_local}</td>
-                          <td className="px-3 py-3 text-sm text-gray-500">{cost.cost_usd}</td>
+                          <td className="whitespace-nowrap px-3 py-3 text-right text-sm text-gray-500">{cost.cost_usd}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1917,31 +1917,31 @@ export default function CountryPage({
                 className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                 style={{ maxHeight: tippingOpen ? '2000px' : '0px' }}
               >
-                <div className="mt-1">
+                <div className="-mx-4 mt-1 sm:-mx-0">
                   <table className="min-w-full divide-y divide-gray-300">
                     <thead>
                       <tr>
                         <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                           Context
                         </th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        <th scope="col" className="whitespace-nowrap px-3 py-3.5 text-right text-sm font-semibold text-gray-900">
                           Expected
-                        </th>
-                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
-                          Amount
-                        </th>
-                        <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
-                          Note
                         </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {tippingCustoms.map((tip) => (
                         <tr key={tip.id}>
-                          <td className="py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">{tip.context}</td>
-                          <td className="px-3 py-3 text-sm text-gray-500">{tip.expected}</td>
-                          <td className="hidden px-3 py-3 text-sm text-gray-500 sm:table-cell">{tip.typical_amount ?? '—'}</td>
-                          <td className="hidden px-3 py-3 text-sm text-gray-500 lg:table-cell">{tip.note ?? '—'}</td>
+                          <td className="py-3 pr-3 pl-4 text-sm font-medium text-gray-900 sm:pl-0">
+                            {tip.context}
+                            {tip.typical_amount && (
+                              <dl className="font-normal sm:hidden">
+                                <dt className="sr-only">Amount</dt>
+                                <dd className="mt-1 truncate text-gray-500">{tip.typical_amount}</dd>
+                              </dl>
+                            )}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-3 text-right text-sm text-gray-500">{tip.expected}</td>
                         </tr>
                       ))}
                     </tbody>
