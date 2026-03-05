@@ -2226,17 +2226,17 @@ export default function CountryPage({
                 className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                 style={{ maxHeight: mobileEsimOpen ? '500px' : '0px' }}
               >
-                <div className="px-4 py-3 space-y-2 sm:px-0">
+                <div className="px-4 py-4 space-y-4 sm:px-0">
                   {mobileData.esim_available && (
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Available</p>
-                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.esim_available}</p>
+                      <p className="mt-1 text-sm text-gray-700">{mobileData.esim_available}</p>
                     </div>
                   )}
                   {mobileData.esim_providers && (
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Providers</p>
-                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.esim_providers}</p>
+                      <p className="mt-1 text-sm text-gray-700">{mobileData.esim_providers}</p>
                     </div>
                   )}
                 </div>
@@ -2262,17 +2262,17 @@ export default function CountryPage({
                 className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                 style={{ maxHeight: mobileSimPurchaseOpen ? '500px' : '0px' }}
               >
-                <div className="px-4 py-3 space-y-2 sm:px-0">
+                <div className="px-4 py-4 space-y-4 sm:px-0">
                   {mobileData.sim_purchase_locations && (
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Where to Buy</p>
-                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.sim_purchase_locations}</p>
+                      <p className="mt-1 text-sm text-gray-700">{mobileData.sim_purchase_locations}</p>
                     </div>
                   )}
                   {mobileData.sim_requirements && (
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Requirements</p>
-                      <p className="mt-0.5 text-sm text-gray-700">{mobileData.sim_requirements}</p>
+                      <p className="mt-1 text-sm text-gray-700">{mobileData.sim_requirements}</p>
                     </div>
                   )}
                 </div>
@@ -2842,23 +2842,23 @@ export default function CountryPage({
                     className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                     style={{ maxHeight: transitCardOpen ? '500px' : '0px' }}
                   >
-                    <div className="px-4 py-3 space-y-2 sm:px-0">
+                    <div className="px-4 py-4 space-y-4 sm:px-0">
                       {publicTransit.transit_card_name && (
                         <div>
                           <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Card</p>
-                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_card_name}</p>
+                          <p className="mt-1 text-sm text-gray-700">{publicTransit.transit_card_name}</p>
                         </div>
                       )}
                       {publicTransit.transit_card_where_to_buy && (
                         <div>
                           <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Where to Buy</p>
-                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_card_where_to_buy}</p>
+                          <p className="mt-1 text-sm text-gray-700">{publicTransit.transit_card_where_to_buy}</p>
                         </div>
                       )}
                       {publicTransit.transit_contactless && (
                         <div>
                           <p className="text-xs font-medium uppercase tracking-wide text-gray-500">Contactless Payment</p>
-                          <p className="mt-0.5 text-sm text-gray-700">{publicTransit.transit_contactless}</p>
+                          <p className="mt-1 text-sm text-gray-700">{publicTransit.transit_contactless}</p>
                         </div>
                       )}
                     </div>
