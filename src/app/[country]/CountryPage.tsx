@@ -3625,7 +3625,7 @@ export default function CountryPage({
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                   style={{ maxHeight: embassyOpen ? '2000px' : '0px' }}
                 >
-                  <div className="border-t border-gray-200">
+                  <div>
                     <dl className="divide-y divide-gray-200">
                       <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium text-gray-900">Official Name</dt>
