@@ -3196,22 +3196,22 @@ export default function CountryPage({
 
       {/* ---- 15-DAY FORECAST — SEO-safe accordion ---- */}
       {forecast.length > 0 && (
-        <div className="mt-8">
+        <div className="mt-6">
           <button
             type="button"
             onClick={() => setForecastOpen(!forecastOpen)}
-            className="flex w-full items-center justify-between border-b border-gray-200 pb-3"
+            className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
             aria-expanded={forecastOpen}
           >
-            <span className="text-sm font-semibold text-gray-900">15-Day Forecast</span>
+            <span>15-Day Forecast</span>
             <ChevronDown
-              className={`size-5 text-gray-500 transition-transform duration-200 ${forecastOpen ? 'rotate-180' : ''}`}
+              className={`size-5 text-gray-400 transition-transform duration-200 ${forecastOpen ? 'rotate-180' : ''}`}
               aria-hidden="true"
             />
           </button>
           <div
-            className="overflow-hidden transition-all duration-300 ease-in-out"
-            style={{ maxHeight: forecastOpen ? '2000px' : '0' }}
+            className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+            style={{ maxHeight: forecastOpen ? '2000px' : '0px' }}
           >
             <div className="mt-3 flow-root">
               <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -3252,22 +3252,22 @@ export default function CountryPage({
       )}
 
       {/* ---- CLIMATE AVERAGES — SEO-safe accordion ---- */}
-      <div className="mt-8">
+      <div>
         <button
           type="button"
           onClick={() => setClimateOpen(!climateOpen)}
-          className="flex w-full items-center justify-between border-b border-gray-200 pb-3"
+          className="flex w-full items-center justify-between border-b border-gray-200 py-3 text-left text-sm font-medium text-gray-900 hover:text-gray-600"
           aria-expanded={climateOpen}
         >
-          <span className="text-sm font-semibold text-gray-900">Climate Averages</span>
+          <span>Climate Averages</span>
           <ChevronDown
-            className={`size-5 text-gray-500 transition-transform duration-200 ${climateOpen ? 'rotate-180' : ''}`}
+            className={`size-5 text-gray-400 transition-transform duration-200 ${climateOpen ? 'rotate-180' : ''}`}
             aria-hidden="true"
           />
         </button>
         <div
-          className="overflow-hidden transition-all duration-300 ease-in-out"
-          style={{ maxHeight: climateOpen ? '2000px' : '0' }}
+          className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
+          style={{ maxHeight: climateOpen ? '2000px' : '0px' }}
         >
           <div className="mt-3 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
