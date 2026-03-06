@@ -3213,11 +3213,11 @@ export default function CountryPage({
             className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
             style={{ maxHeight: forecastOpen ? '2000px' : '0px' }}
           >
-            <div className="-mx-4 mt-1 sm:-mx-0">
+            <div className="mt-1">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">Day</th>
+                    <th scope="col" className="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">Day</th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
                     <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Conditions</th>
@@ -3229,7 +3229,7 @@ export default function CountryPage({
                 <tbody className="divide-y divide-gray-200">
                   {forecast.map((day, index) => (
                     <tr key={index}>
-                      <td className="py-3 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">{day.date}</td>
+                      <td className="py-3 pr-3 text-sm font-medium whitespace-nowrap text-gray-900">{day.date}</td>
                       <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{day.high}°C</td>
                       <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{day.low}°C</td>
                       <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.description}</td>
@@ -3263,11 +3263,11 @@ export default function CountryPage({
           className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
           style={{ maxHeight: climateOpen ? '2000px' : '0px' }}
         >
-          <div className="-mx-4 mt-1 sm:-mx-0">
+          <div className="mt-1">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
-                  <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">Month</th>
+                  <th scope="col" className="py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">Month</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
                   <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rain (mm)</th>
@@ -3282,7 +3282,7 @@ export default function CountryPage({
                 )}
                 {climateAverages.map((avg, index) => (
                   <tr key={index}>
-                    <td className="py-3 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">{avg.month}</td>
+                    <td className="py-3 pr-3 text-sm font-medium whitespace-nowrap text-gray-900">{avg.month}</td>
                     <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.high}°C</td>
                     <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.low}°C</td>
                     <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.precip}</td>
