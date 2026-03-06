@@ -3213,7 +3213,7 @@ export default function CountryPage({
             className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
             style={{ maxHeight: forecastOpen ? '2000px' : '0px' }}
           >
-            <div className="mt-1">
+            <div className="px-4 mt-1 sm:px-0">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
@@ -3263,7 +3263,7 @@ export default function CountryPage({
           className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
           style={{ maxHeight: climateOpen ? '2000px' : '0px' }}
         >
-          <div className="mt-1">
+          <div className="px-4 mt-1 sm:px-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
