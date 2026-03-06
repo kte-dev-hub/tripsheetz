@@ -3213,39 +3213,33 @@ export default function CountryPage({
             className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
             style={{ maxHeight: forecastOpen ? '2000px' : '0px' }}
           >
-            <div className="mt-3 flow-root">
-              <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                  <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-300">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Day</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
-                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
-                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Conditions</th>
-                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Precip %</th>
-                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Humidity</th>
-                          <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">UV</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200 bg-gray-50">
-                        {forecast.map((day, index) => (
-                          <tr key={index}>
-                            <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{day.date}</td>
-                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.high}°C</td>
-                            <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{day.low}°C</td>
-                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.description}</td>
-                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.precipChance}%</td>
-                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.humidity}%</td>
-                            <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.uvindex}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+            <div className="-mx-4 mt-1 sm:-mx-0">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">Day</th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
+                    <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Conditions</th>
+                    <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Precip %</th>
+                    <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">Humidity</th>
+                    <th scope="col" className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell">UV</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {forecast.map((day, index) => (
+                    <tr key={index}>
+                      <td className="py-3 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">{day.date}</td>
+                      <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{day.high}°C</td>
+                      <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{day.low}°C</td>
+                      <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.description}</td>
+                      <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-gray-500 sm:table-cell">{day.precipChance}%</td>
+                      <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.humidity}%</td>
+                      <td className="hidden px-3 py-3 text-sm whitespace-nowrap text-gray-500 md:table-cell">{day.uvindex}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -3269,40 +3263,34 @@ export default function CountryPage({
           className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
           style={{ maxHeight: climateOpen ? '2000px' : '0px' }}
         >
-          <div className="mt-3 flow-root">
-            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div className="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg">
-                  <table className="min-w-full divide-y divide-gray-300">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6">Month</th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rain (mm)</th>
-                        <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Humidity</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-gray-50">
-                      {climateLoading && climateAverages.length === 0 && (
-                        <tr>
-                          <td colSpan={5} className="px-3 py-4 text-sm text-gray-500 text-center">Loading climate data...</td>
-                        </tr>
-                      )}
-                      {climateAverages.map((avg, index) => (
-                        <tr key={index}>
-                          <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6">{avg.month}</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.high}°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.low}°C</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.precip}</td>
-                          <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">{avg.humidity}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+          <div className="-mx-4 mt-1 sm:-mx-0">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th scope="col" className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">Month</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">High</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Low</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rain (mm)</th>
+                  <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Humidity</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {climateLoading && climateAverages.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-3 py-3 text-sm text-gray-500 text-center">Loading climate data...</td>
+                  </tr>
+                )}
+                {climateAverages.map((avg, index) => (
+                  <tr key={index}>
+                    <td className="py-3 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">{avg.month}</td>
+                    <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.high}°C</td>
+                    <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.low}°C</td>
+                    <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.precip}</td>
+                    <td className="px-3 py-3 text-sm whitespace-nowrap text-gray-500">{avg.humidity}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
