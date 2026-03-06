@@ -1802,8 +1802,8 @@ export default function CountryPage({
       {paymentMethods && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Paying</h3>
-          <div className="mt-3 border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
+          <div className="mt-3 border-t border-gray-200">
+            <dl className="divide-y divide-gray-200">
               {paymentMethods.cash_vs_card && (
                 <div className="bg-gray-100 px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-3">
                   <dt className="text-sm font-medium text-gray-900">Cash vs. Card</dt>
@@ -2161,7 +2161,7 @@ export default function CountryPage({
           {/* Phone details — description list (#50 pattern, no card wrapper) */}
           {(phoneInfo.phone_number_format || phoneInfo.phone_number_length || phoneInfo.how_to_dial_local || phoneInfo.how_to_dial_international) && (
             <div className="mt-6">
-              <dl className="divide-y divide-gray-100">
+              <dl className="divide-y divide-gray-200">
                 {phoneInfo.phone_number_format && (
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm font-medium text-gray-900">Number Format</dt>
@@ -2394,7 +2394,7 @@ export default function CountryPage({
           {/* VPN & Blocked Services — description list (unchanged) */}
           {(appsAccess.vpn_needed || appsAccess.blocked_services) && (
             <div className="mt-6">
-              <dl className="divide-y divide-gray-100">
+              <dl className="divide-y divide-gray-200">
                 {appsAccess.vpn_needed && (
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm font-medium text-gray-900">VPN Needed</dt>
@@ -2464,7 +2464,7 @@ export default function CountryPage({
                       {time12} · {dateStr}
                     </p>
                   </div>
-                  <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                  <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-200 pt-4">
                     <div>
                       <dt className="text-xs font-medium text-gray-500">UTC Offset</dt>
                       <dd className="mt-1 text-sm font-semibold text-gray-900">UTC {utcOffset}</dd>
@@ -2528,7 +2528,7 @@ export default function CountryPage({
                         {time12} · {dateStr}
                       </p>
                     </div>
-                    <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
+                    <dl className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-200 pt-4">
                       <div>
                         <dt className="text-xs font-medium text-gray-500">UTC Offset</dt>
                         <dd className="mt-1 text-sm font-semibold text-gray-900">UTC {utcOffset}</dd>
@@ -3004,8 +3004,8 @@ export default function CountryPage({
               Comparing {selectedHomeElectrical.name} → {country.name}.
             </p>
             {electricalComparison && (
-              <div className="mt-3 border-t border-gray-100">
-                <dl className="divide-y divide-gray-100">
+              <div className="mt-3 border-t border-gray-200">
+                <dl className="divide-y divide-gray-200">
                   {electricalComparison.adapter && (
                     <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                       <dt className="text-sm font-medium text-gray-900">Adapter Needed</dt>
@@ -3521,8 +3521,8 @@ export default function CountryPage({
             className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
             style={{ maxHeight: otherEmergencyOpen ? '2000px' : '0px' }}
           >
-            <div className="border-t border-gray-100">
-              <dl className="divide-y divide-gray-100">
+            <div className="border-t border-gray-200">
+              <dl className="divide-y divide-gray-200">
                 {emergencyNumbers.tourist_police && (
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm font-medium text-gray-900">Tourist Police</dt>
@@ -3625,8 +3625,8 @@ export default function CountryPage({
                   className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
                   style={{ maxHeight: embassyOpen ? '2000px' : '0px' }}
                 >
-                  <div className="border-t border-gray-100">
-                    <dl className="divide-y divide-gray-100">
+                  <div className="border-t border-gray-200">
+                    <dl className="divide-y divide-gray-200">
                       <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium text-gray-900">Official Name</dt>
                         <dd className="mt-1 text-sm text-gray-700 sm:col-span-2 sm:mt-0">{mainEmbassy.official_name ?? `${nationalityName} Embassy in ${mainEmbassy.city ?? '—'}`}</dd>
@@ -3719,8 +3719,8 @@ export default function CountryPage({
                         <div className="my-4 border-t border-gray-300" />
                       )}
                       <h4 className="mt-4 text-sm font-semibold text-gray-900">{consulate.city ?? 'Consulate'}</h4>
-                      <div className="mt-2 border-t border-gray-100">
-                        <dl className="divide-y divide-gray-100">
+                      <div className="mt-2 border-t border-gray-200">
+                        <dl className="divide-y divide-gray-200">
                           {consulate.official_name && (
                             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                               <dt className="text-sm font-medium text-gray-900">Official Name</dt>
@@ -3797,8 +3797,8 @@ export default function CountryPage({
       {healthSafety && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Health</h3>
-          <div className="mt-3 border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
+          <div className="mt-3 border-t border-gray-200">
+            <dl className="divide-y divide-gray-200">
               {healthSafety.required_vaccinations && (
                 <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt className="text-sm font-medium text-gray-900">Required Vaccinations</dt>
@@ -3826,8 +3826,8 @@ export default function CountryPage({
       {travelAdvisory && (
         <div className="mt-12">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">Travel Advisories</h3>
-          <div className="mt-3 border-t border-gray-100">
-            <dl className="divide-y divide-gray-100">
+          <div className="mt-3 border-t border-gray-200">
+            <dl className="divide-y divide-gray-200">
               {travelAdvisory.advisory_us && (
                 <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                   <dt className="text-sm font-medium text-gray-900">US Advisory</dt>
