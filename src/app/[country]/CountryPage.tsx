@@ -3521,7 +3521,7 @@ export default function CountryPage({
             className="overflow-hidden transition-[max-height] duration-300 ease-in-out"
             style={{ maxHeight: otherEmergencyOpen ? '2000px' : '0px' }}
           >
-            <div className="border-t border-gray-200">
+            <div>
               <dl className="divide-y divide-gray-200">
                 {emergencyNumbers.tourist_police && (
                   <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
